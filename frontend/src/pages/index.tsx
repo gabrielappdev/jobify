@@ -1,21 +1,19 @@
 import { useEffect } from "react";
-import { Heading } from "@chakra-ui/react";
 import Container from "../components/Container";
-import { DarkModeSwitch } from "../components/DarkModeSwitch";
 import fetch from "services/api";
-import { HomeProps } from "types";
-import { useDispatch, useSelector } from "react-redux";
+import { HomeProps, IndexProps } from "types";
+import { useDispatch } from "react-redux";
 import { SET_GLOBAL_DATA } from "store/actions";
-import { ReducersProps } from "store/reducers";
+import HomePage from "../pages/Home";
 
-type IndexProps = {
-  data: HomeProps;
+type IndexPageProps = {
+  data: IndexProps;
 };
 
-const Index = ({ data }: IndexProps) => {
+const Index = ({ data }: IndexPageProps) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    if (data?.price) {
+    if (data?.appData?.price) {
       dispatch({
         type: SET_GLOBAL_DATA,
         payload: data,
@@ -23,35 +21,71 @@ const Index = ({ data }: IndexProps) => {
     }
   }, [data, dispatch]);
   return (
-    <Container height="100vh">
-      <DarkModeSwitch />
-      <Heading as="h1">With chakra</Heading>
-      {data?.name && <Heading>{data.name}</Heading>}
+    <Container minH="100vh">
+      <HomePage data={data} />
     </Container>
   );
 };
 
 export async function getStaticProps() {
-  let data: HomeProps = {
-    name: "",
-    description: "",
-    price: 0,
-    createdAt: "",
-    updatedAt: "",
+  let notFound = false;
+  let data: IndexProps = {
+    appData: {
+      name: "",
+      description: "",
+      price: 0,
+      logo: null,
+      logoUrl: "",
+    },
+    categories: [],
   };
+
+  const assignGlobalData = (json) => {
+    const appData = json.data.attributes as HomeProps;
+    const {
+      logo: {
+        data: {
+          attributes: { url },
+        },
+      },
+    } = appData;
+    data = { ...data, appData: { ...appData, logoUrl: url?.toString() } };
+  };
+
+  const assignCategories = (json) => {
+    data = {
+      ...data,
+      categories: json.data.map(({ attributes: { title, slug } }) => ({
+        title,
+        slug,
+      })),
+    };
+  };
+
   try {
-    const response = await fetch("/global");
-    if (response.ok) {
-      const resultData = await response.json();
-      if (resultData) {
-        data = resultData.data.attributes;
+    const promises = [fetch("/global?populate=logo"), fetch("/categories")];
+    const responses = await Promise.all(promises);
+    if (responses) {
+      for (let i = 0; i < responses.length; i++) {
+        const json = await responses[i].json();
+        if (json) {
+          switch (i) {
+            case 0:
+              assignGlobalData(json);
+              break;
+            case 1:
+              assignCategories(json);
+          }
+        }
       }
     }
   } catch (error) {
     //
+    notFound = true;
   }
   return {
     props: { data },
+    notFound,
   };
 }
 

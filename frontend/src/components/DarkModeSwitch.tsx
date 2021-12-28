@@ -1,16 +1,21 @@
-import { useColorMode, Switch } from '@chakra-ui/react'
+import { useMemo } from "react";
+import { useColorMode, Switch } from "@chakra-ui/react";
 
-export const DarkModeSwitch = () => {
-  const { colorMode, toggleColorMode } = useColorMode()
-  const isDark = colorMode === 'dark'
+const DarkModeSwitch = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
+  const isDark = useMemo(() => {
+    return colorMode === "dark";
+  }, [colorMode]);
   return (
     <Switch
-      position="fixed"
-      top="1rem"
-      right="1rem"
-      color="green"
+      mb={0}
+      mx={4}
+      h="auto"
+      colorScheme="green"
       isChecked={isDark}
       onChange={toggleColorMode}
     />
-  )
-}
+  );
+};
+
+export default DarkModeSwitch;
