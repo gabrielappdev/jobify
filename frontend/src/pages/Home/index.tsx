@@ -1,6 +1,6 @@
-import Container from "@/components/Container";
 import { IndexProps } from "types";
 import Template from "../../templates";
+import Hero from "@/components/Hero";
 
 type DataType = {
   data: IndexProps;
@@ -9,7 +9,7 @@ type DataType = {
 const Home = ({ data }: DataType) => {
   return (
     <Template data={data}>
-      <Container></Container>
+      <Hero data={data.appData} />
     </Template>
   );
 };

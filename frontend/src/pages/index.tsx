@@ -36,6 +36,8 @@ export async function getStaticProps() {
       price: 0,
       logo: null,
       logoUrl: "",
+      hero: null,
+      heroUrl: "",
     },
     categories: [],
   };
@@ -48,8 +50,20 @@ export async function getStaticProps() {
           attributes: { url },
         },
       },
+      hero: {
+        data: {
+          attributes: { url: heroUrl },
+        },
+      },
     } = appData;
-    data = { ...data, appData: { ...appData, logoUrl: url?.toString() } };
+    data = {
+      ...data,
+      appData: {
+        ...appData,
+        logoUrl: url?.toString(),
+        heroUrl: heroUrl.toString(),
+      },
+    };
   };
 
   const assignCategories = (json) => {
@@ -63,7 +77,7 @@ export async function getStaticProps() {
   };
 
   try {
-    const promises = [fetch("/global?populate=logo"), fetch("/categories")];
+    const promises = [fetch("/global?populate=*"), fetch("/categories")];
     const responses = await Promise.all(promises);
     if (responses) {
       for (let i = 0; i < responses.length; i++) {
@@ -81,6 +95,7 @@ export async function getStaticProps() {
     }
   } catch (error) {
     //
+    console.log(error);
     notFound = true;
   }
   return {

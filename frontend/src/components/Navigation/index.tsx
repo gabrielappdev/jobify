@@ -42,7 +42,7 @@ const Navigation = ({ data }: NavigationProps) => {
     ({ currPos }) => {
       setIsTransparent(currPos.y > -200);
     },
-    [],
+    [colorMode],
     null,
     false,
     500
@@ -116,6 +116,7 @@ const Navigation = ({ data }: NavigationProps) => {
   return (
     <Box
       position="fixed"
+      zIndex={999}
       left={0}
       top={0}
       borderBottom={1}

@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import Navigation from "@/components/Navigation";
 import { IndexProps } from "types";
-import { Box } from "@chakra-ui/react";
 
 type TemplateProps = {
   children: React.ReactNode;
@@ -20,7 +19,7 @@ const Template = ({ children, data }: TemplateProps) => {
       <Navigation
         data={{ logo: appData.logoUrl, price: appData.price, categories }}
       />
-      <Box pt={300}>{children}</Box>
+      {children}
     </>
   );
 };

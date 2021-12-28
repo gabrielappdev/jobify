@@ -12,6 +12,8 @@ export type HomeProps = {
   price: Number;
   logo: LogoProps;
   logoUrl: string;
+  hero: LogoProps;
+  heroUrl: String;
 };
 
 export type CategoryProps = {
