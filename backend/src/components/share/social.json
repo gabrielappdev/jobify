@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_share_socials",
+  "info": {
+    "displayName": "social",
+    "icon": "share-alt"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "icon": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "color": {
+      "type": "string",
+      "default": "#333333"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_settings_settings",
+  "info": {
+    "displayName": "settings",
+    "icon": "cogs"
+  },
+  "options": {},
+  "attributes": {
+    "display_logo": {
+      "type": "boolean",
+      "default": true,
+      "required": false
+    },
+    "highlight": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "pinned": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    }
+  }
+}
