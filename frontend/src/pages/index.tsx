@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import Container from "../components/Container";
 import fetch from "services/api";
-import { HomeProps, IndexProps } from "types";
+import { HomeProps, IndexProps, PostAttributesProps } from "types";
 import { useDispatch } from "react-redux";
 import { SET_GLOBAL_DATA } from "store/actions";
 import HomePage from "../pages/Home";
+import { _formatCardPost, _formatCategories, _formatCompany } from "helpers";
 
 type IndexPageProps = {
   data: IndexProps;
@@ -40,6 +41,7 @@ export async function getStaticProps() {
       heroUrl: "",
     },
     categories: [],
+    featuredPosts: [],
   };
 
   const assignGlobalData = (json) => {
@@ -69,15 +71,27 @@ export async function getStaticProps() {
   const assignCategories = (json) => {
     data = {
       ...data,
-      categories: json.data.map(({ attributes: { title, slug } }) => ({
-        title,
-        slug,
-      })),
+      categories: _formatCategories(json),
+    };
+  };
+
+  const assignPosts = (json, key) => {
+    data = {
+      ...data,
+      [key]: json.data.map(({ attributes }) =>
+        _formatCardPost(attributes as PostAttributesProps)
+      ),
     };
   };
 
   try {
-    const promises = [fetch("/global?populate=*"), fetch("/categories")];
+    const promises = [
+      fetch("/global?populate=*"),
+      fetch("/categories"),
+      fetch(
+        "/posts?filters[active]=true&filters[post_settings][featured]=true&populate[0]=company&populate[1]=company.profile_picture&populate[2]=categories&populate[3]=post_settings"
+      ),
+    ];
     const responses = await Promise.all(promises);
     if (responses) {
       for (let i = 0; i < responses.length; i++) {
@@ -89,6 +103,10 @@ export async function getStaticProps() {
               break;
             case 1:
               assignCategories(json);
+              break;
+            case 2:
+              assignPosts(json, "featuredPosts");
+              break;
           }
         }
       }
