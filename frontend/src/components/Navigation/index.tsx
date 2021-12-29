@@ -48,11 +48,21 @@ const Navigation = ({ data }: NavigationProps) => {
     500
   );
 
+  const getLogo = () => {
+    return (
+      <Link href="/">
+        <Box sx={{ cursor: "pointer" }} data-testid="navigation-home">
+          <Image src={data.logo} width={196} height={56} />
+        </Box>
+      </Link>
+    );
+  };
+
   const getRightSideContent = () => {
     if (isMobile) {
       return (
         <Flex w="100%" align="center">
-          <Image src={data.logo} width={196} height={56} />
+          {getLogo()}
           <Spacer />
           <Flex align="center">
             <DarkModeSwitch />
@@ -85,7 +95,7 @@ const Navigation = ({ data }: NavigationProps) => {
     }
     return (
       <Flex w="100%" align="center">
-        <Image src={data.logo} width={196} height={56} />
+        {getLogo()}
         <Spacer />
         <Flex align="center">
           <Menu>
@@ -93,6 +103,7 @@ const Navigation = ({ data }: NavigationProps) => {
               background="inherit"
               as={Button}
               rightIcon={<ChevronDownIcon />}
+              data-testid="navigation-categories"
             >
               Categories
             </MenuButton>
@@ -105,7 +116,12 @@ const Navigation = ({ data }: NavigationProps) => {
             </MenuList>
           </Menu>
           <DarkModeSwitch />
-          <Button ml={4} colorScheme="green" leftIcon={<AddIcon />}>
+          <Button
+            data-testid="navigation-post-job"
+            ml={4}
+            colorScheme="green"
+            leftIcon={<AddIcon />}
+          >
             Post a job
           </Button>
         </Flex>
@@ -125,6 +141,7 @@ const Navigation = ({ data }: NavigationProps) => {
       w="100%"
       background={isTransparent ? "transparent" : bgColor[colorMode]}
       transition="background ease 200ms"
+      data-testid="navigation"
     >
       <Container
         maxW="140ch"
