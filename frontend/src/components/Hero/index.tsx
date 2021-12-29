@@ -23,6 +23,7 @@ const Hero = ({ data }: HeroProps) => {
       backgroundImage={data.heroUrl?.toString()}
       backgroundSize="cover"
       pt={88}
+      data-testid="hero"
     >
       <Box
         position="absolute"
@@ -45,11 +46,14 @@ const Hero = ({ data }: HeroProps) => {
               textAlign="center"
               my={4}
               dangerouslySetInnerHTML={{ __html: data.description?.toString() }}
+              data-testid="hero-description"
             />
           )}
-          <Link href={`/jobs/new`}>
-            <Button colorScheme="green">Post a job for ${data.price}</Button>
-          </Link>
+          {data.price && (
+            <Link href={`/jobs/new`}>
+              <Button colorScheme="green">Post a job for ${data.price}</Button>
+            </Link>
+          )}
         </Stack>
       </Container>
     </Box>
