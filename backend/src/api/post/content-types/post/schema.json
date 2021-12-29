@@ -43,6 +43,16 @@
       "type": "component",
       "repeatable": false,
       "component": "settings.settings"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::tag.tag"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "required": false
     }
   }
 }

@@ -31,6 +31,13 @@
     },
     "price": {
       "type": "float"
+    },
+    "hero": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }
