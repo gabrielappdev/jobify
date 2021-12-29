@@ -19,7 +19,6 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
       } else {
         ctx.status = 404;
       }
-      console.log(job);
     } catch (err) {
       ctx.body = err;
     }

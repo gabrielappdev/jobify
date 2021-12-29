@@ -1,5 +1,5 @@
 module.exports = {
-  "* 30 * * * *": async ({ strapi }) => {
+  "* * 1 * * *": async ({ strapi }) => {
     await strapi.service("api::post.post").unpublish();
   },
 };
