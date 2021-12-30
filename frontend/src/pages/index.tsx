@@ -11,7 +11,6 @@ import {
   _formatCategories,
   _formatCompany,
 } from "helpers";
-import moment from "moment";
 
 type IndexPageProps = {
   data: IndexProps;
@@ -81,6 +80,13 @@ export async function getStaticProps() {
     };
   };
 
+  const assignFeaturedCompanies = (json) => {
+    data = {
+      ...data,
+      featuredCompanies: json,
+    };
+  };
+
   const assignPosts = (json, key) => {
     const jobs = applyPostsSorting(
       json.data.map((job) =>
@@ -100,8 +106,12 @@ export async function getStaticProps() {
     const promises = [
       fetch("/global?populate=*"),
       fetch("/categories"),
+      fetch("/featured-companies"),
       fetch(
         "/posts?filters[active]=true&filters[post_settings][featured]=true&populate[0]=company&populate[1]=company.profile_picture&populate[2]=categories&populate[3]=post_settings"
+      ),
+      fetch(
+        "/posts?filters[active]=true&filters[post_settings][featured]=false&populate[0]=company&populate[1]=company.profile_picture&populate[2]=categories&populate[3]=post_settings&pagination[limit]=50"
       ),
     ];
     const responses = await Promise.all(promises);
@@ -117,7 +127,13 @@ export async function getStaticProps() {
               assignCategories(json);
               break;
             case 2:
+              assignFeaturedCompanies(json);
+              break;
+            case 3:
               assignPosts(json, "featuredPosts");
+              break;
+            case 4:
+              assignPosts(json, "otherPosts");
               break;
           }
         }

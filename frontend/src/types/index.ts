@@ -21,10 +21,20 @@ export type CategoryProps = {
   slug: String;
 };
 
+export type FeaturedCompaniesProps = {
+  id: Number;
+  logo: String;
+  name: String;
+  slug: String;
+  posts: Number;
+};
+
 export type IndexProps = {
   appData?: HomeProps;
   categories?: CategoryProps[];
+  featuredCompanies?: FeaturedCompaniesProps[];
   featuredPosts?: JobCardProps[];
+  otherPosts?: JobCardProps[];
 };
 
 export type CompanyProps = {
