@@ -44,7 +44,7 @@ const Hero = ({ data }: HeroProps) => {
               color={theme.colors.white}
               fontSize="lg"
               textAlign="center"
-              my={4}
+              py={4}
               dangerouslySetInnerHTML={{ __html: data.description?.toString() }}
               data-testid="hero-description"
             />

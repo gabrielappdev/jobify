@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   Box,
-  useMediaQuery,
   Menu,
   MenuButton,
   MenuList,
@@ -14,6 +13,7 @@ import {
   Spacer,
   theme,
   Container,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { CategoryProps } from "types";
@@ -21,6 +21,7 @@ import { AddIcon, ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import DarkModeSwitch from "../DarkModeSwitch";
+import useIsTouchDevice from "hooks/useDeviceDetect";
 
 export type NavigationProps = {
   data: {
@@ -33,7 +34,7 @@ export type NavigationProps = {
 const bgColor = { light: "gray.100", dark: "gray.800" };
 
 const Navigation = ({ data }: NavigationProps) => {
-  const [isMobile] = useMediaQuery("(max-width: 799px)");
+  const isMobile = useIsTouchDevice();
   const [isTransparent, setIsTransparent] = useState(true);
 
   const { colorMode } = useColorMode();

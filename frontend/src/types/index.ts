@@ -62,6 +62,7 @@ export type FormattedPostSettings = {
 };
 
 export type JobCardProps = {
+  id: Number;
   title: String;
   createdAt: String;
   slug: String;
@@ -90,6 +91,7 @@ export type RawCategoriesProps = {
 };
 
 export type PostAttributesProps = {
+  id: Number;
   title: String;
   description: String;
   createdAt: String;

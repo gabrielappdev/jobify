@@ -5,7 +5,13 @@ import { HomeProps, IndexProps, PostAttributesProps } from "types";
 import { useDispatch } from "react-redux";
 import { SET_GLOBAL_DATA } from "store/actions";
 import HomePage from "../pages/Home";
-import { _formatCardPost, _formatCategories, _formatCompany } from "helpers";
+import {
+  applyPostsSorting,
+  _formatCardPost,
+  _formatCategories,
+  _formatCompany,
+} from "helpers";
+import moment from "moment";
 
 type IndexPageProps = {
   data: IndexProps;
@@ -76,11 +82,17 @@ export async function getStaticProps() {
   };
 
   const assignPosts = (json, key) => {
+    const jobs = applyPostsSorting(
+      json.data.map((job) =>
+        _formatCardPost({
+          id: job.id,
+          ...job.attributes,
+        } as PostAttributesProps)
+      )
+    );
     data = {
       ...data,
-      [key]: json.data.map(({ attributes }) =>
-        _formatCardPost(attributes as PostAttributesProps)
-      ),
+      [key]: jobs,
     };
   };
 
