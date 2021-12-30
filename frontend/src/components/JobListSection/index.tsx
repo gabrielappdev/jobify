@@ -1,11 +1,5 @@
-import {
-  Center,
-  Divider,
-  Heading,
-  Stack,
-  Text,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import { Center, Divider, Heading, Stack, Text } from "@chakra-ui/react";
+import useIsTouchDevice from "hooks/useDeviceDetect";
 import { JobCardProps } from "types";
 import JobCard from "../JobCard";
 import Section from "../Section";
@@ -17,7 +11,7 @@ type JobListSection = {
 };
 
 const JobListSection = ({ heading, description, jobList }) => {
-  const [isMobile] = useMediaQuery("max-width: 799px");
+  const isMobile = useIsTouchDevice();
   const getCards = () => {
     if (jobList.length) {
       return jobList.map((jobCard: JobCardProps, index) => {
@@ -34,7 +28,7 @@ const JobListSection = ({ heading, description, jobList }) => {
             {heading}
           </Heading>
           {description && (
-            <Text textAlign="center" size="md">
+            <Text role="description" textAlign="center" size="md">
               {description}
             </Text>
           )}
