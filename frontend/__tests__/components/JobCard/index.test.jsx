@@ -1,11 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import JobCard from "../../../src/components/JobCard";
 import mock from "../../../__mocks__/jobCardMock";
-import { highlightColor } from "../../../src/helpers";
 import moment from "moment";
 
 global.matchMedia = () => ({ matches: true });
-
 describe("JobCard", () => {
   it("renders the title correctly", () => {
     const { getByTestId } = render(<JobCard data={mock} />);

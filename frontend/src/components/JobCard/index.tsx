@@ -90,10 +90,25 @@ const JobCard = ({ data }: JobCardDataProps) => {
           align="center"
           data-testid="job-card-adornments"
         >
+          {isNew && (
+            <Box
+              px={2}
+              h="26px"
+              borderRadius={2}
+              color={contrastColor[colorMode]}
+              bg={switchPrimaryColor[colorMode]}
+              data-testid="job-card-new"
+            >
+              <Text fontWeight="bold" size="sm">
+                NEW
+              </Text>
+            </Box>
+          )}
           {data.isPinned && (
             <Box
               color={switchPrimaryColor[colorMode]}
               p={1}
+              ml={2}
               borderRadius={1}
               borderWidth={1}
               borderColor={theme.colors.green[700]}
@@ -104,21 +119,6 @@ const JobCard = ({ data }: JobCardDataProps) => {
               <Center>
                 <AiFillPushpin />
               </Center>
-            </Box>
-          )}
-          {isNew && (
-            <Box
-              px={2}
-              h="26px"
-              ml={2}
-              borderRadius={2}
-              color={contrastColor[colorMode]}
-              bg={switchPrimaryColor[colorMode]}
-              data-testid="job-card-new"
-            >
-              <Text fontWeight="bold" size="sm">
-                NEW
-              </Text>
             </Box>
           )}
         </Flex>
