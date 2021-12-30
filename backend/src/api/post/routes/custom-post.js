@@ -2,7 +2,7 @@ module.exports = {
   routes: [
     {
       method: "GET",
-      path: "/jobs/:slug",
+      path: "/job/:slug",
       handler: "post.findBySlug",
     },
   ],

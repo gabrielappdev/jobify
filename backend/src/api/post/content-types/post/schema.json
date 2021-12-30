@@ -35,8 +35,9 @@
     },
     "company": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::company.company"
+      "relation": "manyToOne",
+      "target": "api::company.company",
+      "inversedBy": "posts"
     },
     "post_settings": {
       "displayName": "settings",
