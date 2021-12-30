@@ -67,7 +67,12 @@ const Navigation = ({ data }: NavigationProps) => {
           <Spacer />
           <Flex align="center">
             <DarkModeSwitch />
-            <Button size="sm" ml={4} colorScheme="green">
+            <Button
+              data-testid="navigation-post-job"
+              size="sm"
+              ml={4}
+              colorScheme="green"
+            >
               Job
             </Button>
             <Menu>
@@ -79,6 +84,7 @@ const Navigation = ({ data }: NavigationProps) => {
                 icon={<HamburgerIcon />}
                 variant="outline"
                 ml={4}
+                data-testid="navigation-categories"
               />
               <MenuList>
                 <MenuGroup title="Categories">

@@ -8,6 +8,8 @@ import {
 import Navigation from "../../../src/components/Navigation";
 import mock from "../../../__mocks__/navigationProps";
 
+global.matchMedia = () => ({ matches: true });
+
 describe("Navigation", () => {
   it("renders correctly", () => {
     const { getByTestId } = render(<Navigation data={mock} />);
