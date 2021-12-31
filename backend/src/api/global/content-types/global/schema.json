@@ -33,11 +33,17 @@
       "type": "float"
     },
     "hero": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "notification": {
+      "type": "component",
+      "repeatable": false,
+      "component": "global-notification.global-notification"
     }
   }
 }

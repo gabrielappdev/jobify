@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_global_notification_global_notifications",
+  "info": {
+    "displayName": "global_notification",
+    "icon": "comment-dots"
+  },
+  "options": {},
+  "attributes": {
+    "colorScheme": {
+      "type": "string",
+      "default": "blue"
+    },
+    "message": {
+      "type": "richtext"
+    }
+  }
+}

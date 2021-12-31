@@ -17,13 +17,13 @@ const getPostCreateNotification = async (params = {}, users = []) => {
   await asyncDispatchMessages(
     [
       users.map(({ id }) => {
-        return () =>
+        return (created_at) =>
           pusher.trigger("jobify-notifications", "actions/new-joba-alert", {
             message: {
               ...notificationData,
               user_id: id,
               action: "actions/new-joba-alert",
-              created_at: moment().toDate("DD/MM/YYYY HH:ss"),
+              created_at,
             },
           });
       }),
@@ -36,11 +36,12 @@ const getPostCreateNotification = async (params = {}, users = []) => {
 const getPostAuthorCreatorNotification = async (params = {}, user) => {
   await asyncDispatchMessages(
     [
-      () =>
+      (created_at) =>
         pusher.trigger("jobify-notifications", "actions/job-created", {
           message: {
             ...params,
             action: "actions/job-created",
+            created_at,
           },
         }),
     ],
