@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   Box,
   Menu,
@@ -53,6 +53,13 @@ const Navigation = ({ data }: NavigationProps) => {
   const isGlobalNotificationVisible = useSelector(
     ({ app }: ReducersProps) => app.appData.notificationVisible
   );
+
+  const shouldDisplayNotification = useMemo(() => {
+    if (globalNotification) {
+      return globalNotification.active;
+    }
+    return false;
+  }, [globalNotification]);
 
   usePusherEventListener(
     async (data) => {
@@ -235,7 +242,7 @@ const Navigation = ({ data }: NavigationProps) => {
       transition="background ease 200ms"
       data-testid="navigation"
     >
-      {globalNotification && (
+      {shouldDisplayNotification && (
         <AnimatedWrapper
           color={theme.colors[globalNotification.colorScheme as string][500]}
           className={

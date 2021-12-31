@@ -25,6 +25,7 @@ export type HomeProps = {
 export type GlobalNotificationProps = {
   message: String;
   colorScheme: String;
+  active: Boolean;
 };
 
 export type CategoryProps = {
