@@ -18,14 +18,18 @@ const getPostCreateNotification = async (params = {}, users = []) => {
     [
       users.map(({ id }) => {
         return (created_at) =>
-          pusher.trigger("jobify-notifications", "actions/new-joba-alert", {
-            message: {
-              ...notificationData,
-              user_id: id,
-              action: "actions/new-joba-alert",
-              created_at,
-            },
-          });
+          pusher.trigger(
+            "jobify-notifications",
+            "actions/create::job-subscribers-notification",
+            {
+              message: {
+                ...notificationData,
+                user_id: id,
+                action: "actions/create::job-subscribers-notification",
+                created_at,
+              },
+            }
+          );
       }),
     ],
     `Start processing notifications for post ${params.title}`,
@@ -37,13 +41,17 @@ const getPostAuthorCreatorNotification = async (params = {}, user) => {
   await asyncDispatchMessages(
     [
       (created_at) =>
-        pusher.trigger("jobify-notifications", "actions/job-created", {
-          message: {
-            ...params,
-            action: "actions/job-created",
-            created_at,
-          },
-        }),
+        pusher.trigger(
+          "jobify-notifications",
+          "actions/create::job-author-notification",
+          {
+            message: {
+              ...params,
+              action: "actions/create::job-author-notification",
+              created_at,
+            },
+          }
+        ),
     ],
     "",
     `Notications created for post (${params.title}) - author ${user.email}`

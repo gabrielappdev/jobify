@@ -17,10 +17,10 @@ module.exports = createCoreController("api::global.global", ({ strapi }) => ({
           (created_at) =>
             pusher.trigger(
               "jobify-notifications",
-              "actions/global-notification",
+              "actions/update::global-notification",
               {
                 message: {
-                  action: "actions/global-notification",
+                  action: "actions/update::global-notification",
                   created_at,
                 },
               }
