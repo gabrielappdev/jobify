@@ -7,6 +7,10 @@ export default class Document extends NextDocument {
       <Html>
         <Head />
         <body style={{ overflowX: "hidden" }}>
+          <div
+            className="fake-scroll-element"
+            style={{ position: "absolute", top: "-100000px" }}
+          />
           <ColorModeScript />
           <Main />
           <NextScript />

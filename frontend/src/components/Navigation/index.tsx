@@ -13,7 +13,6 @@ import {
   Spacer,
   theme,
   Container,
-  useBreakpointValue,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { CategoryProps } from "types";
@@ -22,6 +21,7 @@ import Link from "next/link";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import DarkModeSwitch from "../DarkModeSwitch";
 import useIsTouchDevice from "hooks/useDeviceDetect";
+import { navigationBgColor } from "../../helpers";
 
 export type NavigationProps = {
   data: {
@@ -30,8 +30,6 @@ export type NavigationProps = {
     categories: CategoryProps[];
   };
 };
-
-const bgColor = { light: "gray.100", dark: "gray.800" };
 
 const Navigation = ({ data }: NavigationProps) => {
   const isMobile = useIsTouchDevice();
@@ -146,7 +144,7 @@ const Navigation = ({ data }: NavigationProps) => {
       borderBottomColor={theme.colors.gray[300]}
       p={4}
       w="100%"
-      background={isTransparent ? "transparent" : bgColor[colorMode]}
+      background={isTransparent ? "transparent" : navigationBgColor[colorMode]}
       transition="background ease 200ms"
       data-testid="navigation"
     >

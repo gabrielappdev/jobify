@@ -4,19 +4,23 @@ import {
   Container,
   LayoutProps,
   SpacerProps,
-  theme,
   useColorMode,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import useIsTouchDevice from "hooks/useDeviceDetect";
 
 type SectionProps = {
   minW?: LayoutProps["minW"];
   padding?: SpacerProps["padding"];
+  inheritBg?: Boolean;
   children: ReactElement<any, string | JSXElementConstructor<any>>;
 };
 
-const Section = ({ minW = "120ch", children }: SectionProps) => {
+const Section = ({
+  minW = "120ch",
+  padding = "",
+  inheritBg = false,
+  children,
+}: SectionProps) => {
   const { colorMode } = useColorMode();
   const isMobile = useIsTouchDevice();
   const maxW = useMemo(() => {
@@ -26,11 +30,11 @@ const Section = ({ minW = "120ch", children }: SectionProps) => {
     <Container
       as="section"
       color={color[colorMode]}
-      bg={bgColor[colorMode]}
+      bg={inheritBg ? "inherit" : bgColor[colorMode]}
       minW={minW}
       maxW={maxW as SpacerProps["maxW"]}
       py={8}
-      borderY={`1px solid ${theme.colors.gray[100]}`}
+      padding={padding}
     >
       {children}
     </Container>

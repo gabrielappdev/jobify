@@ -6,6 +6,11 @@ export type LogoProps = {
   };
 };
 
+export type ColorModeProps = {
+  light: String;
+  dark: String;
+};
+
 export type HomeProps = {
   name: String;
   description: String;

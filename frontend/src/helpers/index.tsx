@@ -85,6 +85,8 @@ export const contrastColor = {
   dark: theme.colors.green[900],
 };
 
+export const navigationBgColor = { light: "gray.100", dark: "gray.800" };
+
 export const applyPostsSorting = (posts = []) => {
   return posts
     .sort((a, b) => {

@@ -19,12 +19,10 @@ type IndexPageProps = {
 const Index = ({ data }: IndexPageProps) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    if (data?.appData?.price) {
-      dispatch({
-        type: SET_GLOBAL_DATA,
-        payload: data,
-      });
-    }
+    dispatch({
+      type: SET_GLOBAL_DATA,
+      payload: data,
+    });
   }, [data, dispatch]);
   return (
     <Container minH="100vh">
