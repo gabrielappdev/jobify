@@ -20,9 +20,9 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
           active: false,
         },
       });
-      console.log("Number of jobs updated: ", response.count);
+      return response;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   },
 }));

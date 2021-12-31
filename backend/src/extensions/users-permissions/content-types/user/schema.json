@@ -63,10 +63,22 @@
       "inversedBy": "users",
       "configurable": false
     },
+    "notifications": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::notification.notification",
+      "mappedBy": "users_permissions_user"
+    },
     "company": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::company.company"
+      "target": "api::company.company",
+      "inversedBy": "users_permissions_user"
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::category.category"
     }
   }
 }
