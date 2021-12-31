@@ -1,5 +1,5 @@
-import { HomeProps } from "types";
+import { IndexProps } from "types";
 
 export type ReducersProps = {
-  app: HomeProps;
+  app: IndexProps;
 };

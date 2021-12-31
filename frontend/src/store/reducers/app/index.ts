@@ -10,8 +10,13 @@ const initialState: IndexProps = {
     price: 0,
     logo: null,
     logoUrl: "",
+    hero: null,
+    heroUrl: "",
   },
   categories: [],
+  featuredCompanies: [],
+  featuredPosts: [],
+  otherPosts: [],
 };
 
 export const reducer = (state = initialState, action: AnyAction) => {
