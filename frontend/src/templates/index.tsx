@@ -23,7 +23,12 @@ const Template = ({ children, data }: TemplateProps) => {
   return (
     <>
       <Navigation
-        data={{ logo: appData.logoUrl, price: appData.price, categories }}
+        data={{
+          logo: appData.logoUrl,
+          price: appData.price,
+          categories,
+          globalNotification: appData.notification,
+        }}
       />
       {children}
       <Divider />

@@ -12,6 +12,8 @@ const initialState: IndexProps = {
     logoUrl: "",
     hero: null,
     heroUrl: "",
+    notification: null,
+    notificationVisible: false,
   },
   categories: [],
   featuredCompanies: [],

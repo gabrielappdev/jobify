@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Menu,
@@ -13,27 +13,59 @@ import {
   Spacer,
   theme,
   Container,
+  Text,
+  CloseButton,
 } from "@chakra-ui/react";
 import Image from "next/image";
-import { CategoryProps } from "types";
+import { CategoryProps, GlobalNotificationProps } from "types";
 import { AddIcon, ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import DarkModeSwitch from "../DarkModeSwitch";
 import useIsTouchDevice from "hooks/useDeviceDetect";
 import { navigationBgColor } from "../../helpers";
+import { useDispatch, useSelector } from "react-redux";
+import { SET_GLOBAL_DATA } from "../../store/actions";
+import { ReducersProps } from "../../store/reducers";
+
+import { AnimatedWrapper } from "./styles";
 
 export type NavigationProps = {
   data: {
     logo: string;
     price: Number;
     categories: CategoryProps[];
+    globalNotification?: GlobalNotificationProps;
   };
 };
 
 const Navigation = ({ data }: NavigationProps) => {
   const isMobile = useIsTouchDevice();
   const [isTransparent, setIsTransparent] = useState(true);
+  const [globalNotification, setGlobalNotification] = useState(
+    data.globalNotification
+  );
+  const dispatch = useDispatch();
+  const isGlobalNotificationVisible = useSelector(
+    ({ app }: ReducersProps) => app.appData.notificationVisible
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (globalNotification) {
+        dispatch({
+          type: SET_GLOBAL_DATA,
+          payload: {
+            appData: { notificationVisible: true },
+          },
+        });
+      }
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [globalNotification, dispatch]);
 
   const { colorMode } = useColorMode();
 
@@ -55,6 +87,15 @@ const Navigation = ({ data }: NavigationProps) => {
         </Box>
       </Link>
     );
+  };
+
+  const handleHideGlobalNotification = () => {
+    dispatch({
+      type: SET_GLOBAL_DATA,
+      payload: {
+        appData: { notificationVisible: "hide" },
+      },
+    });
   };
 
   const getRightSideContent = () => {
@@ -134,6 +175,8 @@ const Navigation = ({ data }: NavigationProps) => {
     );
   };
 
+  console.log;
+
   return (
     <Box
       position="fixed"
@@ -148,6 +191,27 @@ const Navigation = ({ data }: NavigationProps) => {
       transition="background ease 200ms"
       data-testid="navigation"
     >
+      {globalNotification && (
+        <AnimatedWrapper
+          color={theme.colors[globalNotification.colorScheme as string][300]}
+          className={
+            isGlobalNotificationVisible === true
+              ? "displayGlobalNotification"
+              : isGlobalNotificationVisible === "hide" &&
+                "hideGlobalNotification"
+          }
+        >
+          <Container maxW="140ch" p={2}>
+            <Text fontSize="lg">{globalNotification.message}</Text>
+            <CloseButton
+              position="absolute"
+              top="10px"
+              right="10px"
+              onClick={handleHideGlobalNotification}
+            />
+          </Container>
+        </AnimatedWrapper>
+      )}
       <Container
         maxW="140ch"
         centerContent

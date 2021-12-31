@@ -19,6 +19,12 @@ export type HomeProps = {
   logoUrl: string;
   hero: LogoProps;
   heroUrl: String;
+  notification: GlobalNotificationProps;
+} & { notificationVisible: Boolean | String };
+
+export type GlobalNotificationProps = {
+  message: String;
+  colorScheme: String;
 };
 
 export type CategoryProps = {
