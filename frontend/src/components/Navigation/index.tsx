@@ -23,12 +23,14 @@ import Link from "next/link";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import DarkModeSwitch from "../DarkModeSwitch";
 import useIsTouchDevice from "hooks/useDeviceDetect";
-import { navigationBgColor } from "../../helpers";
+import { bgColor, navigationBgColor } from "../../helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { SET_GLOBAL_DATA } from "../../store/actions";
 import { ReducersProps } from "../../store/reducers";
-
 import { AnimatedWrapper } from "./styles";
+import usePusherEventListener from "../../hooks/usePusherEventListener";
+import { PUSHER_GLOBAL_NOTIFICATION } from "../../constants";
+import fetch from "../../services/api";
 
 export type NavigationProps = {
   data: {
@@ -41,7 +43,9 @@ export type NavigationProps = {
 
 const Navigation = ({ data }: NavigationProps) => {
   const isMobile = useIsTouchDevice();
+  const { colorMode } = useColorMode();
   const [isTransparent, setIsTransparent] = useState(true);
+
   const [globalNotification, setGlobalNotification] = useState(
     data.globalNotification
   );
@@ -50,9 +54,43 @@ const Navigation = ({ data }: NavigationProps) => {
     ({ app }: ReducersProps) => app.appData.notificationVisible
   );
 
+  usePusherEventListener(
+    async (data) => {
+      const fetchNotifications = async () => {
+        try {
+          const response = await fetch("/global?populate[0]=notification");
+          if (response) {
+            const { data } = await response.json();
+            if (!data?.error) {
+              setGlobalNotification(data?.attributes?.notification);
+              if (
+                !isGlobalNotificationVisible ||
+                isGlobalNotificationVisible === "hide"
+              ) {
+                dispatch({
+                  type: SET_GLOBAL_DATA,
+                  payload: {
+                    appData: { notificationVisible: true },
+                  },
+                });
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching global data notifications: ", error);
+        }
+      };
+      if (data) {
+        await fetchNotifications();
+      }
+    },
+    PUSHER_GLOBAL_NOTIFICATION,
+    [isGlobalNotificationVisible, dispatch]
+  );
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (globalNotification) {
+    let startTimer = setTimeout(() => {
+      if (globalNotification && isGlobalNotificationVisible !== "hide") {
         dispatch({
           type: SET_GLOBAL_DATA,
           payload: {
@@ -61,13 +99,22 @@ const Navigation = ({ data }: NavigationProps) => {
         });
       }
     }, 2000);
+    let timer = setTimeout(() => {
+      if (isGlobalNotificationVisible) {
+        dispatch({
+          type: SET_GLOBAL_DATA,
+          payload: {
+            appData: { notificationVisible: "hide" },
+          },
+        });
+      }
+    }, 10000);
 
     return () => {
+      clearTimeout(startTimer);
       clearTimeout(timer);
     };
-  }, [globalNotification, dispatch]);
-
-  const { colorMode } = useColorMode();
+  }, [globalNotification, dispatch, isGlobalNotificationVisible]);
 
   useScrollPosition(
     ({ currPos }) => {
@@ -174,9 +221,6 @@ const Navigation = ({ data }: NavigationProps) => {
       </Flex>
     );
   };
-
-  console.log;
-
   return (
     <Box
       position="fixed"
@@ -193,7 +237,7 @@ const Navigation = ({ data }: NavigationProps) => {
     >
       {globalNotification && (
         <AnimatedWrapper
-          color={theme.colors[globalNotification.colorScheme as string][300]}
+          color={theme.colors[globalNotification.colorScheme as string][500]}
           className={
             isGlobalNotificationVisible === true
               ? "displayGlobalNotification"
@@ -201,11 +245,14 @@ const Navigation = ({ data }: NavigationProps) => {
                 "hideGlobalNotification"
           }
         >
-          <Container maxW="140ch" p={2}>
-            <Text fontSize="lg">{globalNotification.message}</Text>
+          <Container maxW="140ch" py={3}>
+            <Text color={theme.colors.white} textAlign="center" fontSize="lg">
+              {globalNotification.message}
+            </Text>
             <CloseButton
+              color={theme.colors.white}
               position="absolute"
-              top="10px"
+              top="0px"
               right="10px"
               onClick={handleHideGlobalNotification}
             />

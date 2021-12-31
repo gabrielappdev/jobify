@@ -5,7 +5,14 @@ import theme from "../theme";
 import { AppProps } from "next/app";
 import Head from "next/head";
 
+import { PusherProvider } from "use-pusher";
+
 function MyApp({ Component, pageProps }: AppProps) {
+  const pusherConfig = {
+    clientKey: process.env.NEXT_PUBLIC_PUSHER_KEY,
+    cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    authEndpoint: "/api/pusher/auth",
+  };
   return (
     <>
       <Head>
@@ -14,9 +21,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"
         />
       </Head>
-      <ChakraProvider resetCSS theme={theme}>
-        <Component {...pageProps} />
-      </ChakraProvider>
+      <PusherProvider {...pusherConfig}>
+        <ChakraProvider resetCSS theme={theme}>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </PusherProvider>
     </>
   );
 }

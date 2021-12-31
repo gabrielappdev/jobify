@@ -5,8 +5,10 @@ export const AnimatedWrapper = styled.div`
     position: absolute;
     top: 0;
     left: 0;
+    border-top: 2px solid ${color};
+    border-bottom: 2px solid ${color};
     background-color: ${color};
-    padding: 16px;
+    box-sizing: border-box;
     opacity: 0;
     width: 100%;
 

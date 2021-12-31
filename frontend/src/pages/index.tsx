@@ -42,6 +42,8 @@ export async function getStaticProps() {
       logoUrl: "",
       hero: null,
       heroUrl: "",
+      notification: null,
+      notificationVisible: false,
     },
     categories: [],
     featuredPosts: [],
