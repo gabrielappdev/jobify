@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { navigationBgColor } from "helpers";
 import useIsTouchDevice from "hooks/useDeviceDetect";
+import moment from "moment";
 import Link from "next/link";
 import { JobCardProps } from "types";
 import CompanyCard from "../CompanyCard";
@@ -43,7 +44,7 @@ const JobPageHero = ({ data }: JobPageHeroProps) => {
               {data.title}
             </Heading>
             <Text py={2}>
-              <b>Posted:</b> {data.createdAt}
+              <b>Posted:</b> {moment(data.createdAt as string).format("ll")}
             </Text>
             <SimpleGrid py={2} gap={4} columns={isMobile ? 2 : 4}>
               {data.categories.map(({ title, slug }, index) => {

@@ -13,7 +13,7 @@ const FeaturedCompanies = ({ data }: FeaturedCompaniesDataProps) => {
     <Section minW="auto">
       <Stack w="100%" align="center">
         <SimpleGrid w="100%" columns={{ sm: 2, md: 5 }} gap={4}>
-          {data.map((company) => {
+          {data?.map((company) => {
             return (
               <Link
                 href={`/companies/${company.slug}`}

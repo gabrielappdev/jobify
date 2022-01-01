@@ -11,22 +11,22 @@ type TemplateProps = {
 
 const Template = ({ children, data }: TemplateProps) => {
   const appData = useMemo(() => {
-    return data.appData;
-  }, []);
+    return data?.appData;
+  }, [data]);
   const categories = useMemo(() => {
-    return data.categories;
-  }, []);
+    return data?.categories;
+  }, [data]);
   const featuredCompanies = useMemo(() => {
-    return data.featuredCompanies;
-  }, []);
+    return data?.featuredCompanies;
+  }, [data]);
   return (
     <>
       <Navigation
         data={{
-          logo: appData.logoUrl,
-          price: appData.price,
+          logo: appData?.logoUrl,
+          price: appData?.price,
           categories,
-          globalNotification: appData.notification,
+          globalNotification: appData?.notification,
         }}
       />
       {children}

@@ -62,7 +62,7 @@ export async function getStaticProps() {
       appData: {
         ...appData,
         logoUrl: url?.toString(),
-        heroUrl: heroUrl.toString(),
+        heroUrl: heroUrl?.toString(),
       },
     };
   };
@@ -96,28 +96,22 @@ export async function getStaticProps() {
     };
   };
 
-  try {
-    const response = await fetch("/index");
-    const responseData = await response.json();
+  const response = await fetch("/index");
+  const responseData = await response.json();
 
-    if (Object.keys(data)?.length) {
-      let { appData, categories, featuredCompanies, featuredJobs, otherJobs } =
-        responseData;
-      appData = assignGlobalData(appData);
-      categories = assignCategories(categories);
-      featuredCompanies = assignFeaturedCompanies(featuredCompanies);
-      featuredJobs = assignPosts(featuredJobs, "featuredJobs");
-      otherJobs = assignPosts(otherJobs, "otherJobs");
-    }
-  } catch (error) {
-    //
-    console.log(error);
-    notFound = true;
+  if (Object.keys(data)?.length) {
+    let { appData, categories, featuredCompanies, featuredJobs, otherJobs } =
+      responseData;
+    appData = assignGlobalData(appData);
+    categories = assignCategories(categories);
+    featuredCompanies = assignFeaturedCompanies(featuredCompanies);
+    featuredJobs = assignPosts(featuredJobs, "featuredJobs");
+    otherJobs = assignPosts(otherJobs, "otherJobs");
   }
-  console.log(Object.keys(data));
   return {
     props: { data },
     notFound,
+    revalidate: 60,
   };
 }
 

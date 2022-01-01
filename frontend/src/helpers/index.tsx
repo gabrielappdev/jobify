@@ -41,8 +41,8 @@ export const _formatCompany = (data: CompanyProps): JobCardCompanyProps => {
     slug,
     logo: profilePicture.url,
     posts,
-    createdAt: moment(createdAt.toString()).format("ll"),
-    updatedAt: moment(updatedAt.toString()).format("ll"),
+    createdAt,
+    updatedAt,
   };
 };
 
@@ -68,7 +68,7 @@ export const _formatCardPost = (data: PostAttributesProps): JobCardProps => {
     id: data.id,
     title: data.title,
     description: data?.description || "",
-    createdAt: moment(data.createdAt.toString()).format("ll"),
+    createdAt: data.createdAt,
     slug: data.slug,
     company: _formatCompany(data.company),
     categories: _formatCategories(data.categories),

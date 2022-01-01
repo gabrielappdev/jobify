@@ -27,12 +27,12 @@ const JobListSection = ({
   const [category, setCategory] = useState("");
 
   const allCategories = useMemo(() => {
-    const jobsCategories = jobList.reduce((acc: String[], job): String[] => {
-      const categories = job.categories.map(({ title }) => title);
+    const jobsCategories = jobList?.reduce((acc: String[], job): String[] => {
+      const categories = job?.categories.map(({ title }) => title);
       acc = acc.concat(categories);
       return acc;
     }, []);
-    jobsCategories.unshift("Select a category");
+    jobsCategories?.unshift("Select a category");
     const set = new Set(jobsCategories);
 
     return Array.from(set);
@@ -41,8 +41,8 @@ const JobListSection = ({
   useEffect(() => {
     if (category) {
       setDisplayedJobs([
-        ...jobList.filter((data) =>
-          data.categories.find(({ title }) => title === category)
+        ...jobList?.filter((data) =>
+          data?.categories.find(({ title }) => title === category)
         ),
       ]);
     } else {
@@ -51,8 +51,8 @@ const JobListSection = ({
   }, [category]);
 
   const getCards = () => {
-    if (displayedJobs.length) {
-      return displayedJobs.map((jobCard: JobCardProps, index) => {
+    if (displayedJobs?.length) {
+      return displayedJobs?.map((jobCard: JobCardProps, index) => {
         return <JobCard data={jobCard} key={index} />;
       });
     }
@@ -76,7 +76,7 @@ const JobListSection = ({
               onChange={({ target: { value } }) => setCategory(value)}
               maxW="300px"
             >
-              {allCategories.map((cat, index) => {
+              {allCategories?.map((cat, index) => {
                 return (
                   <option key={index} value={index === 0 ? "" : cat.toString()}>
                     {cat}

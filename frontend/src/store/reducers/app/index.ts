@@ -17,8 +17,8 @@ const initialState: IndexProps = {
   },
   categories: [],
   featuredCompanies: [],
-  featuredPosts: [],
-  otherPosts: [],
+  featuredJobs: [],
+  otherJobs: [],
 };
 
 export const reducer = (state = initialState, action: AnyAction) => {

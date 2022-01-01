@@ -11,14 +11,14 @@ type DataType = {
 const Home = ({ data }: DataType) => {
   return (
     <Template data={data}>
-      <Hero data={data.appData} />
-      <FeaturedCompanies data={data.featuredCompanies} />
+      <Hero data={data?.appData} />
+      <FeaturedCompanies data={data?.featuredCompanies} />
       <JobListSection
         heading="Featured Jobs"
         description="Trending jobs with high competition"
-        jobList={data.featuredJobs}
+        jobList={data?.featuredJobs}
       />
-      <JobListSection heading="Latest Jobs" jobList={data.otherJobs} />
+      <JobListSection heading="Latest Jobs" jobList={data?.otherJobs} />
     </Template>
   );
 };

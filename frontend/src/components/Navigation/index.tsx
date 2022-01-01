@@ -49,7 +49,7 @@ const Navigation = ({ data }: NavigationProps) => {
   const localStorage = new LocalStorage();
 
   const [globalNotification, setGlobalNotification] = useState(
-    data.globalNotification
+    data?.globalNotification
   );
   const dispatch = useDispatch();
   const isGlobalNotificationVisible = useSelector(
@@ -148,7 +148,7 @@ const Navigation = ({ data }: NavigationProps) => {
     return (
       <Link href="/">
         <Box sx={{ cursor: "pointer" }} data-testid="navigation-home">
-          <Image src={data.logo} width={196} height={56} />
+          <Image src={data?.logo} width={196} height={56} />
         </Box>
       </Link>
     );
@@ -195,7 +195,7 @@ const Navigation = ({ data }: NavigationProps) => {
               />
               <MenuList>
                 <MenuGroup title="Categories">
-                  {data.categories.map((category, index) => (
+                  {data?.categories?.map((category, index) => (
                     <Link href={`/categories/${category.slug}`} key={index}>
                       <MenuItem>{category.title}</MenuItem>
                     </Link>
@@ -222,7 +222,7 @@ const Navigation = ({ data }: NavigationProps) => {
               Categories
             </MenuButton>
             <MenuList>
-              {data.categories.map((category, index) => (
+              {data?.categories?.map((category, index) => (
                 <Link href={`/categories/${category.slug}`} key={index}>
                   <MenuItem>{category.title}</MenuItem>
                 </Link>

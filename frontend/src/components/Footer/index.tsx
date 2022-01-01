@@ -108,7 +108,7 @@ const Footer = ({ data }: FooterDataProps) => {
         <Section minW={isMobile ? "auto" : "120ch"}>
           <SimpleGrid gap={4} columns={{ sm: 2, md: 4 }}>
             <Stack align="center" mb={4}>
-              <Image width={196} height={56} src={data.appData.logoUrl} />
+              <Image width={196} height={56} src={data?.appData?.logoUrl} />
               <Text pt={4} fontSize="xs">
                 Find the best talents in only one place
               </Text>
@@ -117,7 +117,7 @@ const Footer = ({ data }: FooterDataProps) => {
               <Heading color={color[colorMode]} size="md" as="h6">
                 Quick Links
               </Heading>
-              {quickLinks.map((link, index) => (
+              {quickLinks?.map((link, index) => (
                 <GenericLink
                   name={link.name}
                   url={link.url}
@@ -130,7 +130,7 @@ const Footer = ({ data }: FooterDataProps) => {
               <Heading color={color[colorMode]} size="md" as="h6">
                 Categories
               </Heading>
-              {data.categories.map((category, index) => (
+              {data?.categories?.map((category, index) => (
                 <GenericLink
                   name={category.title}
                   url={`/categories/${category.slug}`}
@@ -143,7 +143,7 @@ const Footer = ({ data }: FooterDataProps) => {
               <Heading color={color[colorMode]} size="md" as="h6">
                 Featured Companies
               </Heading>
-              {data.featuredCompanies.map((company, index) => (
+              {data?.featuredCompanies?.map((company, index) => (
                 <GenericLink
                   name={company.name}
                   url={`/companies/${company.slug}`}

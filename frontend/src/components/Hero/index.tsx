@@ -20,7 +20,7 @@ const Hero = ({ data }: HeroProps) => {
       minH="50vh"
       w="100vw"
       position="relative"
-      backgroundImage={data.heroUrl?.toString()}
+      backgroundImage={data?.heroUrl?.toString()}
       backgroundSize="cover"
       pt={88}
       data-testid="hero"
@@ -37,21 +37,23 @@ const Hero = ({ data }: HeroProps) => {
       <Container centerContent>
         <Stack zIndex={2} align="center" h="100%" justify="center">
           <Heading color={theme.colors.white} size="3xl" as="h1">
-            {data.name}
+            {data?.name}
           </Heading>
-          {data.description && (
+          {data?.description && (
             <Text
               color={theme.colors.white}
               fontSize="lg"
               textAlign="center"
               py={4}
-              dangerouslySetInnerHTML={{ __html: data.description?.toString() }}
+              dangerouslySetInnerHTML={{
+                __html: data?.description?.toString(),
+              }}
               data-testid="hero-description"
             />
           )}
-          {data.price && (
+          {data?.price && (
             <Link href={`/jobs/new`}>
-              <Button colorScheme="green">Post a job for ${data.price}</Button>
+              <Button colorScheme="green">Post a job for ${data?.price}</Button>
             </Link>
           )}
         </Stack>
