@@ -2,11 +2,11 @@ import {
   FormattedPostSettings,
   JobCardCompanyProps,
   RawCategoriesProps,
-  RawCompanyProps,
   PostSettingsProps,
   JobCardProps,
   PostAttributesProps,
   CategoryProps,
+  CompanyProps,
 } from "types";
 
 import { rgba } from "polished";
@@ -17,26 +17,21 @@ export const defaultPostPopulateQuery =
   "populate[0]=company&populate[1]=company.profile_picture&populate[2]=categories&populate[3]=post_settings";
 
 export const _formatCategories = (
-  categories: RawCategoriesProps
+  categories: CategoryProps[]
 ): CategoryProps[] => {
-  return categories.data.map(({ attributes: { title, slug } }) => ({
+  return categories.map(({ title, slug }) => ({
     title,
     slug,
   }));
 };
 
-export const _formatCompany = (data: RawCompanyProps): JobCardCompanyProps => {
-  const {
-    name,
-    location,
-    slug,
-    profile_picture: profilePicture,
-  } = data.attributes;
+export const _formatCompany = (data: CompanyProps): JobCardCompanyProps => {
+  const { name, location, slug, profile_picture: profilePicture } = data;
   return {
     name,
     location,
     slug,
-    logo: profilePicture.data.attributes.url,
+    logo: profilePicture.url,
   };
 };
 
@@ -63,7 +58,7 @@ export const _formatCardPost = (data: PostAttributesProps): JobCardProps => {
     title: data.title,
     createdAt: data.createdAt,
     slug: data.slug,
-    company: _formatCompany(data.company.data),
+    company: _formatCompany(data.company),
     categories: _formatCategories(data.categories),
     ..._formatSettings(data.post_settings),
   };

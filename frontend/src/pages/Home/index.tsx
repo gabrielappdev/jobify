@@ -16,9 +16,9 @@ const Home = ({ data }: DataType) => {
       <JobListSection
         heading="Featured Jobs"
         description="Trending jobs with high competition"
-        jobList={data.featuredPosts}
+        jobList={data.featuredJobs}
       />
-      <JobListSection heading="Latest Jobs" jobList={data.otherPosts} />
+      <JobListSection heading="Latest Jobs" jobList={data.otherJobs} />
     </Template>
   );
 };

@@ -46,22 +46,16 @@ export async function getStaticProps() {
       notificationVisible: false,
     },
     categories: [],
-    featuredPosts: [],
+    featuredJobs: [],
+    otherJobs: [],
+    featuredCompanies: [],
   };
 
   const assignGlobalData = (json) => {
-    const appData = json.data.attributes as HomeProps;
+    const appData = json as HomeProps;
     const {
-      logo: {
-        data: {
-          attributes: { url },
-        },
-      },
-      hero: {
-        data: {
-          attributes: { url: heroUrl },
-        },
-      },
+      logo: { url },
+      hero: { url: heroUrl },
     } = appData;
     data = {
       ...data,
@@ -89,10 +83,10 @@ export async function getStaticProps() {
 
   const assignPosts = (json, key) => {
     const jobs = applyPostsSorting(
-      json.data.map((job) =>
+      json.map((job) =>
         _formatCardPost({
           id: job.id,
-          ...job.attributes,
+          ...job,
         } as PostAttributesProps)
       )
     );
@@ -103,47 +97,24 @@ export async function getStaticProps() {
   };
 
   try {
-    const promises = [
-      fetch("/global?populate=*"),
-      fetch("/categories"),
-      fetch("/featured-companies"),
-      fetch(
-        "/posts?filters[active]=true&filters[post_settings][featured]=true&populate[0]=company&populate[1]=company.profile_picture&populate[2]=categories&populate[3]=post_settings"
-      ),
-      fetch(
-        "/posts?filters[active]=true&filters[post_settings][featured]=false&populate[0]=company&populate[1]=company.profile_picture&populate[2]=categories&populate[3]=post_settings&pagination[limit]=50"
-      ),
-    ];
-    const responses = await Promise.all(promises);
-    if (responses) {
-      for (let i = 0; i < responses.length; i++) {
-        const json = await responses[i].json();
-        if (json) {
-          switch (i) {
-            case 0:
-              assignGlobalData(json);
-              break;
-            case 1:
-              assignCategories(json);
-              break;
-            case 2:
-              assignFeaturedCompanies(json);
-              break;
-            case 3:
-              assignPosts(json, "featuredPosts");
-              break;
-            case 4:
-              assignPosts(json, "otherPosts");
-              break;
-          }
-        }
-      }
+    const response = await fetch("/index");
+    const responseData = await response.json();
+
+    if (Object.keys(data)?.length) {
+      let { appData, categories, featuredCompanies, featuredJobs, otherJobs } =
+        responseData;
+      appData = assignGlobalData(appData);
+      categories = assignCategories(categories);
+      featuredCompanies = assignFeaturedCompanies(featuredCompanies);
+      featuredJobs = assignPosts(featuredJobs, "featuredJobs");
+      otherJobs = assignPosts(otherJobs, "otherJobs");
     }
   } catch (error) {
     //
     console.log(error);
     notFound = true;
   }
+  console.log(Object.keys(data));
   return {
     props: { data },
     notFound,

@@ -1,9 +1,5 @@
 export type LogoProps = {
-  data: {
-    attributes: {
-      url: String;
-    };
-  };
+  url: String;
 };
 
 export type ColorModeProps = {
@@ -45,9 +41,14 @@ export type IndexProps = {
   appData?: HomeProps;
   categories?: CategoryProps[];
   featuredCompanies?: FeaturedCompaniesProps[];
-  featuredPosts?: JobCardProps[];
-  otherPosts?: JobCardProps[];
+  featuredJobs?: JobCardProps[];
+  otherJobs?: JobCardProps[];
 };
+
+export type TemplateDataProps = Pick<
+  IndexProps,
+  "appData" | "categories" | "featuredCompanies"
+>;
 
 export type CompanyProps = {
   name: String;
@@ -96,6 +97,11 @@ export type JobCardProps = {
   shouldDisplayLogo: Boolean;
 };
 
+export type JobPostProps = {
+  relatedPosts: JobCardProps[];
+  description: String;
+} & JobCardProps;
+
 export type RawCompanyProps = {
   data?: {
     id: Number;
@@ -121,8 +127,8 @@ export type PostAttributesProps = {
   slug: String;
   expiration_date: String;
   active: Boolean;
-  company: RawCompanyProps;
-  categories: RawCategoriesProps;
+  company: CompanyProps;
+  categories: CategoryProps[];
   post_settings: PostSettingsProps;
 };
 

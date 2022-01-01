@@ -2,8 +2,7 @@ import { useMemo } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { IndexProps } from "types";
-import { Box, Divider, theme, useColorMode } from "@chakra-ui/react";
-import { switchPrimaryColor } from "../helpers";
+import { Divider } from "@chakra-ui/react";
 
 type TemplateProps = {
   children: React.ReactNode;
