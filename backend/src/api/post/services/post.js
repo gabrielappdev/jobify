@@ -55,9 +55,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
             "company.posts",
             "post_settings",
           ],
-          pagination: {
-            pageSize: 5,
-          },
+          limit: 5,
         });
         return attachPostLength(relatedPosts);
       } else {
@@ -74,10 +72,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
         where: {
           active: true,
         },
-        pagination: {
-          // make sure that will retrieve all posts
-          pageSize: 100000,
-        },
+        limit: 100000,
         populate: [
           "categories",
           "company.profile_picture",
@@ -100,9 +95,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
             featured: true,
           },
         },
-        pagination: {
-          pageSize: 10,
-        },
+        limit: 10,
         populate: [
           "categories",
           "company.profile_picture",
@@ -125,9 +118,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
             featured: false,
           },
         },
-        pagination: {
-          pageSize: 50,
-        },
+        limit: 50,
         populate: [
           "categories",
           "company.profile_picture",
