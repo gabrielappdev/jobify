@@ -11,7 +11,7 @@ const JobPageContent = ({ data }: JobPageContentProps) => {
   return (
     <>
       <Container maxW="140ch">
-        <Box py={4}>
+        <Box p={4}>
           <div
             dangerouslySetInnerHTML={{ __html: data.description as string }}
           />
