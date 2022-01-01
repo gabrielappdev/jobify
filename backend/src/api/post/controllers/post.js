@@ -13,15 +13,39 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
     try {
       const job = await strapi.query("api::post.post").findOne({
         where: { slug },
-        populate: { categories: true, company: true, post_settings: true },
+        populate: ["categories", "company.profile_picture", "post_settings"],
       });
       if (job) {
-        ctx.body = job;
+        const templateData = await strapi
+          .service("api::global.global")
+          .getTemplateData();
+        const relatedPosts = await strapi
+          .service("api::post.post")
+          .getRelatedPosts(slug);
+        ctx.body = { job: { ...job, relatedPosts }, templateData };
       } else {
         ctx.status = 404;
       }
     } catch (err) {
       ctx.body = err;
+    }
+  },
+  async getRelatedPosts(ctx) {
+    const { slug } = ctx.params;
+    if (!slug) {
+      return ctx.status(404);
+    }
+    try {
+      const relatedPosts = await strapi
+        .service("api::post.post")
+        .getRelatedPosts(slug);
+      if (!relatedPosts) {
+        ctx.status = 404;
+      } else {
+        ctx.body = relatedPosts;
+      }
+    } catch (error) {
+      ctx.body = error;
     }
   },
   async create(ctx) {
@@ -67,5 +91,13 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
     }
 
     return response;
+  },
+  async getAllActivePosts(ctx) {
+    try {
+      const posts = await strapi.service("api::post.post").getAllActivePosts();
+      ctx.body = posts;
+    } catch (error) {
+      ctx.body = error;
+    }
   },
 }));
