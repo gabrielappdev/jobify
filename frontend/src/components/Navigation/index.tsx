@@ -23,7 +23,7 @@ import Link from "next/link";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import DarkModeSwitch from "../DarkModeSwitch";
 import useIsTouchDevice from "hooks/useDeviceDetect";
-import { bgColor, navigationBgColor } from "../../helpers";
+import { navigationBgColor } from "../../helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { SET_GLOBAL_DATA } from "../../store/actions";
 import { ReducersProps } from "../../store/reducers";
@@ -31,6 +31,7 @@ import { AnimatedWrapper } from "./styles";
 import usePusherEventListener from "../../hooks/usePusherEventListener";
 import { PUSHER_GLOBAL_NOTIFICATION } from "../../constants";
 import fetch from "../../services/api";
+import { LocalStorage } from "../../services/localStorage";
 
 export type NavigationProps = {
   data: {
@@ -45,6 +46,7 @@ const Navigation = ({ data }: NavigationProps) => {
   const isMobile = useIsTouchDevice();
   const { colorMode } = useColorMode();
   const [isTransparent, setIsTransparent] = useState(true);
+  const localStorage = new LocalStorage();
 
   const [globalNotification, setGlobalNotification] = useState(
     data.globalNotification
@@ -74,6 +76,9 @@ const Navigation = ({ data }: NavigationProps) => {
                 !isGlobalNotificationVisible ||
                 isGlobalNotificationVisible === "hide"
               ) {
+                localStorage.setData("jobify", {
+                  hideGlobalNotification: false,
+                });
                 dispatch({
                   type: SET_GLOBAL_DATA,
                   payload: {
@@ -97,7 +102,13 @@ const Navigation = ({ data }: NavigationProps) => {
 
   useEffect(() => {
     let startTimer = setTimeout(() => {
-      if (globalNotification && isGlobalNotificationVisible !== "hide") {
+      const storedHideGlobalNotification =
+        localStorage.getData("jobify")?.hideGlobalNotification;
+      if (
+        !storedHideGlobalNotification &&
+        globalNotification &&
+        isGlobalNotificationVisible !== "hide"
+      ) {
         dispatch({
           type: SET_GLOBAL_DATA,
           payload: {
@@ -149,6 +160,9 @@ const Navigation = ({ data }: NavigationProps) => {
       payload: {
         appData: { notificationVisible: "hide" },
       },
+    });
+    localStorage.setData("jobify", {
+      hideGlobalNotification: true,
     });
   };
 
