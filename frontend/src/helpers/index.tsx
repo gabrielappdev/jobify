@@ -76,6 +76,19 @@ export const _formatCardPost = (data: PostAttributesProps): JobCardProps => {
   };
 };
 
+export const _formatAppData = (json) => {
+  const {
+    logo: { url },
+    hero: { url: heroUrl },
+  } = json;
+  json = {
+    ...json,
+    logoUrl: url?.toString(),
+    heroUrl: heroUrl?.toString(),
+  };
+  return json;
+};
+
 export const bgColor = { light: "gray.50", dark: "gray.900" };
 
 export const color = { light: "black", dark: "white" };

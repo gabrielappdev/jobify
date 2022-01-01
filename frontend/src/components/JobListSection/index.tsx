@@ -70,21 +70,25 @@ const JobListSection = ({
               {description}
             </Text>
           )}
-          <Divider />
-          <Flex w="100%" justify="flex-end">
-            <Select
-              onChange={({ target: { value } }) => setCategory(value)}
-              maxW="300px"
-            >
-              {allCategories?.map((cat, index) => {
-                return (
-                  <option key={index} value={index === 0 ? "" : cat.toString()}>
-                    {cat}
-                  </option>
-                );
-              })}
-            </Select>
-          </Flex>
+          {jobList?.length && (
+            <Flex w="100%" justify="flex-end">
+              <Select
+                onChange={({ target: { value } }) => setCategory(value)}
+                maxW="300px"
+              >
+                {allCategories?.map((cat, index) => {
+                  return (
+                    <option
+                      key={index}
+                      value={index === 0 ? "" : cat.toString()}
+                    >
+                      {cat}
+                    </option>
+                  );
+                })}
+              </Select>
+            </Flex>
+          )}
           <Stack pt={8} w="inherit">
             {getCards()}
           </Stack>

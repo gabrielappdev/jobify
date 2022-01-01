@@ -3,7 +3,8 @@ import {
   _formatCardPost,
   _formatSettings,
   randomIntFromInterval,
-} from "helpers";
+  _formatAppData,
+} from "../../helpers";
 import _ from "lodash";
 import Template from "templates";
 import { JobPostProps, TemplateDataProps } from "types";
@@ -12,7 +13,6 @@ import JobPageHero from "@/components/JobPageHero";
 import JobPageContent from "@/components/JobPageContent";
 import { fetcher } from "../../services/api";
 import useSWR from "swr";
-import React from "react";
 import { Container, Flex, Skeleton, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
@@ -98,18 +98,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params: { slug } }) {
   let notFound = false;
   let data = {};
-  const assignAppData = (json) => {
-    const {
-      logo: { url },
-      hero: { url: heroUrl },
-    } = json;
-    json = {
-      ...json,
-      logoUrl: url?.toString(),
-      heroUrl: heroUrl?.toString(),
-    };
-    return json;
-  };
+
   const response = await fetch(`/job/${slug}`);
   const responseData = await response.json();
 
@@ -128,7 +117,7 @@ export async function getStaticProps({ params: { slug } }) {
       },
       templateData: {
         ...responseData.templateData,
-        appData: { ...assignAppData(responseData.templateData.appData) },
+        appData: { ..._formatAppData(responseData.templateData.appData) },
       },
     };
   }

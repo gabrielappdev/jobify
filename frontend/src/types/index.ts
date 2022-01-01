@@ -62,6 +62,7 @@ export type CompanyProps = {
   email: String;
   post_settings: PostSettingsProps;
   posts?: Number;
+  jobs?: JobCardProps[];
 };
 
 export type PostSettingsProps = {
@@ -77,6 +78,7 @@ export type JobCardCompanyProps = {
   slug: String;
   logo: String;
   posts?: Number;
+  jobs?: JobCardProps[];
   createdAt?: String;
   updatedAt?: String;
 };

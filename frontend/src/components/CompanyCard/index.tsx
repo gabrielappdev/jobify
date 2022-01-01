@@ -21,7 +21,7 @@ const CompanyCard = ({ data, shouldDisplayLogo }: CompanyCardProps) => {
   const { colorMode } = useColorMode();
   return (
     <Stack align="center">
-      <Link href={`/companies/${data.slug}`}>
+      <Link href={`/companies/${data?.slug}`}>
         {shouldDisplayLogo && (
           <Box
             borderRadius="4px"
@@ -33,7 +33,7 @@ const CompanyCard = ({ data, shouldDisplayLogo }: CompanyCardProps) => {
             borderColor={highlightColor[colorMode]}
           >
             <Image
-              src={data.logo as string}
+              src={data?.logo as string}
               width="100%"
               height="100%"
               objectFit="cover"
@@ -42,14 +42,14 @@ const CompanyCard = ({ data, shouldDisplayLogo }: CompanyCardProps) => {
         )}
       </Link>
       <Heading size="md" as="h3">
-        {data.name}
+        {data?.name}
       </Heading>
       <Flex data-testid="job-card-location" align="center">
         <FaMapMarkerAlt />
-        <Text ml={2}>{data.location}</Text>
+        <Text ml={2}>{data?.location}</Text>
       </Flex>
       <Text size="xs">
-        <b>Jobs posted:</b> {data.posts}
+        <b>Jobs posted:</b> {data?.posts}
       </Text>
     </Stack>
   );
