@@ -61,6 +61,7 @@ export type CompanyProps = {
   slug: String;
   email: String;
   post_settings: PostSettingsProps;
+  posts?: Number;
 };
 
 export type PostSettingsProps = {
@@ -75,6 +76,9 @@ export type JobCardCompanyProps = {
   location: String;
   slug: String;
   logo: String;
+  posts?: Number;
+  createdAt?: String;
+  updatedAt?: String;
 };
 
 export type FormattedPostSettings = {
@@ -87,6 +91,7 @@ export type FormattedPostSettings = {
 export type JobCardProps = {
   id: Number;
   title: String;
+  description?: String;
   createdAt: String;
   slug: String;
   categories: CategoryProps[];
@@ -98,7 +103,7 @@ export type JobCardProps = {
 };
 
 export type JobPostProps = {
-  relatedPosts: JobCardProps[];
+  relatedJobs: JobCardProps[];
   description: String;
 } & JobCardProps;
 

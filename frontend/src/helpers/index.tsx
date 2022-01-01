@@ -11,7 +11,7 @@ import {
 
 import { rgba } from "polished";
 import { theme } from "@chakra-ui/react";
-import moment from "moment";
+import moment, { MomentInput } from "moment";
 
 export const defaultPostPopulateQuery =
   "populate[0]=company&populate[1]=company.profile_picture&populate[2]=categories&populate[3]=post_settings";
@@ -26,12 +26,23 @@ export const _formatCategories = (
 };
 
 export const _formatCompany = (data: CompanyProps): JobCardCompanyProps => {
-  const { name, location, slug, profile_picture: profilePicture } = data;
+  const {
+    name,
+    location,
+    slug,
+    profile_picture: profilePicture,
+    posts,
+    createdAt,
+    updatedAt,
+  } = data;
   return {
     name,
     location,
     slug,
     logo: profilePicture.url,
+    posts,
+    createdAt: moment(createdAt.toString()).format("ll"),
+    updatedAt: moment(updatedAt.toString()).format("ll"),
   };
 };
 
@@ -56,7 +67,8 @@ export const _formatCardPost = (data: PostAttributesProps): JobCardProps => {
   return {
     id: data.id,
     title: data.title,
-    createdAt: data.createdAt,
+    description: data?.description || "",
+    createdAt: moment(data.createdAt.toString()).format("ll"),
     slug: data.slug,
     company: _formatCompany(data.company),
     categories: _formatCategories(data.categories),

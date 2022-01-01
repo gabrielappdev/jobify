@@ -3,6 +3,8 @@ import _ from "lodash";
 import Template from "templates";
 import { JobCardProps, JobPostProps, TemplateDataProps } from "types";
 import fetch from "../../services/api";
+import JobPageHero from "@/components/JobPageHero";
+import JobPageContent from "@/components/JobPageContent";
 
 type JobPageProps = {
   data: {
@@ -13,7 +15,10 @@ type JobPageProps = {
 
 const JobPage = ({ data }: JobPageProps) => {
   return (
-    <Template data={data.templateData}>{JSON.stringify(data.job)}</Template>
+    <Template data={data.templateData}>
+      <JobPageHero data={data.job} />
+      <JobPageContent data={data.job} />
+    </Template>
   );
 };
 
