@@ -6,6 +6,13 @@ const moment = require("moment");
 
 const { createCoreService } = require("@strapi/strapi").factories;
 
+const attachPostLength = (posts) => {
+  return posts.map((post) => ({
+    ...post,
+    company: { ...post.company, posts: post.company.posts.length },
+  }));
+};
+
 module.exports = createCoreService("api::post.post", ({ strapi }) => ({
   async unpublish(...args) {
     try {
@@ -42,12 +49,17 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
               })
             ),
           },
-          populate: ["categories", "company.profile_picture", "post_settings"],
+          populate: [
+            "categories",
+            "company.profile_picture",
+            "company.posts",
+            "post_settings",
+          ],
           pagination: {
             pageSize: 5,
           },
         });
-        return relatedPosts;
+        return attachPostLength(relatedPosts);
       } else {
         return null;
       }
@@ -66,9 +78,14 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
           // make sure that will retrieve all posts
           pageSize: 100000,
         },
-        populate: ["categories", "company.profile_picture", "post_settings"],
+        populate: [
+          "categories",
+          "company.profile_picture",
+          "company.posts",
+          "post_settings",
+        ],
       });
-      return posts;
+      return attachPostLength(posts);
     } catch (error) {
       console.error("Error fetching all active posts: ", error);
       throw new Error(error);
@@ -86,9 +103,14 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
         pagination: {
           pageSize: 10,
         },
-        populate: ["categories", "company.profile_picture", "post_settings"],
+        populate: [
+          "categories",
+          "company.profile_picture",
+          "company.posts",
+          "post_settings",
+        ],
       });
-      return posts;
+      return attachPostLength(posts);
     } catch (error) {
       console.error("Error fetching all active posts: ", error);
       throw new Error(error);
@@ -106,9 +128,14 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
         pagination: {
           pageSize: 50,
         },
-        populate: ["categories", "company.profile_picture", "post_settings"],
+        populate: [
+          "categories",
+          "company.profile_picture",
+          "company.posts",
+          "post_settings",
+        ],
       });
-      return posts;
+      return attachPostLength(posts);
     } catch (error) {
       console.error("Error fetching all active posts: ", error);
       throw new Error(error);
