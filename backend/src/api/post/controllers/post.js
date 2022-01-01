@@ -13,7 +13,12 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
     try {
       const job = await strapi.query("api::post.post").findOne({
         where: { slug },
-        populate: ["categories", "company.profile_picture", "post_settings"],
+        populate: [
+          "categories",
+          "company.profile_picture",
+          "company.posts",
+          "post_settings",
+        ],
       });
       if (job) {
         const templateData = await strapi
@@ -22,7 +27,14 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
         const relatedJobs = await strapi
           .service("api::post.post")
           .getRelatedPosts(slug);
-        ctx.body = { job: { ...job, relatedJobs }, templateData };
+        ctx.body = {
+          job: {
+            ...job,
+            company: { ...job.company, posts: job.company.posts.length },
+            relatedJobs,
+          },
+          templateData,
+        };
       } else {
         ctx.status = 404;
       }
