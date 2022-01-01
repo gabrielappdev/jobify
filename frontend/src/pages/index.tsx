@@ -31,7 +31,7 @@ const Index = ({ data }: IndexPageProps) => {
   );
 };
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   let notFound = false;
   let data: IndexProps = {
     appData: {
@@ -111,7 +111,6 @@ export async function getStaticProps() {
   return {
     props: { data },
     notFound,
-    revalidate: 60,
   };
 }
 

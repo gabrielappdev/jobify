@@ -105,3 +105,7 @@ export const applyPostsSorting = (posts = []) => {
     .sort((a, b) => b.isHighlighted - a.isHighlighted)
     .sort((a, b) => b.isPinned - a.isPinned);
 };
+
+export const randomIntFromInterval = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};

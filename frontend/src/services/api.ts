@@ -11,4 +11,7 @@ const fetch = (url, ...params) => {
   else return origFetch(url, ...params);
 };
 
+//@ts-ignore
+export const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
 export default fetch;
