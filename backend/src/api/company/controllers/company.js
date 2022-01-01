@@ -12,10 +12,13 @@ module.exports = createCoreController("api::company.company", ({ strapi }) => ({
     try {
       const company = await strapi.query("api::company.company").findOne({
         where: { slug },
-        populate: { profile_picture: true, posts: true },
+        populate: { profile_picture: true },
       });
+      const jobs = await strapi
+        .service("api::company.company")
+        .getLatestJobs(slug);
       if (company) {
-        ctx.body = company;
+        ctx.body = { ...company, posts: jobs };
       } else {
         ctx.status = 404;
       }
@@ -29,6 +32,20 @@ module.exports = createCoreController("api::company.company", ({ strapi }) => ({
         .service("api::company.company")
         .setFeaturedCompanies();
       ctx.body = companies;
+    } catch (error) {
+      ctx.body = error;
+    }
+  },
+  async latestJobs(ctx) {
+    const { slug } = ctx.params;
+    if (!slug) {
+      return (ctx.status = 404);
+    }
+    try {
+      const jobs = await strapi
+        .service("api::company.company")
+        .getLatestJobs(slug);
+      ctx.body = jobs;
     } catch (error) {
       ctx.body = error;
     }

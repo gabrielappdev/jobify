@@ -48,6 +48,9 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
                 },
               })
             ),
+            $not: {
+              slug: currentJob.slug,
+            },
           },
           populate: [
             "categories",

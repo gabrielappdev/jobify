@@ -27,4 +27,29 @@ module.exports = createCoreService("api::company.company", ({ strapi }) => ({
         }))
     );
   },
+  async getLatestJobs(slug) {
+    try {
+      const posts = await strapi.db.query("api::post.post").findMany({
+        where: {
+          active: true,
+          company: {
+            slug,
+          },
+        },
+        limit: 10,
+        populate: [
+          "categories",
+          "company.profile_picture",
+          "company.posts",
+          "post_settings",
+        ],
+      });
+      return posts;
+    } catch (error) {
+      console.error(
+        `Error getting the latest posts of company ${slug}: `,
+        error
+      );
+    }
+  },
 }));
