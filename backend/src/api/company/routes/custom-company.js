@@ -3,7 +3,7 @@ module.exports = {
     {
       method: "GET",
       path: "/company/:slug",
-      handler: "company.findBySlug",
+      handler: "company.getCompanyPage",
     },
     {
       method: "GET",

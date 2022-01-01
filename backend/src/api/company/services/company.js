@@ -44,7 +44,7 @@ module.exports = createCoreService("api::company.company", ({ strapi }) => ({
           "post_settings",
         ],
       });
-      return posts;
+      return strapi.service("api::post.post").attachPostLength(posts);
     } catch (error) {
       console.error(
         `Error getting the latest posts of company ${slug}: `,

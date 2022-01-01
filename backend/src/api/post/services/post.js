@@ -6,14 +6,13 @@ const moment = require("moment");
 
 const { createCoreService } = require("@strapi/strapi").factories;
 
-const attachPostLength = (posts) => {
-  return posts.map((post) => ({
-    ...post,
-    company: { ...post.company, posts: post.company.posts.length },
-  }));
-};
-
 module.exports = createCoreService("api::post.post", ({ strapi }) => ({
+  attachPostLength(posts) {
+    return posts.map((post) => ({
+      ...post,
+      company: { ...post.company, posts: post.company.posts.length },
+    }));
+  },
   async unpublish(...args) {
     try {
       const response = await strapi.db.query("api::post.post").updateMany({
@@ -60,7 +59,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
           ],
           limit: 5,
         });
-        return attachPostLength(relatedPosts);
+        return this.attachPostLength(relatedPosts);
       } else {
         return null;
       }
@@ -83,7 +82,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
           "post_settings",
         ],
       });
-      return attachPostLength(posts);
+      return this.attachPostLength(posts);
     } catch (error) {
       console.error("Error fetching all active posts: ", error);
       throw new Error(error);
@@ -106,7 +105,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
           "post_settings",
         ],
       });
-      return attachPostLength(posts);
+      return this.attachPostLength(posts);
     } catch (error) {
       console.error("Error fetching all active posts: ", error);
       throw new Error(error);
@@ -129,7 +128,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
           "post_settings",
         ],
       });
-      return attachPostLength(posts);
+      return this.attachPostLength(posts);
     } catch (error) {
       console.error("Error fetching all active posts: ", error);
       throw new Error(error);
