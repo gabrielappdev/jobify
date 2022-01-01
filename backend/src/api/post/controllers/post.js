@@ -19,10 +19,10 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
         const templateData = await strapi
           .service("api::global.global")
           .getTemplateData();
-        const relatedPosts = await strapi
+        const relatedJobs = await strapi
           .service("api::post.post")
           .getRelatedPosts(slug);
-        ctx.body = { job: { ...job, relatedPosts }, templateData };
+        ctx.body = { job: { ...job, relatedJobs }, templateData };
       } else {
         ctx.status = 404;
       }
