@@ -119,12 +119,7 @@ const Navigation = ({ data }: NavigationProps) => {
     }, 2000);
     let timer = setTimeout(() => {
       if (isGlobalNotificationVisible) {
-        dispatch({
-          type: SET_GLOBAL_DATA,
-          payload: {
-            appData: { notificationVisible: "hide" },
-          },
-        });
+        handleHideGlobalNotification();
       }
     }, 10000);
 
