@@ -56,6 +56,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
             "company.profile_picture",
             "company.posts",
             "post_settings",
+            "tags",
           ],
           limit: 5,
         });
@@ -80,6 +81,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
           "company.profile_picture",
           "company.posts",
           "post_settings",
+          "tags",
         ],
       });
       return this.attachPostLength(posts);
@@ -103,6 +105,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
           "company.profile_picture",
           "company.posts",
           "post_settings",
+          "tags",
         ],
       });
       return this.attachPostLength(posts);
@@ -126,6 +129,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
           "company.profile_picture",
           "company.posts",
           "post_settings",
+          "tags",
         ],
       });
       return this.attachPostLength(posts);

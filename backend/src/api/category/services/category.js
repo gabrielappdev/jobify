@@ -24,6 +24,7 @@ module.exports = createCoreService("api::category.category", ({ strapi }) => ({
           "company.profile_picture",
           "company.posts",
           "post_settings",
+          "tags",
         ],
       });
 

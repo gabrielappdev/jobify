@@ -18,6 +18,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
           "company.profile_picture",
           "company.posts",
           "post_settings",
+          "tags",
         ],
       });
       if (job) {
