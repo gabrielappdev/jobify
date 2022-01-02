@@ -19,9 +19,10 @@ export const defaultPostPopulateQuery =
 export const _formatCategories = (
   categories: CategoryProps[]
 ): CategoryProps[] => {
-  return categories.map(({ title, slug }) => ({
+  return categories.map(({ title, slug, description }) => ({
     title,
     slug,
+    description,
   }));
 };
 

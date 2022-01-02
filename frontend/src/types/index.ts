@@ -26,6 +26,7 @@ export type GlobalNotificationProps = {
 
 export type CategoryProps = {
   title: String;
+  description: String;
   slug: String;
 };
 
