@@ -5,6 +5,7 @@ import {
   Flex,
   Heading,
   Stack,
+  Tag,
   Text,
   theme,
   useColorMode,
@@ -170,16 +171,15 @@ const JobCard = ({ data }: JobCardDataProps) => {
               <Flex data-testid="job-card-categories">
                 {data.categories.map((category, index) => {
                   return (
-                    <span
-                      style={{ marginLeft: index > 0 ? "4px" : "0x" }}
-                      key={index}
-                    >
-                      {category.title}
-                      {data.categories.length > 1 &&
-                      index !== data.categories.length - 1
-                        ? ","
-                        : ""}
-                    </span>
+                    <Link key={index} href={`/categories/${category.slug}`}>
+                      <Tag
+                        ml={index !== 0 ? 2 : 0}
+                        colorScheme="blue"
+                        size="sm"
+                      >
+                        {category.title}
+                      </Tag>
+                    </Link>
                   );
                 })}
               </Flex>

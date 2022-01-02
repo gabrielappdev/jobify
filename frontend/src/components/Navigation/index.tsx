@@ -23,7 +23,7 @@ import Link from "next/link";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import DarkModeSwitch from "../DarkModeSwitch";
 import useIsTouchDevice from "hooks/useDeviceDetect";
-import { navigationBgColor } from "../../helpers";
+import { navigationBgColor, contrastColor } from "../../helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { SET_GLOBAL_DATA } from "../../store/actions";
 import { ReducersProps } from "../../store/reducers";
@@ -204,12 +204,17 @@ const Navigation = ({ data }: NavigationProps) => {
     }
     return (
       <Flex w="100%" align="center">
-        {getLogo()}
+        <Flex align="center">
+          {getLogo()}
+          <Box ml={4}>
+            <DarkModeSwitch />
+          </Box>
+        </Flex>
         <Spacer />
         <Flex align="center">
           <Menu>
             <MenuButton
-              background="inherit"
+              bg={contrastColor[colorMode]}
               as={Button}
               rightIcon={<ChevronDownIcon />}
               data-testid="navigation-categories"
@@ -224,7 +229,6 @@ const Navigation = ({ data }: NavigationProps) => {
               ))}
             </MenuList>
           </Menu>
-          <DarkModeSwitch />
           <Button
             data-testid="navigation-post-job"
             ml={4}
