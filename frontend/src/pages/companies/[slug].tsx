@@ -39,9 +39,11 @@ const CompanyPage = ({ data }: CompanyPageProps) => {
           heading={`Latest ${data?.company?.name}'s jobs`}
           jobList={data?.company?.jobs}
           description={
-            !data?.company.posts
-              ? `There's no jobs listed for this company`
-              : ""
+            !data?.company?.posts
+              ? "No recent jobs found for this company!"
+              : `${data?.company?.posts} ${
+                  data?.company?.posts === 1 ? "job" : "jobs"
+                } found`
           }
         />
       </Box>
