@@ -200,14 +200,15 @@ const JobCard = ({ data }: JobCardDataProps) => {
               <Flex justify="flex-end">
                 {data?.tags?.map((tag, index) => {
                   return (
-                    <Tag
-                      colorScheme="green"
-                      ml={index !== 0 ? 2 : 0}
-                      size="sm"
-                      key={index}
-                    >
-                      {tag.title}
-                    </Tag>
+                    <Link key={index} href={`/tags/${tag.slug}`}>
+                      <Tag
+                        colorScheme="green"
+                        ml={index !== 0 ? 2 : 0}
+                        size="sm"
+                      >
+                        {tag.title}
+                      </Tag>
+                    </Link>
                   );
                 })}
               </Flex>
