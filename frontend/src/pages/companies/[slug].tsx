@@ -1,4 +1,5 @@
 import Template from "../../templates";
+import { Box, useColorMode } from "@chakra-ui/react";
 import {
   FeaturedCompaniesProps,
   JobCardCompanyProps,
@@ -17,7 +18,7 @@ import {
 } from "../../helpers";
 import _ from "lodash";
 import JobListSection from "@/components/JobListSection";
-import { Box, useColorMode } from "@chakra-ui/react";
+import CompanyDescription from "@/components/CompanyDescription";
 
 type CompanyPageProps = {
   data: {
@@ -35,6 +36,13 @@ const CompanyPage = ({ data }: CompanyPageProps) => {
         <CompanyCard data={data?.company} shouldDisplayLogo={true} />
       </GenericPageHero>
       <Box w="100%" bg={bgColor[colorMode]}>
+        <CompanyDescription
+          data={{
+            name: data?.company?.name,
+            description: data?.company?.description,
+            url: data?.company?.url,
+          }}
+        />
         <JobListSection
           heading={`Latest ${data?.company?.name}'s jobs`}
           jobList={data?.company?.jobs}

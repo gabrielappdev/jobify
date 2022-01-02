@@ -95,7 +95,7 @@ const JobListSection = ({
                 </Text>
               )}
             </Stack>
-            {jobList?.length && (
+            {!!jobList?.length && (
               <Flex w="100%" justify="flex-end">
                 <Select
                   onChange={({ target: { value } }) => setCategory(value)}

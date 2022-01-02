@@ -23,6 +23,7 @@ const Hero = ({ data }: HeroProps) => {
       backgroundImage={data?.heroUrl?.toString()}
       backgroundSize="cover"
       pt={88}
+      pb={8}
       data-testid="hero"
     >
       <Box

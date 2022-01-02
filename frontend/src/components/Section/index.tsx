@@ -24,7 +24,7 @@ const Section = ({
   const { colorMode } = useColorMode();
   const isMobile = useIsTouchDevice();
   const maxW = useMemo(() => {
-    return isMobile ? "100%" : "120ch";
+    return isMobile ? "100%" : "140ch";
   }, [isMobile]);
   return (
     <Container

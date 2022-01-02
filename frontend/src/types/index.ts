@@ -80,6 +80,8 @@ export type PostSettingsProps = {
 
 export type JobCardCompanyProps = {
   name: String;
+  description: String;
+  url: String;
   location: String;
   slug: String;
   logo: String;

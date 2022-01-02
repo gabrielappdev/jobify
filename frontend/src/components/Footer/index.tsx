@@ -104,8 +104,8 @@ const Footer = ({ data }: FooterDataProps) => {
       bg={bgColor[colorMode]}
       color={color[colorMode]}
     >
-      <Stack padding="32px 0px 0px 0px" w="100%">
-        <Section minW={isMobile ? "auto" : "120ch"}>
+      <Stack w="100%">
+        <Section minW={isMobile ? "auto" : "140ch"}>
           <SimpleGrid gap={4} columns={{ sm: 2, md: 4 }}>
             <Stack align="center" mb={4}>
               <Image width={196} height={56} src={data?.appData?.logoUrl} />
@@ -156,12 +156,7 @@ const Footer = ({ data }: FooterDataProps) => {
         </Section>
         <Flex w="100%" background={navigationBgColor[colorMode]}>
           <Section padding="32px 16px 32px 16px" inheritBg minW="auto">
-            <Flex
-              w="inherit"
-              dir={isMobile ? "column" : "row"}
-              justify={isMobile ? "center" : "space-between"}
-              align="center"
-            >
+            <Flex w="inherit" justify="space-between" align="center">
               <Text color={switchPrimaryColor[colorMode]} size="sm">
                 {new Date().getFullYear()} - Jobify &#174;
               </Text>

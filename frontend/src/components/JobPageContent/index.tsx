@@ -1,6 +1,7 @@
-import { Box, Container, theme, useColorMode } from "@chakra-ui/react";
+import { Box, Container, Divider, theme, useColorMode } from "@chakra-ui/react";
 import { bgColor } from "helpers";
 import { JobPostProps } from "types";
+import CompanyDescription from "../CompanyDescription";
 import JobListSection from "../JobListSection";
 
 type JobPageContentProps = {
@@ -17,6 +18,16 @@ const JobPageContent = ({ data }: JobPageContentProps) => {
           />
         </Box>
       </Container>
+      <Box w="100%" bg={bgColor[colorMode]}>
+        <Divider />
+        <CompanyDescription
+          data={{
+            name: data?.company?.name,
+            description: data?.company?.description,
+            url: data?.company?.url,
+          }}
+        />
+      </Box>
       <Box
         borderTopWidth={1}
         borderTopColor={theme.colors.gray[200]}

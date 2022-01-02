@@ -37,6 +37,8 @@ export const _formatTags = (categories: TagProps[]): TagProps[] => {
 export const _formatCompany = (data: CompanyProps): JobCardCompanyProps => {
   const {
     name,
+    description,
+    url,
     location,
     slug,
     profile_picture: profilePicture,
@@ -46,6 +48,8 @@ export const _formatCompany = (data: CompanyProps): JobCardCompanyProps => {
   } = data;
   return {
     name,
+    description,
+    url,
     location,
     slug,
     logo: profilePicture.url,
