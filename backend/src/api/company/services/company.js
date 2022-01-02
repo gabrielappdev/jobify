@@ -13,17 +13,19 @@ module.exports = createCoreService("api::company.company", ({ strapi }) => ({
       select: ["name", "slug", "id"],
       populate: { posts: true, profile_picture: true },
     });
-    return companies
-      .filter(({ posts }) => posts.length >= 1)
-      .sort((a, b) => b.posts.length - a.posts.length)
-      .slice(0, 5)
-      .map((company) => ({
-        id: company.id,
-        logo: company.profile_picture.url,
-        name: company.name,
-        slug: company.slug,
-        posts: company.posts.length,
-      }));
+    return (
+      companies
+        // .filter(({ posts }) => posts.length >= 1)
+        .sort((a, b) => b.posts.length - a.posts.length)
+        .slice(0, 5)
+        .map((company) => ({
+          id: company.id,
+          logo: company.profile_picture.url,
+          name: company.name,
+          slug: company.slug,
+          posts: company.posts.length,
+        }))
+    );
   },
   async getLatestJobs(slug) {
     try {
