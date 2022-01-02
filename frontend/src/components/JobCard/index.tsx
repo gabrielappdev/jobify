@@ -58,7 +58,6 @@ const JobCard = ({ data }: JobCardDataProps) => {
       top: "10px",
     };
   };
-
   return (
     <Link href={"/jobs/" + data.slug}>
       <Box
@@ -151,7 +150,7 @@ const JobCard = ({ data }: JobCardDataProps) => {
             direction={isMobile ? "column" : "row"}
             w="100%"
           >
-            <Stack px={4} pt={0}>
+            <Stack px={4} pt={0} alignSelf={isMobile ? "flex-start" : "center"}>
               <Text
                 fontSize="sm"
                 fontWeight="bold"
@@ -184,16 +183,35 @@ const JobCard = ({ data }: JobCardDataProps) => {
                 })}
               </Flex>
             </Stack>
-            <Flex
-              data-testid="job-card-location"
-              align="center"
-              pt={isMobile ? 4 : 0}
+            <Stack
+              alignSelf={isMobile ? "flex-start" : "center"}
+              ml={isMobile ? 4 : 0}
             >
-              <FaMapMarkerAlt />
-              <Text ml={2} fontWeight="bold">
-                {data.company.location}
-              </Text>
-            </Flex>
+              <Flex
+                data-testid="job-card-location"
+                align="center"
+                pt={isMobile ? 4 : 0}
+              >
+                <FaMapMarkerAlt />
+                <Text ml={2} fontWeight="bold">
+                  {data.company.location}
+                </Text>
+              </Flex>
+              <Flex justify="flex-end">
+                {data?.tags?.map((tag, index) => {
+                  return (
+                    <Tag
+                      colorScheme="green"
+                      ml={index !== 0 ? 2 : 0}
+                      size="sm"
+                      key={index}
+                    >
+                      {tag.title}
+                    </Tag>
+                  );
+                })}
+              </Flex>
+            </Stack>
           </Flex>
         </Flex>
       </Box>

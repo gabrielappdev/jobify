@@ -7,6 +7,7 @@ import {
   PostAttributesProps,
   CategoryProps,
   CompanyProps,
+  TagProps,
 } from "types";
 
 import { rgba } from "polished";
@@ -23,6 +24,13 @@ export const _formatCategories = (
     title,
     slug,
     description,
+  }));
+};
+
+export const _formatTags = (categories: TagProps[]): TagProps[] => {
+  return categories.map(({ title, slug }) => ({
+    title,
+    slug,
   }));
 };
 
@@ -73,6 +81,7 @@ export const _formatCardPost = (data: PostAttributesProps): JobCardProps => {
     slug: data.slug,
     company: _formatCompany(data.company),
     categories: _formatCategories(data.categories),
+    tags: _formatTags(data.tags),
     ..._formatSettings(data.post_settings),
   };
 };

@@ -1,11 +1,11 @@
 import {
+  Center,
   Flex,
   Heading,
   SimpleGrid,
   Stack,
   Tag,
   Text,
-  useColorMode,
 } from "@chakra-ui/react";
 import useIsTouchDevice from "hooks/useDeviceDetect";
 import moment from "moment";
@@ -20,7 +20,6 @@ type JobPageHeroProps = {
 
 const JobPageHero = ({ data }: JobPageHeroProps) => {
   const isMobile = useIsTouchDevice();
-  const { colorMode } = useColorMode();
   return (
     <GenericPageHero>
       <Flex
@@ -39,7 +38,30 @@ const JobPageHero = ({ data }: JobPageHeroProps) => {
             {data.categories.map(({ title, slug }, index) => {
               return (
                 <Link href={`/categories/${slug}`} key={index}>
-                  <Tag cursor="pointer" colorScheme="blue" size="lg">
+                  <Tag
+                    display="flex"
+                    justifyContent="center"
+                    cursor="pointer"
+                    colorScheme="blue"
+                    size="lg"
+                  >
+                    {title}
+                  </Tag>
+                </Link>
+              );
+            })}
+          </SimpleGrid>
+          <SimpleGrid py={2} gap={4} columns={isMobile ? 2 : 4}>
+            {data.tags.map(({ title, slug }, index) => {
+              return (
+                <Link href={`/tags/${slug}`} key={index}>
+                  <Tag
+                    display="flex"
+                    justifyContent="center"
+                    cursor="pointer"
+                    colorScheme="green"
+                    size="lg"
+                  >
                     {title}
                   </Tag>
                 </Link>

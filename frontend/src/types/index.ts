@@ -30,6 +30,11 @@ export type CategoryProps = {
   slug: String;
 };
 
+export type TagProps = {
+  title: String;
+  slug: String;
+};
+
 export type FeaturedCompaniesProps = {
   id: Number;
   logo: String;
@@ -98,6 +103,7 @@ export type JobCardProps = {
   createdAt: String;
   slug: String;
   categories: CategoryProps[];
+  tags: TagProps[];
   company: JobCardCompanyProps;
   isHighlighted: Boolean;
   isPinned: Boolean;
@@ -137,6 +143,7 @@ export type PostAttributesProps = {
   active: Boolean;
   company: CompanyProps;
   categories: CategoryProps[];
+  tags: TagProps[];
   post_settings: PostSettingsProps;
 };
 
