@@ -12,10 +12,13 @@ import Template from "templates";
 import GenericPageHero from "@/components/GenericPageHero";
 import {
   Box,
+  Button,
   Center,
-  Divider,
   Flex,
   Heading,
+  Input,
+  InputGroup,
+  InputRightElement,
   SimpleGrid,
   Stack,
   Text,
@@ -35,6 +38,7 @@ type CompaniesPageProps = {
     params: {
       limit: Number;
       page: Number;
+      search: String;
     };
   };
 };
@@ -43,35 +47,119 @@ const CompaniesPage = ({ data }: CompaniesPageProps) => {
   const { colorMode } = useColorMode();
   const [page, setPage] = useState(data?.params?.page || 1);
   const [limit, setLimit] = useState(data?.params?.limit || 15);
+  const [search, setSearch] = useState(data?.params?.search || "");
+
+  const [companies, setCompanies] = useState(data?.companies);
+
   const router = useRouter();
 
   useEffect(() => {
-    router.push(`/companies?page=${page}&limit=${limit}`, undefined, {
-      shallow: false,
-    });
+    router.push(
+      `/companies?${
+        search ? `search=${search}&` : ""
+      }page=${page}&limit=${limit}`,
+      undefined,
+      {
+        shallow: false,
+      }
+    );
   }, [page]);
+
+  useEffect(() => {
+    const params = data?.params;
+    setPage(params?.page || 1);
+    setLimit(params?.limit || 15);
+    setSearch(params?.search || "");
+  }, [data?.params]);
+
+  useEffect(() => {
+    setCompanies([...data?.companies]);
+  }, [data?.companies]);
 
   const handleChangePage = (page: number) => {
     setPage(page);
+  };
+
+  const handleSearch = (event) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    router.push(
+      `/companies?${
+        search ? `search=${search}&` : ""
+      }page=${page}&limit=${limit}`,
+      undefined,
+      {
+        shallow: false,
+      }
+    );
+  };
+
+  const handleReset = (event) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    router.push(`/companies?page=${page}&limit=${limit}`, undefined, {
+      shallow: false,
+    });
+  };
+
+  const handleChange = (value) => {
+    setSearch(value);
   };
 
   return (
     <Template data={data.templateData}>
       <GenericPageHero>
         <Center>
-          <Stack align="center">
+          <Stack pb={4} align="center">
             <Heading as="h1" size="2xl">
               All companies
             </Heading>
-            <Text>Meet all companies currently using our platform</Text>
+            <Text textAlign="center">
+              Meet all companies currently using our platform
+            </Text>
           </Stack>
         </Center>
+        <form onSubmit={handleSearch} onReset={handleReset}>
+          <Stack w="100%">
+            <Flex w="100%">
+              <InputGroup>
+                <Input
+                  w="calc(100% - 80px)"
+                  bg={bgColor[colorMode]}
+                  placeholder="Search by name or company location"
+                  onChange={({ target: { value } }) => handleChange(value)}
+                  value={search as string}
+                  required
+                />
+                <InputRightElement width="4.5rem">
+                  <Button color="gray.100" bgColor="gray.500" type="reset">
+                    Clear
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+              <Button ml={2} colorScheme="blue" type="submit">
+                Search
+              </Button>
+            </Flex>
+          </Stack>
+        </form>
       </GenericPageHero>
       <Box py={4} bg={bgColor[colorMode]}>
         <Section minW="auto">
           <Stack w="100%">
+            <Text py={4} textAlign="center">
+              <b>Showing: </b>
+              {companies?.length}
+              {companies?.length === 1 ? " company" : " companies"}
+            </Text>
             <SimpleGrid pt={4} columns={{ sm: 2, md: 4 }} gap={4} rowGap={8}>
-              {data?.companies.map((company, index) => (
+              {companies.map((company, index) => (
                 <CompanyCard data={company} shouldDisplayLogo key={index} />
               ))}
             </SimpleGrid>
@@ -94,15 +182,34 @@ const CompaniesPage = ({ data }: CompaniesPageProps) => {
 export async function getServerSideProps({ query }) {
   const page = query?.page || 1;
   const pageSize = query?.limit || 15;
-  const searchQuery = {
+  const search = query?.search || "";
+  let searchQuery = {
     sort: ["name"],
     populate: ["profile_picture", "posts"],
     pagination: {
       page,
       pageSize,
     },
+    filters: {},
   };
-  console.log(qs.stringify(searchQuery));
+  if (search) {
+    const filters = {
+      $or: [
+        {
+          name: {
+            $containsi: search,
+          },
+        },
+        {
+          location: { $containsi: search },
+        },
+      ],
+    };
+    searchQuery = {
+      ...searchQuery,
+      filters,
+    };
+  }
   const promises = [
     fetch("/index"),
     fetch(
@@ -132,6 +239,7 @@ export async function getServerSideProps({ query }) {
     params: {
       page: parseInt(page) as Number,
       limit: parseInt(pageSize) as Number,
+      search,
     },
   };
 
