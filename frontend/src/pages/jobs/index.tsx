@@ -106,7 +106,7 @@ export async function getServerSideProps({ query }) {
   };
   const promises = [
     fetch("/index"),
-    fetch(`/posts?${qs.stringify(searchQuery)}`),
+    fetch(`/posts?${qs.stringify(searchQuery, { encodeValuesOnly: true })}`),
   ];
   const responses = await Promise.all(promises);
   const [templateData, postsResponse] = await Promise.all(

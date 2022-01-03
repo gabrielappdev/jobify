@@ -1,4 +1,9 @@
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@chakra-ui/icons";
 import { Button, Flex, IconButton, Stack } from "@chakra-ui/react";
 
 type PaginationProps = {
@@ -69,6 +74,16 @@ const Pagination = ({ data }: PaginationProps) => {
   return (
     <Stack>
       <Flex align="center">
+        {data.currentPage !== 1 && (
+          <IconButton
+            aria-label="First Page"
+            icon={<ArrowLeftIcon />}
+            size="sm"
+            mr={2}
+            sx={{ "& svg": { width: "8px", height: "8px" } }}
+            onClick={() => data.onChange((data.currentPage as number) - 1)}
+          />
+        )}
         <IconButton
           aria-label="Previous Page"
           icon={<ChevronLeftIcon />}
@@ -76,15 +91,28 @@ const Pagination = ({ data }: PaginationProps) => {
           mr={2}
           onClick={() => data.onChange((data.currentPage as number) - 1)}
           disabled={data.currentPage === 1}
-        ></IconButton>
+        />
         {getPages()}
         <IconButton
           aria-label="Next Page"
           icon={<ChevronRightIcon />}
           size="sm"
           onClick={() => data.onChange((data.currentPage as number) + 1)}
-          disabled={(data.currentPage as number) - 1 === data.pageCount}
-        ></IconButton>
+          disabled={
+            (data.currentPage as number) - 1 === data.pageCount ||
+            data.pageCount === 1
+          }
+        />
+        {(data.currentPage as number) - 1 !== data.pageCount ||
+          (data.currentPage !== 1 && (
+            <IconButton
+              aria-label="Last Page"
+              icon={<ArrowRightIcon />}
+              size="sm"
+              sx={{ "& svg": { width: "8px", height: "8px" } }}
+              onClick={() => data.onChange((data.currentPage as number) + 1)}
+            />
+          ))}
       </Flex>
     </Stack>
   );
