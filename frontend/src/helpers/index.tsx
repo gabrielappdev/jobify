@@ -59,6 +59,20 @@ export const _formatCompany = (data: CompanyProps): JobCardCompanyProps => {
   };
 };
 
+export const _extractRawData = (json) => {
+  if (json?.data && Array.isArray(json?.data)) {
+    if (!json.data?.length) return [];
+    return json.data.map(({ attributes, id }) => ({ ...attributes, id }));
+  }
+  if (
+    json?.data &&
+    !Array.isArray(json?.data) &&
+    typeof json?.data === "object"
+  ) {
+    return { ...json.data?.attributes, id: json.data?.id };
+  }
+};
+
 export const _formatSettings = (
   data: PostSettingsProps
 ): FormattedPostSettings => {

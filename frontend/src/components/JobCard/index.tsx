@@ -124,25 +124,27 @@ const JobCard = ({ data }: JobCardDataProps) => {
         </Flex>
         <Flex w="100%" h="inherit" align={isMobile ? "flex-start" : "center"}>
           {data.shouldDisplayLogo && (
-            <Box
-              w="auto"
-              maxH="100px"
-              height={isMobile ? "auto" : "inherit"}
-              borderRadius={0}
-              borderWidth={1}
-              borderColor={colorMode === "dark" ? "white" : "transparent"}
-              data-testid="job-card-company-logo"
-            >
-              <Center>
-                <Image
-                  src={data.company.logo.toString()}
-                  alt={data.company.name.toString()}
-                  width="100%"
-                  height="100%"
-                  objectFit="cover"
-                />
-              </Center>
-            </Box>
+            <Link href={`/companies/${data?.company?.slug}`}>
+              <Box
+                w="auto"
+                maxH="100px"
+                height={isMobile ? "auto" : "inherit"}
+                borderRadius={0}
+                borderWidth={1}
+                borderColor={colorMode === "dark" ? "white" : "transparent"}
+                data-testid="job-card-company-logo"
+              >
+                <Center>
+                  <Image
+                    src={data?.company?.logo.toString()}
+                    alt={data?.company?.name.toString()}
+                    width="100%"
+                    height="100%"
+                    objectFit="cover"
+                  />
+                </Center>
+              </Box>
+            </Link>
           )}
           <Flex
             align="center"

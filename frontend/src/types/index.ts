@@ -156,3 +156,12 @@ export type RawPostProps = {
   };
   attributes?: PostAttributesProps;
 };
+
+export type MetaProps = {
+  pagination: {
+    page: Number;
+    pageSize: Number;
+    pageCount: Number;
+    totalNumber: Number;
+  };
+};

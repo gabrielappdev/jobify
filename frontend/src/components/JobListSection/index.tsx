@@ -18,6 +18,8 @@ type JobListSectionProps = {
   description?: String;
   jobList: JobCardProps[];
   isLoading?: Boolean;
+  Pagination?: React.ReactNode;
+  displayCategoriesFilters?: Boolean;
 };
 
 const JobListSection = ({
@@ -25,6 +27,8 @@ const JobListSection = ({
   description,
   jobList,
   isLoading,
+  Pagination,
+  displayCategoriesFilters = true,
 }: JobListSectionProps) => {
   const isMobile = useIsTouchDevice();
   const [displayedJobs, setDisplayedJobs] = useState(jobList);
@@ -86,7 +90,7 @@ const JobListSection = ({
             direction={isMobile ? "column" : "row"}
           >
             <Stack w="100%">
-              <Heading as="h2" size="xl" textAlign="left">
+              <Heading as="h2" size="lg" textAlign="left">
                 {heading}
               </Heading>
               {description && (
@@ -95,30 +99,36 @@ const JobListSection = ({
                 </Text>
               )}
             </Stack>
-            {!!jobList?.length && (
-              <Flex w="100%" justify="flex-end">
-                <Select
-                  onChange={({ target: { value } }) => setCategory(value)}
-                  maxW="300px"
-                  pt={isMobile ? 4 : 0}
-                >
-                  {allCategories?.map((cat, index) => {
-                    return (
-                      <option
-                        key={index}
-                        value={index === 0 ? "" : cat.toString()}
-                      >
-                        {cat}
-                      </option>
-                    );
-                  })}
-                </Select>
-              </Flex>
-            )}
+            {!!jobList?.length ||
+              (displayCategoriesFilters && (
+                <Flex w="100%" justify="flex-end">
+                  <Select
+                    onChange={({ target: { value } }) => setCategory(value)}
+                    maxW="300px"
+                    pt={isMobile ? 4 : 0}
+                  >
+                    {allCategories?.map((cat, index) => {
+                      return (
+                        <option
+                          key={index}
+                          value={index === 0 ? "" : cat.toString()}
+                        >
+                          {cat}
+                        </option>
+                      );
+                    })}
+                  </Select>
+                </Flex>
+              ))}
           </Flex>
           <Stack pt={8} w="inherit">
             {getCards()}
           </Stack>
+          {Pagination && (
+            <Flex pt={4} justify="flex-end">
+              {Pagination}
+            </Flex>
+          )}
         </Stack>
       </Center>
     </Section>
