@@ -16,7 +16,6 @@ const asyncDispatchMessages = async (
   const jobProcessor = async function () {
     while (jobQueue.length > 0) {
       const job = jobQueue.pop();
-      console.log(job);
       const callback = job;
       callback(moment().format("DD/MM/YYYY HH:ss"));
       await delay(processDelay);

@@ -1,8 +1,6 @@
 import {
   Box,
   Button,
-  Checkbox,
-  CheckboxGroup,
   Flex,
   Input,
   Select,

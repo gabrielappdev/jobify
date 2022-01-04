@@ -78,7 +78,8 @@ const JobsPage = ({ data }: JobsPageProps) => {
       </GenericPageHero>
       <Box py={4} bg={bgColor[colorMode]}>
         <JobListSection
-          heading={`Showing: ${jobs?.length} ${
+          heading=""
+          description={`Showing: ${jobs?.length} ${
             jobs?.length === 1 ? "result" : "results"
           }`}
           jobList={data?.jobs}
@@ -181,8 +182,6 @@ export async function getServerSideProps({ query }) {
       },
     };
   };
-
-  console.log(buildSearchQuery());
 
   const searchQuery = {
     filters: {

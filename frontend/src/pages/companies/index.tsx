@@ -153,10 +153,9 @@ const CompaniesPage = ({ data }: CompaniesPageProps) => {
       <Box py={4} bg={bgColor[colorMode]}>
         <Section minW="auto">
           <Stack w="100%">
-            <Text py={4} textAlign="center">
-              <b>Showing: </b>
-              {companies?.length}
-              {companies?.length === 1 ? " company" : " companies"}
+            <Text py={4} textAlign="left">
+              Showing:&nbsp;
+              {`${companies?.length} results`}
             </Text>
             <SimpleGrid pt={4} columns={{ sm: 2, md: 4 }} gap={4} rowGap={8}>
               {companies.map((company, index) => (
