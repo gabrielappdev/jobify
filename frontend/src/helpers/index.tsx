@@ -9,7 +9,7 @@ import {
   CompanyProps,
   TagProps,
 } from "types";
-
+import _ from "lodash";
 import { rgba } from "polished";
 import { theme } from "@chakra-ui/react";
 import moment, { MomentInput } from "moment";
@@ -20,7 +20,8 @@ export const defaultPostPopulateQuery =
 export const _formatCategories = (
   categories: CategoryProps[]
 ): CategoryProps[] => {
-  return categories.map(({ title, slug, description }) => ({
+  return categories.map(({ id, title, slug, description }) => ({
+    id,
     title,
     slug,
     description,
@@ -28,7 +29,8 @@ export const _formatCategories = (
 };
 
 export const _formatTags = (categories: TagProps[]): TagProps[] => {
-  return categories.map(({ title, slug }) => ({
+  return categories.map(({ id, title, slug }) => ({
+    id,
     title,
     slug,
   }));
@@ -149,4 +151,20 @@ export const applyPostsSorting = (posts = []) => {
 
 export const randomIntFromInterval = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+export const pickParams = (params) => {
+  return _.pick(params, [
+    "title",
+    "category",
+    "company",
+    "tag",
+    "location",
+    "pinned",
+    "highlight",
+    "featured",
+    "searchType",
+    "limit",
+    "page",
+  ]);
 };

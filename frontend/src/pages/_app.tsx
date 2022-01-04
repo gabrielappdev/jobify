@@ -4,6 +4,7 @@ import { wrapper } from "store";
 import theme from "../theme";
 import { AppProps } from "next/app";
 import Head from "next/head";
+import NextNProgress from "nextjs-progressbar";
 
 import { PusherProvider } from "use-pusher";
 
@@ -23,6 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <PusherProvider {...pusherConfig}>
         <ChakraProvider resetCSS theme={theme}>
+          <NextNProgress color={theme.colors.green[500]} />
           <Component {...pageProps} />
         </ChakraProvider>
       </PusherProvider>

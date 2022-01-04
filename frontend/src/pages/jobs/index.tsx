@@ -1,14 +1,8 @@
+import _ from "lodash";
+import { useRouter } from "next/router";
 import qs from "qs";
-import fetch from "../../services/api";
-import {
-  bgColor,
-  _extractRawData,
-  _formatAppData,
-  _formatCardPost,
-  _formatCompany,
-} from "../../helpers";
-import { TemplateDataProps, JobCardProps, MetaProps } from "../../types";
-import Template from "templates";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import GenericPageHero from "@/components/GenericPageHero";
 import {
   Box,
@@ -18,34 +12,52 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
+import AdvancedSearchJobs, {
+  SearchParamsProps,
+} from "@/components/AdvancedSearchJobs";
 import JobListSection from "@/components/JobListSection";
 import Pagination from "@/components/Pagination";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import Template from "../../templates";
+import { SET_GLOBAL_DATA } from "../../store/actions";
+import fetch from "../../services/api";
+import {
+  bgColor,
+  pickParams,
+  _extractRawData,
+  _formatAppData,
+  _formatCardPost,
+  _formatCompany,
+} from "../../helpers";
+import { TemplateDataProps, JobCardProps, MetaProps } from "../../types";
 
 type JobsPageProps = {
   data: {
     templateData: TemplateDataProps;
     jobs: JobCardProps[];
     meta: MetaProps;
-    params: {
-      limit: Number;
-      page: Number;
-    };
+    params: SearchParamsProps;
   };
 };
 
 const JobsPage = ({ data }: JobsPageProps) => {
   const { colorMode } = useColorMode();
-  const [page, setPage] = useState(data?.params?.page || 1);
-  const [limit, setLimit] = useState(data?.params?.limit || 15);
+  const dispatch = useDispatch();
   const router = useRouter();
 
+  const [page, setPage] = useState(data?.params?.page || 1);
+  const [limit, setLimit] = useState(data?.params?.limit || 15);
+  const [jobs, setJobs] = useState(data?.jobs);
+
   useEffect(() => {
-    router.push(`/jobs?page=${page}&limit=${limit}`, undefined, {
-      shallow: false,
+    dispatch({
+      type: SET_GLOBAL_DATA,
+      payload: data?.templateData,
     });
-  }, [page]);
+  }, [data?.templateData]);
+
+  useEffect(() => {
+    setJobs(data?.jobs);
+  }, [data?.jobs]);
 
   const handleChangePage = (page: number) => {
     setPage(page);
@@ -60,12 +72,15 @@ const JobsPage = ({ data }: JobsPageProps) => {
               All jobs
             </Heading>
             <Text>Find below all active jobs listed</Text>
+            <AdvancedSearchJobs params={data?.params} />
           </Stack>
         </Center>
       </GenericPageHero>
       <Box py={4} bg={bgColor[colorMode]}>
         <JobListSection
-          heading={`Showing: ${data?.meta?.pagination?.pageSize} results`}
+          heading={`Showing: ${jobs?.length} ${
+            jobs?.length === 1 ? "result" : "results"
+          }`}
           jobList={data?.jobs}
           displayCategoriesFilters={false}
           Pagination={
@@ -86,6 +101,89 @@ const JobsPage = ({ data }: JobsPageProps) => {
 export async function getServerSideProps({ query }) {
   const page = query?.page || 1;
   const pageSize = query?.limit || 15;
+
+  const buildSearchQuery = () => {
+    const allParams = pickParams(query);
+    const searchType = allParams?.searchType || "$or";
+
+    let title = {};
+    if (allParams.title !== "") {
+      title = {
+        title: {
+          $containsi: allParams.title,
+        },
+      };
+    }
+
+    let location = {};
+    if (allParams?.location !== "") {
+      location = {
+        company: {
+          location: {
+            $containsi: allParams.location,
+          },
+        },
+      };
+    }
+
+    let category = {};
+    if (!!allParams?.category) {
+      category = {
+        categories: {
+          id: allParams.category,
+        },
+      };
+    }
+
+    let tag = {};
+    if (!!allParams?.tag) {
+      tag = {
+        tags: {
+          id: allParams.tag,
+        },
+      };
+    }
+
+    let company = {};
+    if (!!allParams?.company) {
+      company = {
+        company: {
+          name: {
+            $containsi: allParams.company,
+          },
+        },
+      };
+    }
+
+    let postSettings = {};
+    if (
+      ["highlight", "featured", "pinned"].some((settings) =>
+        Object.keys(allParams).includes(settings)
+      )
+    ) {
+      postSettings = {
+        post_settings: {
+          ..._.pick(allParams, ["highlight", "featured", "pinned"]),
+        },
+      };
+    }
+
+    return {
+      filters: {
+        $and: [
+          { ...title },
+          { ...location },
+          { ...company },
+          { ...category },
+          { ...tag },
+          { ...postSettings },
+        ],
+      },
+    };
+  };
+
+  console.log(buildSearchQuery());
+
   const searchQuery = {
     filters: {
       active: true,
@@ -106,7 +204,11 @@ export async function getServerSideProps({ query }) {
   };
   const promises = [
     fetch("/index"),
-    fetch(`/posts?${qs.stringify(searchQuery, { encodeValuesOnly: true })}`),
+    fetch(
+      `/posts?${qs.stringify(searchQuery, {
+        encodeValuesOnly: true,
+      })}&${qs.stringify(buildSearchQuery(), { encodeValuesOnly: true })}`
+    ),
   ];
   const responses = await Promise.all(promises);
   const [templateData, postsResponse] = await Promise.all(
@@ -115,7 +217,7 @@ export async function getServerSideProps({ query }) {
   let data = {};
 
   const format = (postsResponse) => {
-    const p = _extractRawData(postsResponse);
+    const p = _extractRawData(postsResponse) || [];
     const jobs = p.map((post) => {
       Object.keys(post).forEach((key) => {
         if (!Array.isArray(post[key])) {
@@ -135,7 +237,6 @@ export async function getServerSideProps({ query }) {
           }
         }
       });
-      console.log(post.post_settings);
       return _formatCardPost(post);
     });
     const meta = postsResponse.meta;
@@ -155,6 +256,7 @@ export async function getServerSideProps({ query }) {
     params: {
       page: parseInt(page) as Number,
       limit: parseInt(pageSize) as Number,
+      ...pickParams(query),
     },
   };
   return {

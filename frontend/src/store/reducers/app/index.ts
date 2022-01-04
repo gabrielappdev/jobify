@@ -16,6 +16,7 @@ const initialState: IndexProps = {
     notificationVisible: false,
   },
   categories: [],
+  tags: [],
   featuredCompanies: [],
   featuredJobs: [],
   otherJobs: [],

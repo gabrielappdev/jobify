@@ -25,12 +25,14 @@ export type GlobalNotificationProps = {
 };
 
 export type CategoryProps = {
+  id: Number;
   title: String;
   description: String;
   slug: String;
 };
 
 export type TagProps = {
+  id: Number;
   title: String;
   slug: String;
 };
@@ -46,15 +48,14 @@ export type FeaturedCompaniesProps = {
 export type IndexProps = {
   appData?: HomeProps;
   categories?: CategoryProps[];
+  tags?: TagProps[];
   featuredCompanies?: FeaturedCompaniesProps[];
   featuredJobs?: JobCardProps[];
   otherJobs?: JobCardProps[];
 };
 
-export type TemplateDataProps = Pick<
-  IndexProps,
-  "appData" | "categories" | "featuredCompanies"
->;
+export type TemplateDataProps =
+  | Pick<IndexProps, "appData" | "categories" | "featuredCompanies"> & "tags";
 
 export type CompanyProps = {
   name: String;

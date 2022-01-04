@@ -10,6 +10,7 @@ import {
   _formatCardPost,
   _formatCategories,
   _formatCompany,
+  _formatTags,
 } from "helpers";
 
 type IndexPageProps = {
@@ -46,6 +47,7 @@ export async function getServerSideProps() {
       notificationVisible: false,
     },
     categories: [],
+    tags: [],
     featuredJobs: [],
     otherJobs: [],
     featuredCompanies: [],
@@ -71,6 +73,13 @@ export async function getServerSideProps() {
     data = {
       ...data,
       categories: _formatCategories(json),
+    };
+  };
+
+  const assignTags = (json) => {
+    data = {
+      ...data,
+      tags: _formatTags(json),
     };
   };
 
@@ -100,10 +109,17 @@ export async function getServerSideProps() {
   const responseData = await response.json();
 
   if (Object.keys(data)?.length) {
-    let { appData, categories, featuredCompanies, featuredJobs, otherJobs } =
-      responseData;
+    let {
+      appData,
+      categories,
+      tags,
+      featuredCompanies,
+      featuredJobs,
+      otherJobs,
+    } = responseData;
     appData = assignGlobalData(appData);
     categories = assignCategories(categories);
+    tags = assignTags(tags);
     featuredCompanies = assignFeaturedCompanies(featuredCompanies);
     featuredJobs = assignPosts(featuredJobs, "featuredJobs");
     otherJobs = assignPosts(otherJobs, "otherJobs");
