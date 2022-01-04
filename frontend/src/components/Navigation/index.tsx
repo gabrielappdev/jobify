@@ -15,6 +15,7 @@ import {
   Container,
   Text,
   CloseButton,
+  Center,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { CategoryProps, GlobalNotificationProps } from "types";
@@ -119,9 +120,9 @@ const Navigation = ({ data }: NavigationProps) => {
     }, 2000);
     let timer = setTimeout(() => {
       if (isGlobalNotificationVisible) {
-        handleHideGlobalNotification();
+        handleHideGlobalNotification(false);
       }
-    }, 10000);
+    }, 30000);
 
     return () => {
       clearTimeout(startTimer);
@@ -149,16 +150,18 @@ const Navigation = ({ data }: NavigationProps) => {
     );
   };
 
-  const handleHideGlobalNotification = () => {
+  const handleHideGlobalNotification = (shouldStore = true) => {
     dispatch({
       type: SET_GLOBAL_DATA,
       payload: {
         appData: { notificationVisible: "hide" },
       },
     });
-    localStorage.setData("jobify", {
-      hideGlobalNotification: true,
-    });
+    if (shouldStore) {
+      localStorage.setData("jobify", {
+        hideGlobalNotification: true,
+      });
+    }
   };
 
   const getRightSideContent = () => {
@@ -249,7 +252,6 @@ const Navigation = ({ data }: NavigationProps) => {
       top={0}
       borderBottom={1}
       borderBottomColor={theme.colors.gray[300]}
-      p={4}
       w="100%"
       background={isTransparent ? "transparent" : navigationBgColor[colorMode]}
       transition="background ease 200ms"
@@ -265,22 +267,26 @@ const Navigation = ({ data }: NavigationProps) => {
                 "hideGlobalNotification"
           }
         >
-          <Container maxW="140ch" py={3}>
-            <Text color={theme.colors.white} textAlign="center" fontSize="lg">
-              {globalNotification.message}
-            </Text>
-            <CloseButton
-              color={theme.colors.white}
-              position="absolute"
-              top="0px"
-              right="10px"
-              onClick={handleHideGlobalNotification}
-            />
+          <Container maxW="140ch">
+            <Center>
+              <Text color={theme.colors.white} textAlign="center" fontSize="sm">
+                {globalNotification.message}
+              </Text>
+              <CloseButton
+                color={theme.colors.white}
+                position="absolute"
+                top="-4px"
+                right="10px"
+                onClick={() => handleHideGlobalNotification(true)}
+              />
+            </Center>
           </Container>
         </AnimatedWrapper>
       )}
       <Container
         maxW="140ch"
+        p={4}
+        pt={6}
         centerContent
         direction="row"
         background="inherit"
