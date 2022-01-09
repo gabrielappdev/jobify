@@ -53,7 +53,11 @@ const Navigation = ({ data }: NavigationProps) => {
   const isMobile = useIsTouchDevice();
   const { colorMode } = useColorMode();
   const [isTransparent, setIsTransparent] = useState(true);
-  const localStorage = new LocalStorage();
+  const [isRefreshingUserToken, setIsRefreshingUserToken] = useState(false);
+  const [tokenWasRefreshed, setTokenWasRefreshed] = useState(false);
+  const localStorage = useMemo(() => {
+    return new LocalStorage();
+  }, []);
 
   const [globalNotification, setGlobalNotification] = useState(
     data?.globalNotification
@@ -76,7 +80,49 @@ const Navigation = ({ data }: NavigationProps) => {
       type: SET_USER,
       payload: null,
     });
+    localStorage.setData("jobify", {
+      jwt: null,
+    });
   };
+
+  useEffect(() => {
+    const refreshToken = async (token) => {
+      setIsRefreshingUserToken(true);
+      try {
+        const userResponse = await fetch("/users/me", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const user = await userResponse.json();
+        if (user) {
+          const token = localStorage.getData("jobify").jwt;
+          localStorage.setData("jobify", {
+            jwt: token,
+          });
+          dispatch({
+            type: SET_USER,
+            payload: { ...user, jwt: token },
+          });
+        }
+      } catch (error) {
+        dispatch({
+          type: SET_USER,
+          payload: null,
+        });
+      } finally {
+        setIsRefreshingUserToken(false);
+        setTokenWasRefreshed(true);
+      }
+    };
+    if (typeof window !== undefined) {
+      const localData = localStorage.getData("jobify");
+      if (localData?.jwt && !tokenWasRefreshed) {
+        refreshToken(localData.jwt);
+      }
+    }
+  }, [localStorage]);
 
   const UserMenu = () => {
     if (user?.email) {
@@ -296,6 +342,7 @@ const Navigation = ({ data }: NavigationProps) => {
               color={theme.colors.green[500]}
               border="none"
               ml={2}
+              isLoading={isRefreshingUserToken}
               size="lg"
               _hover={{ background: "transparent" }}
               _active={{
