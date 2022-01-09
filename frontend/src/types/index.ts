@@ -16,7 +16,7 @@ export type HomeProps = {
   hero: LogoProps;
   heroUrl: String;
   notification: GlobalNotificationProps;
-} & { notificationVisible: Boolean | String };
+};
 
 export type GlobalNotificationProps = {
   message: String;
@@ -45,6 +45,14 @@ export type FeaturedCompaniesProps = {
   posts: Number;
 };
 
+export type GlobalModalInnerProps = {};
+
+export type GlobalModalProps = {
+  isGlobalModalOpen: Boolean;
+  action: String;
+  props?: GlobalModalInnerProps;
+};
+
 export type IndexProps = {
   appData?: HomeProps;
   categories?: CategoryProps[];
@@ -52,6 +60,9 @@ export type IndexProps = {
   featuredCompanies?: FeaturedCompaniesProps[];
   featuredJobs?: JobCardProps[];
   otherJobs?: JobCardProps[];
+} & {
+  notificationVisible?: Boolean | string;
+  globalModalProps: GlobalModalProps;
 };
 
 export type TemplateDataProps =
@@ -164,5 +175,17 @@ export type MetaProps = {
     pageSize: Number;
     pageCount: Number;
     totalNumber: Number;
+  };
+};
+
+export type UserProps = {
+  user: {
+    blocked: Boolean;
+    confirmed: Boolean;
+    email: "";
+    id: Number;
+    provider: String;
+    username: String;
+    jwt: String;
   };
 };

@@ -1,5 +1,9 @@
-import { IndexProps } from "types";
+import { IndexProps, UserProps } from "types";
 
 export type ReducersProps = {
-  app: IndexProps & { notificationVisible: Boolean };
+  app: IndexProps & {
+    notificationVisible: Boolean;
+    isGlobalModalOpen: Boolean;
+  };
+  user: UserProps;
 };

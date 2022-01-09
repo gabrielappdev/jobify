@@ -1,10 +1,12 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import logger from "redux-logger";
-import { createWrapper, Context } from "next-redux-wrapper";
+import { createWrapper } from "next-redux-wrapper";
 import { reducer as appReducer } from "./reducers/app";
+import { reducer as userReducer } from "./reducers/user";
 
 const reducers = combineReducers({
   app: appReducer,
+  user: userReducer,
 });
 
 const buildStore = () => {

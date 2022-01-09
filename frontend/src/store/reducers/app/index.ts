@@ -1,7 +1,11 @@
 import { AnyAction } from "redux";
 import { HYDRATE } from "next-redux-wrapper";
 import { HomeProps, IndexProps } from "types";
-import { SET_GLOBAL_DATA } from "../../actions";
+import {
+  SET_GLOBAL_DATA,
+  OPEN_GLOBAL_MODAL,
+  CLOSE_GLOBAL_MODAL,
+} from "../../actions";
 
 const initialState: IndexProps = {
   appData: {
@@ -13,13 +17,18 @@ const initialState: IndexProps = {
     hero: null,
     heroUrl: "",
     notification: null,
-    notificationVisible: false,
   },
   categories: [],
   tags: [],
   featuredCompanies: [],
   featuredJobs: [],
   otherJobs: [],
+  notificationVisible: false,
+  globalModalProps: {
+    isGlobalModalOpen: false,
+    action: "",
+    props: {},
+  },
 };
 
 export const reducer = (state = initialState, action: AnyAction) => {
@@ -28,6 +37,16 @@ export const reducer = (state = initialState, action: AnyAction) => {
       return { ...state, ...action.payload };
     case SET_GLOBAL_DATA:
       return { ...state, ...action.payload };
+    case OPEN_GLOBAL_MODAL:
+      return {
+        ...state,
+        globalModalProps: { ...action.payload, isGlobalModalOpen: true },
+      };
+    case CLOSE_GLOBAL_MODAL:
+      return {
+        ...state,
+        globalModalProps: { ...action.payload, isGlobalModalOpen: false },
+      };
     default:
       return state;
   }

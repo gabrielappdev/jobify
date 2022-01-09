@@ -13,9 +13,9 @@ import {
   Spacer,
   theme,
   Container,
-  Text,
   CloseButton,
   Center,
+  Text,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { CategoryProps, GlobalNotificationProps } from "types";
@@ -24,15 +24,21 @@ import Link from "next/link";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import DarkModeSwitch from "../DarkModeSwitch";
 import useIsTouchDevice from "hooks/useDeviceDetect";
-import { navigationBgColor, contrastColor } from "../../helpers";
+import { contrastColor, navigationBgColor } from "../../helpers";
 import { useDispatch, useSelector } from "react-redux";
-import { SET_GLOBAL_DATA } from "../../store/actions";
+import {
+  SET_GLOBAL_DATA,
+  OPEN_GLOBAL_MODAL,
+  SET_USER,
+} from "../../store/actions";
 import { ReducersProps } from "../../store/reducers";
 import { AnimatedWrapper } from "./styles";
 import usePusherEventListener from "../../hooks/usePusherEventListener";
 import { PUSHER_GLOBAL_NOTIFICATION } from "../../constants";
 import fetch from "../../services/api";
 import { LocalStorage } from "../../services/localStorage";
+import { AiOutlineUser, AiOutlineUserAdd } from "react-icons/ai";
+import { BiLogOutCircle } from "react-icons/bi";
 
 export type NavigationProps = {
   data: {
@@ -54,8 +60,9 @@ const Navigation = ({ data }: NavigationProps) => {
   );
   const dispatch = useDispatch();
   const isGlobalNotificationVisible = useSelector(
-    ({ app }: ReducersProps) => app.appData.notificationVisible
+    ({ app }: ReducersProps) => app.notificationVisible
   );
+  const user = useSelector(({ user }: ReducersProps) => user.user);
 
   const shouldDisplayNotification = useMemo(() => {
     if (globalNotification) {
@@ -63,6 +70,44 @@ const Navigation = ({ data }: NavigationProps) => {
     }
     return false;
   }, [globalNotification]);
+
+  const handleLogout = () => {
+    dispatch({
+      type: SET_USER,
+      payload: null,
+    });
+  };
+
+  const UserMenu = () => {
+    if (user?.email) {
+      return (
+        <MenuGroup title={`Hello ${user.username}!`}>
+          <Link href="/profile">
+            <MenuItem icon={<AiOutlineUser />}>Profile</MenuItem>
+          </Link>
+          <MenuItem onClick={handleLogout} icon={<BiLogOutCircle />}>
+            Logout
+          </MenuItem>
+        </MenuGroup>
+      );
+    }
+    return (
+      <MenuGroup title="Account">
+        <MenuItem
+          onClick={() => openGlobalModal("signup")}
+          icon={<AiOutlineUserAdd />}
+        >
+          Sign up
+        </MenuItem>
+        <MenuItem
+          onClick={() => openGlobalModal("signin")}
+          icon={<AiOutlineUser />}
+        >
+          Sign in
+        </MenuItem>
+      </MenuGroup>
+    );
+  };
 
   usePusherEventListener(
     async (data) => {
@@ -82,9 +127,7 @@ const Navigation = ({ data }: NavigationProps) => {
                 });
                 dispatch({
                   type: SET_GLOBAL_DATA,
-                  payload: {
-                    appData: { notificationVisible: true },
-                  },
+                  payload: { notificationVisible: true },
                 });
               }
             }
@@ -112,9 +155,7 @@ const Navigation = ({ data }: NavigationProps) => {
       ) {
         dispatch({
           type: SET_GLOBAL_DATA,
-          payload: {
-            appData: { notificationVisible: true },
-          },
+          payload: { notificationVisible: true },
         });
       }
     }, 2000);
@@ -153,15 +194,20 @@ const Navigation = ({ data }: NavigationProps) => {
   const handleHideGlobalNotification = (shouldStore = true) => {
     dispatch({
       type: SET_GLOBAL_DATA,
-      payload: {
-        appData: { notificationVisible: "hide" },
-      },
+      payload: { notificationVisible: "hide" },
     });
     if (shouldStore) {
       localStorage.setData("jobify", {
         hideGlobalNotification: true,
       });
     }
+  };
+
+  const openGlobalModal = (action: string) => {
+    dispatch({
+      type: OPEN_GLOBAL_MODAL,
+      payload: { action, params: {} },
+    });
   };
 
   const getRightSideContent = () => {
@@ -199,6 +245,7 @@ const Navigation = ({ data }: NavigationProps) => {
                     </Link>
                   ))}
                 </MenuGroup>
+                <UserMenu />
               </MenuList>
             </Menu>
           </Flex>
@@ -240,6 +287,26 @@ const Navigation = ({ data }: NavigationProps) => {
           >
             Post a job
           </Button>
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Options"
+              icon={<AiOutlineUser />}
+              variant="outline"
+              color={theme.colors.green[500]}
+              border="none"
+              ml={2}
+              size="lg"
+              _hover={{ background: "transparent" }}
+              _active={{
+                background: "transparent",
+                color: theme.colors.green[200],
+              }}
+            />
+            <MenuList>
+              <UserMenu />
+            </MenuList>
+          </Menu>
         </Flex>
       </Flex>
     );
@@ -259,6 +326,7 @@ const Navigation = ({ data }: NavigationProps) => {
     >
       {shouldDisplayNotification && (
         <AnimatedWrapper
+          isMobile={isMobile}
           color={theme.colors[globalNotification.colorScheme as string][500]}
           className={
             isGlobalNotificationVisible === true

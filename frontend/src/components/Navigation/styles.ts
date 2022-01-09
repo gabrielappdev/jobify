@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 
 export const AnimatedWrapper = styled.div`
-  ${({ color }) => `
-    position: relative;
+  ${({ color, isMobile }: { color: string; isMobile: boolean }) => `
+    position: ${isMobile ? "absolute" : "relative"};
     z-index: 9999;
     top: 0px;
     left: 0;
