@@ -28,7 +28,7 @@ const Template = ({ children, data }: TemplateProps) => {
   const ref = useRef(null);
   const dispatch = useDispatch();
 
-  const { isGlobalModalOpen, action } = useSelector(
+  const { isGlobalModalOpen, action, params } = useSelector(
     ({ app }: ReducersProps) => app.globalModalProps
   );
 
@@ -52,7 +52,7 @@ const Template = ({ children, data }: TemplateProps) => {
         ref={ref}
         data={{ size: "xl", onClose: () => closeGlobalModal() }}
       >
-        <Sign data={{ type: action === "signin" ? "in" : "up" }} />
+        <Sign data={{ type: action === "signin" ? "in" : "up", params }} />
       </ModalDialog>
       <Navigation
         data={{

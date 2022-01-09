@@ -8,13 +8,36 @@ import {
   theme,
   Button,
 } from "@chakra-ui/react";
-import Link from "next/link";
+import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { ReducersProps } from "store/reducers";
+import { OPEN_GLOBAL_MODAL } from "store/actions";
 
 type HeroProps = {
   data: HomeProps;
 };
 
 const Hero = ({ data }: HeroProps) => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const user = useSelector(({ user }: ReducersProps) => user.user);
+
+  const handleJobPost = () => {
+    if (!user?.username) {
+      dispatch({
+        type: OPEN_GLOBAL_MODAL,
+        payload: {
+          action: "signin",
+          params: {
+            redirect: "/jobs/new",
+          },
+        },
+      });
+    } else {
+      router.push("/jobs/new");
+    }
+  };
+
   return (
     <Box
       minH="50vh"
@@ -53,9 +76,9 @@ const Hero = ({ data }: HeroProps) => {
             />
           )}
           {data?.price && (
-            <Link href={`/jobs/new`}>
-              <Button colorScheme="green">Post a job for ${data?.price}</Button>
-            </Link>
+            <Button onClick={handleJobPost} colorScheme="green">
+              Post a job for ${data?.price}
+            </Button>
           )}
         </Stack>
       </Container>

@@ -21,10 +21,15 @@ import fetch from "../../services/api";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { CLOSE_GLOBAL_MODAL, SET_USER } from "store/actions";
+import { GlobalModalProps } from "types";
+import { Url } from "url";
 
 type SignProps = {
   data: {
     type: "in" | "up";
+    params?: {
+      redirect?: Url;
+    };
   };
 };
 
@@ -144,7 +149,7 @@ const Sign = ({ data }: SignProps) => {
             isClosable: true,
           });
           _.debounce(() => {
-            router.push("/");
+            router.push(data?.params?.redirect ?? "/");
           }, 5000)();
         }
       }

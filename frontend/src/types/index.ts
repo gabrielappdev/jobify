@@ -1,3 +1,5 @@
+import { Url } from "url";
+
 export type LogoProps = {
   url: String;
 };
@@ -51,6 +53,9 @@ export type GlobalModalProps = {
   isGlobalModalOpen: Boolean;
   action: String;
   props?: GlobalModalInnerProps;
+  params?: {
+    redirect?: Url;
+  };
 };
 
 export type IndexProps = {
