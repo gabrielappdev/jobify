@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "create_job_flows",
+  "info": {
+    "singularName": "create-job-flow",
+    "pluralName": "create-job-flows",
+    "displayName": "createJobFlow",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "step": {
+      "type": "integer",
+      "required": true,
+      "default": 1
+    },
+    "createdCompany": {
+      "type": "boolean",
+      "default": false
+    },
+    "isPaid": {
+      "type": "boolean",
+      "default": false
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "create_job_flow"
+    },
+    "isPending": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

@@ -1,4 +1,5 @@
 "use strict";
+const _ = require("lodash");
 
 /**
  *  global controller
@@ -37,7 +38,37 @@ module.exports = createCoreController("api::global.global", ({ strapi }) => ({
       ctx.body = data;
     } catch (error) {
       console.error("Error getting home data: ", error);
-      ctx.body = error;
+      return { error: error.message };
+    }
+  },
+  async getCurrentUser(ctx) {
+    try {
+      const user = ctx.state.user;
+      if (!user) {
+        return ctx.unathenticated();
+      }
+      const currentUser = await strapi
+        .query("plugin::users-permissions.user")
+        .findOne({
+          where: {
+            id: user.id,
+          },
+          populate: [
+            "role",
+            "roles",
+            "company",
+            "company.profile_picture",
+            "create_job_flow",
+            "social_link",
+          ],
+        });
+      ctx.body = _.omit(currentUser, [
+        "password",
+        "resetPasswordToken",
+        "confirmationToken",
+      ]);
+    } catch (error) {
+      return { error: error.message };
     }
   },
 }));

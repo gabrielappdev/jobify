@@ -58,7 +58,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
         ctx.body = relatedPosts;
       }
     } catch (error) {
-      ctx.body = error;
+      return { error: error.message };
     }
   },
   async create(ctx) {
@@ -110,7 +110,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
       const posts = await strapi.service("api::post.post").getAllActivePosts();
       ctx.body = posts;
     } catch (error) {
-      ctx.body = error;
+      return { error: error.message };
     }
   },
 }));

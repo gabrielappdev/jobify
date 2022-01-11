@@ -79,6 +79,17 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::category.category"
+    },
+    "create_job_flow": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::create-job-flow.create-job-flow",
+      "inversedBy": "users_permissions_user"
+    },
+    "social_link": {
+      "type": "component",
+      "repeatable": true,
+      "component": "share.social"
     }
   }
 }

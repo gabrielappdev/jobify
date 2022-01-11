@@ -1,4 +1,5 @@
 "use strict";
+const _ = require("lodash");
 
 /**
  *  company controller
@@ -40,7 +41,7 @@ module.exports = createCoreController("api::company.company", ({ strapi }) => ({
         .setFeaturedCompanies();
       ctx.body = companies;
     } catch (error) {
-      ctx.body = error;
+      return { error: error.message };
     }
   },
   async latestJobs(ctx) {
@@ -54,7 +55,7 @@ module.exports = createCoreController("api::company.company", ({ strapi }) => ({
         .getLatestJobs(slug);
       ctx.body = jobs;
     } catch (error) {
-      ctx.body = error;
+      return { error: error.message };
     }
   },
   async getCompanyPage(ctx) {
@@ -82,8 +83,62 @@ module.exports = createCoreController("api::company.company", ({ strapi }) => ({
           featuredCompanies,
         };
       } catch (error) {
-        ctx.body = error;
+        return { error: error.message };
       }
+    }
+  },
+  async create(ctx) {
+    const response = await super.create(ctx);
+    ctx.body = response;
+    if (response?.data?.id) {
+      const user = await strapi.db
+        .query("plugin::users-permissions.user")
+        .findOne({
+          where: {
+            id: ctx.state.user.id,
+          },
+          populate: ["create_job_flow"],
+        });
+      const flowContent = {
+        createdCompany: true,
+        step: 2,
+      };
+      if (!user.create_job_flow) {
+        await strapi.db.query("api::create-job-flow.create-job-flow").create({
+          data: {
+            users_permissions_user: ctx.state.user.id,
+            ...flowContent,
+          },
+        });
+      } else {
+        await strapi.db.query("api::create-job-flow.create-job-flow").update({
+          where: { id: user.create_job_flow.id },
+          data: {
+            ...flowContent,
+          },
+        });
+      }
+      const updateResponse = await strapi.db
+        .query("api::company.company")
+        .update({
+          where: { id: response.data.id },
+          data: {
+            users_permissions_user: ctx.state.user.id,
+          },
+          populate: [
+            "users_permissions_user",
+            "profile_picture",
+            "users_permissions_user.create_job_flow",
+          ],
+        });
+      ctx.body = {
+        ...updateResponse,
+        users_permissions_user: _.omit(updateResponse.users_permissions_user, [
+          "password",
+          "resetPasswordToken",
+          "confirmationToken",
+        ]),
+      };
     }
   },
 }));
