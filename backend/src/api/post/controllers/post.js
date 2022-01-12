@@ -12,7 +12,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
     const { slug } = ctx.params;
     try {
       const job = await strapi.query("api::post.post").findOne({
-        where: { slug },
+        where: { slug, active: true },
         populate: [
           "categories",
           "company.profile_picture",
@@ -66,10 +66,29 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
       where: { id: ctx.request.body.data.company },
       populate: { users_permissions_user: true },
     });
+    const postSettings = {
+      display_logo: false,
+      highlight: false,
+      pinned: false,
+      featured: false,
+    };
+    let slug = `${company.slug}-${slugify(
+      ctx.request.body.data.title
+    )}`.toLowerCase();
+    const jobsWithSameTitle = await strapi.db.query("api::post.post").findMany({
+      where: { slug: { $containsi: slug } },
+    });
+    console.log(jobsWithSameTitle);
+    if (jobsWithSameTitle.length) {
+      console.log(slug);
+      slug += +`-${jobsWithSameTitle.length}`;
+      console.log(slug);
+    }
     ctx.request.body.data = {
       ...ctx.request.body.data,
       expiration_date: moment().add(7, "days").endOf("day").toDate(),
-      slug: `${company.slug}-${slugify(ctx.request.body.data.title)}`,
+      slug,
+      post_settings: postSettings,
     };
     const response = await super.create(ctx);
     if (response?.data?.id) {

@@ -16,7 +16,7 @@ const getPostCreateNotification = async (params = {}, users = []) => {
   };
   await asyncDispatchMessages(
     [
-      users.map(({ id }) => {
+      ...users.map(({ id }) => {
         return (created_at) =>
           pusher.trigger(
             "jobify-notifications",
@@ -121,7 +121,7 @@ module.exports = createCoreService(
             },
           },
         });
-
+      console.log("interestedUsers: ", interestedUsers);
       await handleNotifications(params, user, interestedUsers);
     },
     async clear() {
