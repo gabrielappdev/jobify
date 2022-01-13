@@ -26,9 +26,10 @@ import moment, { MomentInput } from "moment";
 
 export type JobCardDataProps = {
   data: JobCardProps;
+  isPreview?: boolean;
 };
 
-const JobCard = ({ data }: JobCardDataProps) => {
+const JobCard = ({ data, isPreview = false }: JobCardDataProps) => {
   const isMobile = useIsTouchDevice();
 
   const { colorMode } = useColorMode();
@@ -46,6 +47,10 @@ const JobCard = ({ data }: JobCardDataProps) => {
       .isAfter(moment());
   }, [data]);
 
+  const isFeatured = useMemo(() => {
+    return data.isFeatured;
+  }, [data]);
+
   const getAdornmentsPosition = () => {
     if (isMobile) {
       return {
@@ -59,7 +64,7 @@ const JobCard = ({ data }: JobCardDataProps) => {
     };
   };
   return (
-    <Link href={"/jobs/" + data.slug}>
+    <Link href={isPreview ? "" : " /jobs/" + data.slug}>
       <Box
         data-testid="job-card"
         aria-label={data.isHighlighted ? "highlighted" : "normal"}
@@ -89,26 +94,26 @@ const JobCard = ({ data }: JobCardDataProps) => {
           {...getAdornmentsPosition()}
           align="center"
           data-testid="job-card-adornments"
+          gap={4}
         >
-          {isNew && (
-            <Box
-              px={2}
-              h="26px"
-              borderRadius={2}
-              color={contrastColor[colorMode]}
-              bg={switchPrimaryColor[colorMode]}
-              data-testid="job-card-new"
-            >
-              <Text fontWeight="bold" size="sm">
-                NEW
+          {isFeatured && (
+            <Tag h="26px" colorScheme="blue" data-testid="job-card-featured">
+              <Text textTransform="uppercase" fontWeight="bold" size="sm">
+                featured
               </Text>
-            </Box>
+            </Tag>
+          )}
+          {isNew && (
+            <Tag colorScheme="orange" data-testid="job-card-new">
+              <Text textTransform="uppercase" fontWeight="bold" size="sm">
+                new
+              </Text>
+            </Tag>
           )}
           {data.isPinned && (
             <Box
               color={switchPrimaryColor[colorMode]}
               p={1}
-              ml={2}
               borderRadius={1}
               borderWidth={1}
               borderColor={theme.colors.green[700]}
@@ -124,7 +129,7 @@ const JobCard = ({ data }: JobCardDataProps) => {
         </Flex>
         <Flex w="100%" h="inherit" align={isMobile ? "flex-start" : "center"}>
           {data.shouldDisplayLogo && (
-            <Link href={`/companies/${data?.company?.slug}`}>
+            <Link href={isPreview ? "" : `/companies/${data?.company?.slug}`}>
               <Box
                 w="auto"
                 maxH="100px"
@@ -172,7 +177,10 @@ const JobCard = ({ data }: JobCardDataProps) => {
               <Flex data-testid="job-card-categories">
                 {data.categories.map((category, index) => {
                   return (
-                    <Link key={index} href={`/categories/${category.slug}`}>
+                    <Link
+                      key={index}
+                      href={isPreview ? "" : `/categories/${category.slug}`}
+                    >
                       <Tag
                         ml={index !== 0 ? 2 : 0}
                         colorScheme="blue"
@@ -188,6 +196,7 @@ const JobCard = ({ data }: JobCardDataProps) => {
             <Stack
               alignSelf={isMobile ? "flex-start" : "center"}
               ml={isMobile ? 4 : 0}
+              mt={4}
             >
               <Flex
                 data-testid="job-card-location"
@@ -202,7 +211,10 @@ const JobCard = ({ data }: JobCardDataProps) => {
               <Flex justify="flex-end">
                 {data?.tags?.map((tag, index) => {
                   return (
-                    <Link key={index} href={`/tags/${tag.slug}`}>
+                    <Link
+                      key={index}
+                      href={isPreview ? "" : `/tags/${tag.slug}`}
+                    >
                       <Tag
                         colorScheme="green"
                         ml={index !== 0 ? 2 : 0}

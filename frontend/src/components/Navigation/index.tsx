@@ -30,6 +30,7 @@ import {
   SET_GLOBAL_DATA,
   OPEN_GLOBAL_MODAL,
   SET_USER,
+  SET_LOADING_USER,
 } from "../../store/actions";
 import { ReducersProps } from "../../store/reducers";
 import { AnimatedWrapper } from "./styles";
@@ -39,6 +40,7 @@ import fetch from "../../services/api";
 import { LocalStorage } from "../../services/localStorage";
 import { AiOutlineUser, AiOutlineUserAdd } from "react-icons/ai";
 import { BiLogOutCircle } from "react-icons/bi";
+import { useRouter } from "next/router";
 
 export type NavigationProps = {
   data: {
@@ -53,7 +55,10 @@ const Navigation = ({ data }: NavigationProps) => {
   const isMobile = useIsTouchDevice();
   const { colorMode } = useColorMode();
   const [isTransparent, setIsTransparent] = useState(true);
-  const [isRefreshingUserToken, setIsRefreshingUserToken] = useState(false);
+  const router = useRouter();
+  const isRefreshingUserToken = useSelector(
+    ({ user }: ReducersProps) => user.isLoading
+  );
   const [tokenWasRefreshed, setTokenWasRefreshed] = useState(false);
   const localStorage = useMemo(() => {
     return new LocalStorage();
@@ -87,9 +92,12 @@ const Navigation = ({ data }: NavigationProps) => {
 
   useEffect(() => {
     const refreshToken = async (token) => {
-      setIsRefreshingUserToken(true);
+      dispatch({
+        type: SET_LOADING_USER,
+        payload: true,
+      });
       try {
-        const userResponse = await fetch("/users/me", {
+        const userResponse = await fetch("/current-user", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -112,17 +120,26 @@ const Navigation = ({ data }: NavigationProps) => {
           payload: null,
         });
       } finally {
-        setIsRefreshingUserToken(false);
         setTokenWasRefreshed(true);
+        dispatch({
+          type: SET_LOADING_USER,
+          payload: false,
+        });
       }
     };
-    if (typeof window !== undefined) {
+    if (typeof window !== undefined && !user?.username && !tokenWasRefreshed) {
       const localData = localStorage.getData("jobify");
-      if (localData?.jwt && !tokenWasRefreshed) {
+      if (localData?.jwt) {
         refreshToken(localData.jwt);
+      } else {
+        setTokenWasRefreshed(true);
+        dispatch({
+          type: SET_LOADING_USER,
+          payload: false,
+        });
       }
     }
-  }, [localStorage]);
+  }, [localStorage, user, dispatch, tokenWasRefreshed]);
 
   const UserMenu = () => {
     if (user?.email) {
@@ -256,6 +273,22 @@ const Navigation = ({ data }: NavigationProps) => {
     });
   };
 
+  const handleJobPost = () => {
+    if (!user?.username) {
+      dispatch({
+        type: OPEN_GLOBAL_MODAL,
+        payload: {
+          action: "signin",
+          params: {
+            redirect: "/jobs/new",
+          },
+        },
+      });
+    } else {
+      router.push("/jobs/new");
+    }
+  };
+
   const getRightSideContent = () => {
     if (isMobile) {
       return (
@@ -269,6 +302,7 @@ const Navigation = ({ data }: NavigationProps) => {
               size="sm"
               ml={4}
               colorScheme="green"
+              onClick={handleJobPost}
             >
               Job
             </Button>
@@ -330,6 +364,7 @@ const Navigation = ({ data }: NavigationProps) => {
             ml={4}
             colorScheme="green"
             leftIcon={<AddIcon />}
+            onClick={handleJobPost}
           >
             Post a job
           </Button>

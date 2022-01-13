@@ -21,8 +21,8 @@ const CompanyCard = ({ data, shouldDisplayLogo }: CompanyCardProps) => {
   const { colorMode } = useColorMode();
   return (
     <Stack align="center">
-      <Link href={`/companies/${data?.slug}`}>
-        {shouldDisplayLogo && (
+      {shouldDisplayLogo && (
+        <Link href={`/companies/${data?.slug}`}>
           <Box
             borderRadius="4px"
             width="100px"
@@ -39,8 +39,8 @@ const CompanyCard = ({ data, shouldDisplayLogo }: CompanyCardProps) => {
               objectFit="cover"
             />
           </Box>
-        )}
-      </Link>
+        </Link>
+      )}
       <Heading size="md" as="h3">
         {data?.name}
       </Heading>

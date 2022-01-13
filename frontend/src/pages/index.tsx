@@ -44,7 +44,6 @@ export async function getServerSideProps() {
       hero: null,
       heroUrl: "",
       notification: null,
-      notificationVisible: false,
     },
     categories: [],
     tags: [],

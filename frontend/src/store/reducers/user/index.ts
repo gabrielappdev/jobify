@@ -1,7 +1,7 @@
 import { AnyAction } from "redux";
 import { HYDRATE } from "next-redux-wrapper";
 import { UserProps } from "types";
-import { SET_USER } from "../../actions";
+import { SET_USER, SET_LOADING_USER } from "../../actions";
 
 const initialState: UserProps = {
   user: {
@@ -12,7 +12,10 @@ const initialState: UserProps = {
     provider: "",
     username: "",
     jwt: "",
+    company: null,
+    role: null,
   },
+  isLoading: true,
 };
 
 export const reducer = (state = initialState, action: AnyAction) => {
@@ -23,6 +26,11 @@ export const reducer = (state = initialState, action: AnyAction) => {
       return {
         ...state,
         user: typeof action.payload === "object" ? { ...action.payload } : null,
+      };
+    case SET_LOADING_USER:
+      return {
+        ...state,
+        isLoading: action.payload,
       };
     default:
       return state;

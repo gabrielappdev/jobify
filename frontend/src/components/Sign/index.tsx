@@ -142,15 +142,15 @@ const Sign = ({ data }: SignProps) => {
             title: `Welcome ${user.username}`,
             description:
               signType === "in"
-                ? "Redirecting you to yout dashboard"
+                ? "You will be redirected"
                 : "We`ve created your account",
             status: "success",
-            duration: 5000,
+            duration: 2000,
             isClosable: true,
           });
           _.debounce(() => {
             router.push(data?.params?.redirect ?? "/");
-          }, 5000)();
+          }, 2000)();
         }
       }
     } catch (error) {

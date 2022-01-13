@@ -127,7 +127,7 @@ export async function getStaticProps({ params: { slug } }) {
       data,
     },
     notFound,
-    revalidate: 10,
+    revalidate: 60,
   };
 }
 

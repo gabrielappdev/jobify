@@ -1,3 +1,4 @@
+import React from "react";
 import { Url } from "url";
 
 export type LogoProps = {
@@ -13,11 +14,15 @@ export type HomeProps = {
   name: String;
   description: String;
   price: Number;
+  display_logo: Number;
+  featured: Number;
+  highlight: Number;
+  pinned: Number;
   logo: LogoProps;
   logoUrl: string;
   hero: LogoProps;
   heroUrl: String;
-  notification: GlobalNotificationProps;
+  notification?: GlobalNotificationProps;
 };
 
 export type GlobalNotificationProps = {
@@ -27,16 +32,16 @@ export type GlobalNotificationProps = {
 };
 
 export type CategoryProps = {
-  id: Number;
-  title: String;
-  description: String;
-  slug: String;
+  id: number;
+  title: string;
+  description: string;
+  slug: string;
 };
 
 export type TagProps = {
-  id: Number;
-  title: String;
-  slug: String;
+  id: number;
+  title: string;
+  slug: string;
 };
 
 export type FeaturedCompaniesProps = {
@@ -67,13 +72,14 @@ export type IndexProps = {
   otherJobs?: JobCardProps[];
 } & {
   notificationVisible?: Boolean | string;
-  globalModalProps: GlobalModalProps;
+  globalModalProps?: GlobalModalProps;
 };
 
 export type TemplateDataProps =
   | Pick<IndexProps, "appData" | "categories" | "featuredCompanies"> & "tags";
 
 export type CompanyProps = {
+  id?: Number;
   name: String;
   location: String;
   description: String;
@@ -116,11 +122,11 @@ export type FormattedPostSettings = {
 };
 
 export type JobCardProps = {
-  id: Number;
+  id?: Number;
   title: String;
   description?: String;
-  createdAt: String;
-  slug: String;
+  createdAt?: String;
+  slug?: String;
   categories: CategoryProps[];
   tags: TagProps[];
   company: JobCardCompanyProps;
@@ -183,14 +189,53 @@ export type MetaProps = {
   };
 };
 
+export type RoleProps = {
+  name: String;
+  type: String;
+};
+
+export type OrderProps = {
+  id: number;
+  total_in_cents: number;
+  payment_intent_id: number;
+  card_brand: string;
+  card_last4: string;
+  status: string;
+  users_permissions_user: UserInnerProps;
+  post: PostAttributesProps;
+};
+
+export type CreateJobFlowProps = {
+  id: number;
+  step: number;
+  createdCompany: true;
+  isPaid: false;
+  isPending: true;
+  values?: any;
+  order: OrderProps;
+};
+
+export type UserInnerProps = {
+  blocked: Boolean;
+  confirmed: Boolean;
+  email: "";
+  id: Number;
+  provider: String;
+  username: String;
+  jwt: String;
+  company: CompanyProps | null;
+  role: RoleProps;
+  create_job_flow?: CreateJobFlowProps;
+};
+
 export type UserProps = {
-  user: {
-    blocked: Boolean;
-    confirmed: Boolean;
-    email: "";
-    id: Number;
-    provider: String;
-    username: String;
-    jwt: String;
-  };
+  user: UserInnerProps;
+  isLoading: Boolean;
+};
+
+export type SocialLinkProps = {
+  name: string;
+  icon: React.ReactElement;
+  url: string;
+  color: string;
 };
