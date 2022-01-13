@@ -115,42 +115,40 @@ const CreateSocialLinkForm = ({
         </Heading>
         <CloseButton onClick={onClose} />
       </Flex>
-      <form>
-        <Flex direction={isMobile ? "column" : "row"} gap={4}>
-          <Select
-            placeholder="Social Network"
-            {...register("name", { required: true })}
-            isInvalid={!!errors?.name}
-            flexBasis="50%"
-          >
-            {validOptions.map((socialNetwork, index) => {
-              return (
-                <option value={socialNetwork.value} key={index}>
-                  {socialNetwork.name}
-                </option>
-              );
-            })}
-          </Select>
-          {socialSelected && (
-            <InputGroup flexBasis="50%">
-              <InputLeftAddon children={`https://${socialSelected}.com/`} />
-              <Input
-                {...register("url", { required: true })}
-                placeholder={`Your ${socialSelected} url`}
-              />
-            </InputGroup>
-          )}
-        </Flex>
-        <Divider py={2} />
-        <Flex align="center" w="100%">
-          <Button mr={4} colorScheme="blue" onClick={handleSubmit(onSubmit)}>
-            Create
-          </Button>
-          <Button type="reset" colorScheme="gray">
-            Reset
-          </Button>
-        </Flex>
-      </form>
+      <Flex direction={isMobile ? "column" : "row"} gap={4}>
+        <Select
+          placeholder="Social Network"
+          {...register("name", { required: true })}
+          isInvalid={!!errors?.name}
+          flexBasis="50%"
+        >
+          {validOptions.map((socialNetwork, index) => {
+            return (
+              <option value={socialNetwork.value} key={index}>
+                {socialNetwork.name}
+              </option>
+            );
+          })}
+        </Select>
+        {socialSelected && (
+          <InputGroup flexBasis="50%">
+            <InputLeftAddon children={`https://${socialSelected}.com/`} />
+            <Input
+              {...register("url", { required: true })}
+              placeholder={`Your ${socialSelected} url`}
+            />
+          </InputGroup>
+        )}
+      </Flex>
+      <Divider py={2} />
+      <Flex align="center" w="100%">
+        <Button mr={4} colorScheme="blue" onClick={handleSubmit(onSubmit)}>
+          Create
+        </Button>
+        <Button type="reset" colorScheme="gray">
+          Reset
+        </Button>
+      </Flex>
     </Stack>
   );
 };

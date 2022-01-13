@@ -37,24 +37,14 @@ export const _formatTags = (categories: TagProps[]): TagProps[] => {
 };
 
 export const _formatCompany = (data: CompanyProps): JobCardCompanyProps => {
-  const {
-    name,
-    description,
-    url,
-    location,
-    slug,
-    profile_picture: profilePicture,
-    posts,
-    createdAt,
-    updatedAt,
-  } = data;
+  const { name, location, slug, posts, createdAt, updatedAt } = data;
   return {
     name,
-    description,
-    url,
+    description: data?.url,
+    url: data?.url,
     location,
     slug,
-    logo: profilePicture.url,
+    logo: data?.profile_picture?.url ?? null,
     posts,
     createdAt,
     updatedAt,

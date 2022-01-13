@@ -141,8 +141,8 @@ const JobCard = ({ data, isPreview = false }: JobCardDataProps) => {
               >
                 <Center>
                   <Image
-                    src={data?.company?.logo.toString()}
-                    alt={data?.company?.name.toString()}
+                    src={data?.company?.logo?.toString()}
+                    alt={data?.company?.name?.toString()}
                     width="100%"
                     height="100%"
                     objectFit="cover"

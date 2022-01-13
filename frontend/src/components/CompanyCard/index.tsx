@@ -33,7 +33,10 @@ const CompanyCard = ({ data, shouldDisplayLogo }: CompanyCardProps) => {
             borderColor={highlightColor[colorMode]}
           >
             <Image
-              src={data?.logo as string}
+              src={
+                (data?.logo as string) ??
+                process.env.NEXT_PUBLIC_COMPANY_LOGO_PLACEHOLDER
+              }
               width="100%"
               height="100%"
               objectFit="cover"

@@ -77,7 +77,6 @@ const CreateJob = ({ onSuccess }: CreateJobProps) => {
   const user = useSelector(({ user }: ReducersProps) => user.user);
 
   const [total, setTotal] = useState(global.price ?? 0);
-
   const { formattedCategories, formattedTags } = useMemo(() => {
     const formattedCategories = categories.map((category) => ({
       value: category.id.toString(),

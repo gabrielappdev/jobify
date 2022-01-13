@@ -60,6 +60,15 @@ const CreateCompany = ({ onSuccess }) => {
   const { colorMode } = useColorMode();
 
   const onSubmit = async (data: CreateCompanyFormProps) => {
+    if (!data.profilePicture) {
+      return toast({
+        title: "Error",
+        description: "You must upload a profile picture to your company",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
     setIsSaving(true);
     const formData = new FormData();
     let submitData = _.omit(
@@ -96,10 +105,11 @@ const CreateCompany = ({ onSuccess }) => {
           isClosable: true,
         });
       } else {
-        const user = response.users_permissions_user;
+        const company = _.omit(response, ["users_permissions_user"]);
+        const updatedUser = { ...response.users_permissions_user, company };
         dispatch({
           type: SET_USER,
-          payload: user,
+          payload: { ...updatedUser, jwt: user.jwt },
         });
         toast({
           title: `Congratulations! You've created the company ${response.name}`,

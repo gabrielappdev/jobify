@@ -54,16 +54,12 @@ export async function getServerSideProps() {
 
   const assignGlobalData = (json) => {
     const appData = json as HomeProps;
-    const {
-      logo: { url },
-      hero: { url: heroUrl },
-    } = appData;
     data = {
       ...data,
       appData: {
         ...appData,
-        logoUrl: url?.toString(),
-        heroUrl: heroUrl?.toString(),
+        logoUrl: appData?.logo?.url?.toString(),
+        heroUrl: appData?.hero?.url?.toString(),
       },
     };
   };

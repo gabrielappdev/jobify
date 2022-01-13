@@ -95,11 +95,13 @@ const NewJob = ({ data }: NewJobProps) => {
   useEffect(() => {
     if (user?.create_job_flow) {
       const { step: currentStep } = user.create_job_flow;
-      const disabledTabs = Array.from(new Array(currentStep - 1)).map(
+      let disabledTabs = Array.from(new Array(currentStep - 1)).map(
         (_, index) => index
       );
       if (currentStep === 2) {
         disabledTabs.push(2);
+      } else if (currentStep === 1) {
+        disabledTabs = [1, 2];
       }
       setDisabledTabs(disabledTabs);
       setTabIndex(currentStep - 1);
@@ -116,10 +118,6 @@ const NewJob = ({ data }: NewJobProps) => {
     const updatedUser = payload.users_permissions_user;
     const step = updatedUser?.create_job_flow?.step;
     handleTabChange(step - 1);
-    dispatch({
-      type: SET_USER,
-      payload: { ...updatedUser },
-    });
     window.scrollTo(0, 0);
   };
 
