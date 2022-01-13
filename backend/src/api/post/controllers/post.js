@@ -62,67 +62,88 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
     }
   },
   async create(ctx) {
-    const company = await strapi.query("api::company.company").findOne({
-      where: { id: ctx.request.body.data.company },
-      populate: { users_permissions_user: true },
-    });
-    const postSettings = {
-      display_logo: false,
-      highlight: false,
-      pinned: false,
-      featured: false,
-    };
-    let slug = `${company.slug}-${slugify(
-      ctx.request.body.data.title
-    )}`.toLowerCase();
-    const jobsWithSameTitle = await strapi.db.query("api::post.post").findMany({
-      where: { slug: { $containsi: slug } },
-    });
-    console.log(jobsWithSameTitle);
-    if (jobsWithSameTitle.length) {
-      console.log(slug);
-      slug += +`-${jobsWithSameTitle.length}`;
-      console.log(slug);
-    }
-    ctx.request.body.data = {
-      ...ctx.request.body.data,
-      expiration_date: moment().add(7, "days").endOf("day").toDate(),
-      slug,
-      post_settings: postSettings,
-    };
-    const response = await super.create(ctx);
-    if (response?.data?.id) {
-      const completePost = await strapi.query("api::post.post").findOne({
-        where: { id: response.data.id },
-        populate: {
-          company: {
-            users_permissions_user: true,
-          },
-          categories: true,
-        },
+    const loadedUser = await strapi
+      .query("plugin::users-permissions.user")
+      .findOne({
+        where: { id: ctx.state.user.id },
+        populate: ["create_job_flow", "create_job_flow.order"],
       });
-
-      const user = company.users_permissions_user;
-      const categories = completePost.categories;
+    const userOrderId = loadedUser.create_job_flow.order.id;
+    const orderId = ctx.request.body.data.order_id;
+    if (userOrderId === orderId) {
+      const company = await strapi.query("api::company.company").findOne({
+        where: { id: ctx.request.body.data.company },
+        populate: { users_permissions_user: true },
+      });
+      let slug = `${company.slug}-${slugify(
+        ctx.request.body.data.title
+      )}`.toLowerCase();
+      const jobsWithSameTitle = await strapi.db
+        .query("api::post.post")
+        .findMany({
+          where: { slug: { $containsi: slug } },
+        });
+      if (jobsWithSameTitle.length) {
+        slug += +`-${jobsWithSameTitle.length}`;
+      }
+      const job = {
+        ...ctx.request.body.data,
+        expiration_date: moment().add(7, "days").endOf("day").toDate(),
+        slug,
+        post_settings: loadedUser.create_job_flow.values.post_settings,
+      };
+      ctx.request.body.data = job;
 
       try {
-        await strapi.service("api::notification.notification").create({
-          title: `New Job at ${company.name} - ${response.data.attributes.title}`,
-          content: response.data.attributes.description
-            .substr(0, 20)
-            .concat("..."),
-          url: `/jobs/${response.data.attributes.slug}`,
-          users_permissions_user: user.id,
-          expiration_date: response.data.attributes.expiration_date,
-          user,
-          categories,
-        });
-      } catch (error) {
-        console.log("after post created error: ", error);
-      }
-    }
+        let createJobFlow = null;
+        const response = await super.create(ctx);
+        if (response?.data?.id) {
+          const { create_job_flow } = await strapi
+            .service("api::order.order")
+            .finishPurchase(loadedUser, response.data, userOrderId);
+          createJobFlow = create_job_flow;
 
-    return response;
+          const completePost = await strapi.query("api::post.post").findOne({
+            where: { id: response.data.id },
+            populate: {
+              company: {
+                users_permissions_user: true,
+              },
+              categories: true,
+            },
+          });
+
+          const user = company.users_permissions_user;
+          const categories = completePost.categories;
+
+          try {
+            await strapi.service("api::notification.notification").create({
+              title: `New Job at ${company.name} - ${response.data.attributes.title}`,
+              content: response.data.attributes.description
+                .substr(0, 20)
+                .concat("..."),
+              url: `/jobs/${response.data.attributes.slug}`,
+              users_permissions_user: user.id,
+              expiration_date: response.data.attributes.expiration_date,
+              user,
+              categories,
+            });
+          } catch (error) {
+            console.log("after post created error: ", error);
+          }
+        }
+        ctx.body = {
+          ...job,
+          create_job_flow: createJobFlow,
+        };
+        return { ...job, create_job_flow: createJobFlow };
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      ctx.status = 401;
+      return { error: "You are not authorized to create a post" };
+    }
   },
   async getAllActivePosts(ctx) {
     try {

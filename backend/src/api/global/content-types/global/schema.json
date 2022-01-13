@@ -44,6 +44,22 @@
       "type": "component",
       "repeatable": false,
       "component": "global-notification.global-notification"
+    },
+    "display_logo": {
+      "type": "biginteger",
+      "default": "10"
+    },
+    "highlight": {
+      "type": "biginteger",
+      "default": "25"
+    },
+    "pinned": {
+      "type": "biginteger",
+      "default": "50"
+    },
+    "featured": {
+      "type": "biginteger",
+      "default": "100"
     }
   }
 }

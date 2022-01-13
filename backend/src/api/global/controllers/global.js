@@ -59,6 +59,7 @@ module.exports = createCoreController("api::global.global", ({ strapi }) => ({
             "company",
             "company.profile_picture",
             "create_job_flow",
+            "create_job_flow.order",
             "social_link",
           ],
         });

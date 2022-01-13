@@ -34,6 +34,18 @@
     "isPending": {
       "type": "boolean",
       "default": true
+    },
+    "order": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::order.order"
+    },
+    "status": {
+      "type": "string",
+      "default": "pending"
+    },
+    "values": {
+      "type": "json"
     }
   }
 }

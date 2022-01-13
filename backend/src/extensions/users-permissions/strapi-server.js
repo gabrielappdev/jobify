@@ -24,6 +24,48 @@ const sanitizeUser = (user, ctx) => {
   return sanitize.contentAPI.output(user, userSchema, { auth });
 };
 
+const getCurrentUserPopulated = async (id) => {
+  const userWithFetchedDependencies = await strapi
+    .query("plugin::users-permissions.user")
+    .findOne({
+      where: { id },
+      populate: [
+        "role",
+        "roles",
+        "company",
+        "company.profile_picture",
+        "create_job_flow",
+        "create_job_flow.order",
+        "social_link",
+      ],
+    });
+
+  let createdJobFlow = null;
+  if (!userWithFetchedDependencies.create_job_flow) {
+    company = await strapi.db.query("api::company.company").findOne({
+      where: {
+        users_permissions_user: id,
+      },
+      populate: ["profile_picture"],
+    });
+    createdJobFlow = await strapi.db
+      .query("api::create-job-flow.create-job-flow")
+      .create({
+        data: {
+          users_permissions_user: id,
+          createdCompany: false,
+          step: company ? 2 : 1,
+        },
+      });
+  }
+
+  return {
+    ...userWithFetchedDependencies,
+    create_job_flow:
+      userWithFetchedDependencies.create_job_flow ?? createdJobFlow,
+  };
+};
+
 module.exports = (plugin) => {
   plugin.controllers.auth.register = async (ctx) => {
     const pluginStore = await strapi.store({
@@ -198,13 +240,7 @@ module.exports = (plugin) => {
         user.password
       );
 
-      const createJobFlow = await strapi.db
-        .query("api::create-job-flow.create-job-flow")
-        .findOne({
-          where: { users_permissions_user: user.id },
-        });
-
-      const userToSend = await sanitizeUser(user, ctx);
+      const populatedUser = await getCurrentUserPopulated(user.id);
 
       if (!validPassword) {
         throw new ValidationError("Invalid identifier or password");
@@ -213,7 +249,7 @@ module.exports = (plugin) => {
           jwt: getService("jwt").issue({
             id: user.id,
           }),
-          user: { ...userToSend, create_job_flow: createJobFlow },
+          user: { ...populatedUser },
         });
       }
     } else {
@@ -237,17 +273,11 @@ module.exports = (plugin) => {
         throw new ApplicationError(error.message);
       }
 
-      const createJobFlow = await strapi.db
-        .query("api::create-job-flow.create-job-flow")
-        .findOne({
-          where: { users_permissions_user: user.id },
-        });
-
-      const userToSend = await sanitizeUser(user, ctx);
+      const populatedUser = await getCurrentUserPopulated(user.id);
 
       ctx.send({
         jwt: getService("jwt").issue({ id: user.id }),
-        user: { ...userToSend, create_job_flow: createJobFlow },
+        user: { ...populatedUser },
       });
     }
   };
