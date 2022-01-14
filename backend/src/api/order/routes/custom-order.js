@@ -15,5 +15,10 @@ module.exports = {
       path: "/orders/finish-purchase",
       handler: "order.finishPurchase",
     },
+    {
+      method: "GET",
+      path: "/orders/get-intent",
+      handler: "order.aaa",
+    },
   ],
 };

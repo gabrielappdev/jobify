@@ -12,11 +12,21 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
       if (!ctx.request.body.data || !ctx.request.body.data?.title) {
         return { error: "Invalid job" };
       }
+
+      const fetchedUser = await strapi
+        .query("plugin::users-permissions.user")
+        .findOne({
+          where: { id: ctx.state.user.id },
+          populate: ["create_job_flow", "create_job_flow.order"],
+        });
       const paymentIntent = await strapi
         .service("api::order.order")
-        .createPaymentIntent({
-          ...ctx.request.body.data,
-        });
+        .createPaymentIntent(
+          {
+            ...ctx.request.body.data,
+          },
+          fetchedUser?.create_job_flow?.order?.payment_intent_id
+        );
 
       const user = await strapi.db
         .query("plugin::users-permissions.user")
@@ -88,5 +98,34 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
     } catch (error) {
       return { error: error?.message };
     }
+  },
+  async currentUserOrders(ctx) {
+    const status = ctx.request.params.status ?? "all";
+    let options = {
+      users_permissions_user: ctx.state.user.id,
+    };
+    if (status !== "all") {
+      options = {
+        ...options,
+        status,
+      };
+    }
+    const orders = await strapi.db.query("api::order.order").findMany({
+      where: { ...options },
+      populate: ["user_permissions_user", "post"],
+    });
+
+    ctx.body = {
+      ...orders.map((order) => ({
+        ...order,
+        total: order.total_in_cents * 100,
+      })),
+    };
+  },
+  async aaa(ctx) {
+    const response = await strapi
+      .service("api::order.order")
+      .getCompleteOrderDetails(ctx.request.query.order_id);
+    ctx.body = response;
   },
 }));

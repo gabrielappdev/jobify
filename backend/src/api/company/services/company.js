@@ -13,6 +13,7 @@ module.exports = createCoreService("api::company.company", ({ strapi }) => ({
       select: ["name", "slug", "id"],
       populate: { posts: true, profile_picture: true },
     });
+    if (!companies.length) return [];
     return (
       companies
         // .filter(({ posts }) => posts.length >= 1)
@@ -20,10 +21,12 @@ module.exports = createCoreService("api::company.company", ({ strapi }) => ({
         .slice(0, 5)
         .map((company) => ({
           id: company.id,
-          logo: company.profile_picture.url,
+          logo:
+            company?.profile_picture?.url ??
+            "https://res.cloudinary.com/yugiohdeckbuilder/image/upload/v1642095660/logo_placeholder_251f61658c.jpg?updated_at=2022-01-13T17:40:59.918Z",
           name: company.name,
           slug: company.slug,
-          posts: company.posts.length,
+          posts: company?.posts?.length ?? 0,
         }))
     );
   },

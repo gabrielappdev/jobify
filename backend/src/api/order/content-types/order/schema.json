@@ -39,6 +39,9 @@
     "status": {
       "type": "string",
       "default": "pending"
+    },
+    "receipt": {
+      "type": "string"
     }
   }
 }

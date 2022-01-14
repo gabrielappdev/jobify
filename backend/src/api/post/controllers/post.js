@@ -14,11 +14,11 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
       const job = await strapi.query("api::post.post").findOne({
         where: { slug, active: true },
         populate: [
+          "tags",
           "categories",
           "company.profile_picture",
           "company.posts",
           "post_settings",
-          "tags",
         ],
       });
       if (job) {
@@ -86,11 +86,15 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
       if (jobsWithSameTitle.length) {
         slug += +`-${jobsWithSameTitle.length}`;
       }
+
+      const bodyData = ctx.request.body.data;
       const job = {
         ...ctx.request.body.data,
         expiration_date: moment().add(7, "days").endOf("day").toDate(),
         slug,
         post_settings: loadedUser.create_job_flow.values.post_settings,
+        categories: bodyData.categories.map(({ id }) => id),
+        tags: bodyData.tags.map(({ id }) => id),
       };
       ctx.request.body.data = job;
 

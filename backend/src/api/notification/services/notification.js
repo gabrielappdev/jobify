@@ -121,7 +121,6 @@ module.exports = createCoreService(
             },
           },
         });
-      console.log("interestedUsers: ", interestedUsers);
       await handleNotifications(params, user, interestedUsers);
     },
     async clear() {

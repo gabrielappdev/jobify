@@ -60,6 +60,14 @@
     "featured": {
       "type": "biginteger",
       "default": "100"
+    },
+    "currency": {
+      "type": "string",
+      "default": "brl"
+    },
+    "country": {
+      "type": "string",
+      "default": "br"
     }
   }
 }
