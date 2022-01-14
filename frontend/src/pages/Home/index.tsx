@@ -12,7 +12,9 @@ const Home = ({ data }: DataType) => {
   return (
     <Template data={data}>
       <Hero data={data?.appData} />
-      <FeaturedCompanies data={data?.featuredCompanies} />
+      {data?.featuredCompanies?.length === 5 && (
+        <FeaturedCompanies data={data?.featuredCompanies} />
+      )}
       <JobListSection
         heading="Featured Jobs"
         description="Trending jobs with high competition"

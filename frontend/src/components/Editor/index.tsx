@@ -8,12 +8,19 @@ import { InjectWrapper } from "./styles";
 interface EditorProps {
   onValueChange: (value: String) => void;
   title?: string;
+  initialValue?: string;
 }
 
-export const Editor: React.FC<EditorProps> = ({ onValueChange, title }) => {
+export const Editor: React.FC<EditorProps> = ({
+  onValueChange,
+  title,
+  initialValue = "",
+}) => {
   const { colorMode } = useColorMode();
   const [value, setValue] = React.useState<EditorValue>(
-    RichTextEditor.createEmptyValue()
+    initialValue
+      ? RichTextEditor.createValueFromString(initialValue, "html")
+      : RichTextEditor.createEmptyValue()
   );
   const memoizedChage = useCallback(
     _.debounce((value) => {

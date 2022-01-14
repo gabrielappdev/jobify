@@ -34,7 +34,7 @@ const JobPageHero = ({ data }: JobPageHeroProps) => {
           <Text py={2}>
             <b>Posted:</b> {moment(data.createdAt as string).format("ll")}
           </Text>
-          <SimpleGrid py={2} gap={4} columns={isMobile ? 2 : 4}>
+          <Flex my={2} gap={4}>
             {data.categories.map(({ title, slug }, index) => {
               return (
                 <Link href={`/categories/${slug}`} key={index}>
@@ -50,8 +50,8 @@ const JobPageHero = ({ data }: JobPageHeroProps) => {
                 </Link>
               );
             })}
-          </SimpleGrid>
-          <SimpleGrid py={2} gap={4} columns={isMobile ? 2 : 4}>
+          </Flex>
+          <Flex my={2} gap={4}>
             {data.tags.map(({ title, slug }, index) => {
               return (
                 <Link href={`/tags/${slug}`} key={index}>
@@ -67,7 +67,7 @@ const JobPageHero = ({ data }: JobPageHeroProps) => {
                 </Link>
               );
             })}
-          </SimpleGrid>
+          </Flex>
         </Stack>
         <Flex pb={isMobile ? 4 : 0}>
           <CompanyCard

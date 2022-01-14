@@ -83,6 +83,7 @@ const NewJob = ({ data }: NewJobProps) => {
   const user = useSelector(({ user }: ReducersProps) => user.user);
   const [disabledTabs, setDisabledTabs] = useState([0, 1]);
   const [tabIndex, setTabIndex] = useState(0);
+  const [isEdit, setIsEdit] = useState(false);
   const { colorMode } = useColorMode();
 
   useEffect(() => {
@@ -139,6 +140,14 @@ const NewJob = ({ data }: NewJobProps) => {
     window.scrollTo(0, 0);
   };
 
+  const handleGoBackCreateJob = () => {
+    window.scrollTo(0, 0);
+    setDisabledTabs([0, 2]);
+    handleTabChange(1);
+
+    setIsEdit(true);
+  };
+
   return (
     <Template data={data}>
       <Box bg={bgColor[colorMode]} w="100%" pt="100px">
@@ -156,7 +165,7 @@ const NewJob = ({ data }: NewJobProps) => {
                 <>Create a company</>
               </CommonTab>
               <CommonTab index={1} disabledTabs={disabledTabs}>
-                <>Create a job</>
+                <>{isEdit ? "Edit this" : "Create a"} job</>
               </CommonTab>
               <CommonTab index={2} disabledTabs={disabledTabs}>
                 <>Payment</>
@@ -167,10 +176,10 @@ const NewJob = ({ data }: NewJobProps) => {
                 <CreateCompany onSuccess={onCompanyCreate} />
               </TabPanel>
               <TabPanel>
-                <CreateJob onSuccess={onCreateJob} />
+                <CreateJob isEdit={isEdit} onSuccess={onCreateJob} />
               </TabPanel>
               <TabPanel>
-                <Payment />
+                <Payment onGoBack={handleGoBackCreateJob} />
               </TabPanel>
             </TabPanels>
           </Tabs>

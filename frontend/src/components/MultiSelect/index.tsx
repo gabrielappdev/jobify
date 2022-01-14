@@ -7,6 +7,7 @@ interface Option extends OptionBase {
 
 interface MultiSelectProps {
   options: Option[];
+  value: any;
   placeholder: string;
   closeMenuOnSelect?: boolean;
   isClearable?: boolean;
@@ -16,6 +17,7 @@ interface MultiSelectProps {
 
 const MultiSelect = ({
   options = [],
+  value = [],
   placeholder,
   closeMenuOnSelect = false,
   isClearable = true,
@@ -28,9 +30,10 @@ const MultiSelect = ({
       placeholder={placeholder}
       options={options}
       closeMenuOnSelect={closeMenuOnSelect}
-      onChange={onChange}
       isClearable={isClearable}
       size={size}
+      value={value}
+      onChange={onChange}
     />
   );
 };

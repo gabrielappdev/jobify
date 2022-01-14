@@ -18,7 +18,7 @@ import {
 import useIsTouchDevice from "hooks/useDeviceDetect";
 import _ from "lodash";
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import fetch from "services/api";
@@ -33,6 +33,7 @@ const ReactRTE = dynamic(() => import("../Editor"), {
 
 type CreateJobProps = {
   onSuccess: (values: any) => void;
+  isEdit?: boolean;
 };
 
 type FormattedCategoryProps = {
@@ -66,15 +67,22 @@ const defaultValues = {
   },
 };
 
-const CreateJob = ({ onSuccess }: CreateJobProps) => {
+const CreateJob = ({ onSuccess, isEdit = false }: CreateJobProps) => {
   const isMobile = useIsTouchDevice();
   const toast = useToast();
   const [isSaving, setIsSaving] = useState(false);
+  const [initialSwitches, setInitialSwitches] = useState(
+    defaultValues.post_settings
+  );
 
   const tags = useSelector(({ app }: ReducersProps) => app.tags);
   const categories = useSelector(({ app }: ReducersProps) => app.categories);
   const global = useSelector(({ app }: ReducersProps) => app.appData);
   const user = useSelector(({ user }: ReducersProps) => user.user);
+
+  const currency = useMemo(() => {
+    return global?.currency ?? "usd";
+  }, [global]);
 
   const [total, setTotal] = useState(global.price ?? 0);
   const { formattedCategories, formattedTags } = useMemo(() => {
@@ -94,8 +102,8 @@ const CreateJob = ({ onSuccess }: CreateJobProps) => {
     register,
     setValue,
     handleSubmit,
-    getValues,
     watch,
+    reset,
     formState: { errors },
   } = useForm<CreateJobFormProps>({
     defaultValues,
@@ -108,6 +116,34 @@ const CreateJob = ({ onSuccess }: CreateJobProps) => {
     tags: formTags,
     post_settings: postSettings,
   } = watch();
+
+  useEffect(() => {
+    if (isEdit) {
+      const values = user.create_job_flow.values;
+      const formattedCategories = _.intersectionBy(
+        categories,
+        values.categories,
+        "id"
+      );
+      const formattedTags = _.intersectionBy(tags, values.tags, "id");
+      reset({
+        ...values,
+        categories: formattedCategories.map((category) => ({
+          id: category.id,
+          label: category.title,
+          value: category.id.toString(),
+          ...category,
+        })),
+        tags: formattedTags.map((tag) => ({
+          id: tag.id,
+          label: tag.title,
+          value: tag.id.toString(),
+          ...tag,
+        })),
+      });
+      setInitialSwitches(values.post_settings);
+    }
+  }, [isEdit, user, reset]);
 
   const onSubmit = async (data: CreateJobFormProps) => {
     setIsSaving(true);
@@ -175,7 +211,14 @@ const CreateJob = ({ onSuccess }: CreateJobProps) => {
       selectedCategories.map((category) => ({ id: parseInt(category.value) })),
       "id"
     );
-    setValue("categories", originalCategories);
+    setValue(
+      "categories",
+      originalCategories.map((category) => ({
+        ...category,
+        value: category.id.toString(),
+        label: category.title,
+      }))
+    );
   };
   const handleTagsSelection = (selectedTags: FormattedTagProps[]) => {
     const originalTags = _.intersectionBy(
@@ -183,7 +226,14 @@ const CreateJob = ({ onSuccess }: CreateJobProps) => {
       selectedTags.map((tag) => ({ id: parseInt(tag.value) })),
       "id"
     );
-    setValue("tags", originalTags);
+    setValue(
+      "tags",
+      originalTags.map((tag) => ({
+        ...tag,
+        value: tag.id.toString(),
+        label: tag.title,
+      }))
+    );
   };
 
   const handlePostSettingsChange = (
@@ -191,7 +241,7 @@ const CreateJob = ({ onSuccess }: CreateJobProps) => {
     total: Number
   ) => {
     setValue("post_settings", postSettings);
-    setTotal(total);
+    setTotal(total as number);
   };
 
   return (
@@ -205,7 +255,11 @@ const CreateJob = ({ onSuccess }: CreateJobProps) => {
           {...register("title")}
           placeholder="Job Title"
         />
-        <ReactRTE title="Description" onValueChange={handleDescriptionChange} />
+        <ReactRTE
+          title="Description"
+          onValueChange={handleDescriptionChange}
+          initialValue={description}
+        />
         <Flex w="100%" direction={isMobile ? "column" : "row"} gap={4}>
           <Box flexBasis="50%">
             <MultiSelect
@@ -214,6 +268,7 @@ const CreateJob = ({ onSuccess }: CreateJobProps) => {
               isClearable
               onChange={handleCategoriesSelection}
               size="md"
+              value={formCategories}
             />
           </Box>
 
@@ -224,16 +279,27 @@ const CreateJob = ({ onSuccess }: CreateJobProps) => {
               isClearable
               onChange={handleTagsSelection}
               size="md"
+              value={formTags}
             />
           </Box>
         </Flex>
         <Divider />
         <JobPreview
           data={jobCardPreviewData}
+          currency={"usd"}
           onChange={handlePostSettingsChange}
+          initialSwitches={initialSwitches}
         />
         <Divider />
-        <Heading size="md">Total price: ${total}</Heading>
+        <Flex gap={2} align="center">
+          <Heading size="md">Total: {`$ ${total}`}</Heading>
+          {currency !== "usd" && (
+            <Text color="red.600" fontSize="sm">
+              * The total price in {currency.toUpperCase()} will be shown on the
+              next page (payment)
+            </Text>
+          )}
+        </Flex>
         <Stack w="100%">
           <Flex gap={4} w="100%" align="center">
             <Button isLoading={isSaving} type="submit" colorScheme="green">

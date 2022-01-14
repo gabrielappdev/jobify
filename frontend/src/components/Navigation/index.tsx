@@ -236,7 +236,7 @@ const Navigation = ({ data }: NavigationProps) => {
 
   useScrollPosition(
     ({ currPos }) => {
-      setIsTransparent(currPos.y > -200);
+      setIsTransparent(currPos.y > -100);
     },
     [colorMode],
     null,

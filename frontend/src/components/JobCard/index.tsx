@@ -35,20 +35,20 @@ const JobCard = ({ data, isPreview = false }: JobCardDataProps) => {
   const { colorMode } = useColorMode();
 
   const backgroundColor = useMemo(() => {
-    if (data.isHighlighted) {
+    if (data?.isHighlighted) {
       return highlightColor[colorMode];
     }
     return bgColor[colorMode];
   }, [data, colorMode]);
 
   const isNew = useMemo(() => {
-    return moment(data.createdAt as MomentInput)
+    return moment(data?.createdAt as MomentInput)
       .add("4", "hours")
       .isAfter(moment());
   }, [data]);
 
   const isFeatured = useMemo(() => {
-    return data.isFeatured;
+    return data?.isFeatured;
   }, [data]);
 
   const getAdornmentsPosition = () => {
@@ -64,10 +64,10 @@ const JobCard = ({ data, isPreview = false }: JobCardDataProps) => {
     };
   };
   return (
-    <Link href={isPreview ? "" : " /jobs/" + data.slug}>
+    <Link href={isPreview ? "" : " /jobs/" + data?.slug}>
       <Box
         data-testid="job-card"
-        aria-label={data.isHighlighted ? "highlighted" : "normal"}
+        aria-label={data?.isHighlighted ? "highlighted" : "normal"}
         p={4}
         borderColor={switchPrimaryColor[colorMode]}
         borderWidth={1}
@@ -82,7 +82,8 @@ const JobCard = ({ data, isPreview = false }: JobCardDataProps) => {
           position: "absolute",
           left: 0,
           top: 0,
-          opacity: data.isHighlighted || data.isFeatured ? 1 : 0,
+          opacity:
+            data?.isPinned || data?.isHighlighted || data?.isFeatured ? 1 : 0,
           background: theme.colors.green[500],
           width: "5px",
           height: "calc(100% + 200px)",
@@ -110,7 +111,7 @@ const JobCard = ({ data, isPreview = false }: JobCardDataProps) => {
               </Text>
             </Tag>
           )}
-          {data.isPinned && (
+          {data?.isPinned && (
             <Box
               color={switchPrimaryColor[colorMode]}
               p={1}
@@ -128,7 +129,7 @@ const JobCard = ({ data, isPreview = false }: JobCardDataProps) => {
           )}
         </Flex>
         <Flex w="100%" h="inherit" align={isMobile ? "flex-start" : "center"}>
-          {data.shouldDisplayLogo && (
+          {data?.shouldDisplayLogo && (
             <Link href={isPreview ? "" : `/companies/${data?.company?.slug}`}>
               <Box
                 w="auto"
@@ -164,7 +165,7 @@ const JobCard = ({ data, isPreview = false }: JobCardDataProps) => {
                 color={switchPrimaryColor[colorMode]}
                 data-testid="job-card-company-name"
               >
-                {data.company.name}
+                {data?.company.name}
               </Text>
               <Heading
                 fontSize="lg"
@@ -172,10 +173,10 @@ const JobCard = ({ data, isPreview = false }: JobCardDataProps) => {
                 color={switchPrimaryColor[colorMode]}
                 as="h6"
               >
-                {data.title}
+                {data?.title}
               </Heading>
               <Flex data-testid="job-card-categories">
-                {data.categories.map((category, index) => {
+                {data?.categories.map((category, index) => {
                   return (
                     <Link
                       key={index}
@@ -205,7 +206,7 @@ const JobCard = ({ data, isPreview = false }: JobCardDataProps) => {
               >
                 <FaMapMarkerAlt />
                 <Text ml={2} fontWeight="bold">
-                  {data.company.location}
+                  {data?.company.location}
                 </Text>
               </Flex>
               <Flex justify="flex-end">

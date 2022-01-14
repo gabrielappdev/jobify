@@ -11,17 +11,20 @@ export type ColorModeProps = {
 };
 
 export type HomeProps = {
-  name: String;
-  description: String;
-  price: Number;
-  display_logo: Number;
-  featured: Number;
-  highlight: Number;
-  pinned: Number;
+  name: string;
+  description: string;
+  price: number;
+  display_logo: number;
+  featured: number;
+  highlight: number;
+  pinned: number;
   logo: LogoProps;
   logoUrl: string;
   hero: LogoProps;
-  heroUrl: String;
+  heroUrl: string;
+  country: string;
+  currency: string;
+  currencySymbol: string;
   notification?: GlobalNotificationProps;
 };
 

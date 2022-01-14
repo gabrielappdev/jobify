@@ -12,6 +12,7 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react";
+import { currencies } from "../../constants";
 import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { FaRocket } from "react-icons/fa";
@@ -22,17 +23,30 @@ import JobCard from "../JobCard";
 
 type JobPreviewProps = {
   data: JobCardProps;
+  currency: string;
   onChange: (post_settings: PostSettingsProps, total: Number) => void;
+  initialSwitches?: PostSettingsProps;
 };
 
 const titles = {
   highlight: "Highlight the job",
   featured: "Feature the job",
   pinned: "Pin the job",
-  display_logo: "Display your logo company",
+  display_logo: "Display company's logo",
 };
 
-const JobPreview = ({ data, onChange }: JobPreviewProps) => {
+const defaultSwitches = {
+  featured: false,
+  pinned: false,
+  highlight: false,
+  display_logo: false,
+};
+
+const JobPreview = ({
+  data,
+  onChange,
+  initialSwitches = defaultSwitches,
+}: JobPreviewProps) => {
   const globalData = useSelector(({ app }: ReducersProps) => app.appData);
   const prices = useMemo(() => {
     if (globalData) {
@@ -47,12 +61,13 @@ const JobPreview = ({ data, onChange }: JobPreviewProps) => {
     return null;
   }, [globalData]);
 
-  const [switches, setSwitches] = useState<PostSettingsProps>({
-    featured: false,
-    pinned: false,
-    highlight: false,
-    display_logo: false,
-  });
+  const [switches, setSwitches] = useState<PostSettingsProps>(initialSwitches);
+
+  useEffect(() => {
+    if (initialSwitches) {
+      setSwitches(initialSwitches);
+    }
+  }, [initialSwitches]);
 
   const isAllEnabled = useMemo(() => {
     return _.keys(switches).every((key) => switches[key]);
@@ -137,6 +152,7 @@ const JobPreview = ({ data, onChange }: JobPreviewProps) => {
                     <Heading
                       size="sm"
                       as="h6"
+                      textAlign="center"
                       color={!!switches[key] ? "green.500" : "gray.400"}
                     >
                       {titles[key]}

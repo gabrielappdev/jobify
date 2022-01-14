@@ -11,7 +11,11 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
-const Payment = () => {
+type PaymentProps = {
+  onGoBack: () => void;
+};
+
+const Payment = ({ onGoBack }: PaymentProps) => {
   const [clientSecret, setClientSecret] = useState("");
   const user = useSelector(({ user }: ReducersProps) => user.user);
   const toast = useToast();
@@ -55,7 +59,7 @@ const Payment = () => {
     <Stack minH="50vh" w="100%" gap={4}>
       {clientSecret && (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <CheckoutForm />
+          <CheckoutForm onGoBack={onGoBack} clientSecret={clientSecret} />
         </Elements>
       )}
     </Stack>

@@ -1,7 +1,6 @@
 import {
   FormattedPostSettings,
   JobCardCompanyProps,
-  RawCategoriesProps,
   PostSettingsProps,
   JobCardProps,
   PostAttributesProps,
@@ -12,7 +11,8 @@ import {
 import _ from "lodash";
 import { rgba } from "polished";
 import { theme } from "@chakra-ui/react";
-import moment, { MomentInput } from "moment";
+import moment from "moment";
+import { currencies } from "../constants";
 
 export const defaultPostPopulateQuery =
   "populate[0]=company&populate[1]=company.profile_picture&populate[2]=categories&populate[3]=post_settings";
@@ -28,8 +28,8 @@ export const _formatCategories = (
   }));
 };
 
-export const _formatTags = (categories: TagProps[]): TagProps[] => {
-  return categories.map(({ id, title, slug }) => ({
+export const _formatTags = (tags: TagProps[]): TagProps[] => {
+  return tags.map(({ id, title, slug }) => ({
     id,
     title,
     slug,
@@ -105,6 +105,9 @@ export const _formatAppData = (json) => {
     ...json,
     logoUrl: url?.toString(),
     heroUrl: heroUrl?.toString(),
+    currencySymbol: currencies.find(({ cc }) => {
+      return cc === json?.currency?.toUpperCase();
+    })?.symbol,
   };
   return json;
 };
