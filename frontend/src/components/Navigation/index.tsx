@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import {
   Box,
   Menu,
@@ -31,16 +31,22 @@ import {
   OPEN_GLOBAL_MODAL,
   SET_USER,
   SET_LOADING_USER,
+  SET_NOTIFICATIONS,
 } from "../../store/actions";
 import { ReducersProps } from "../../store/reducers";
 import { AnimatedWrapper } from "./styles";
 import usePusherEventListener from "../../hooks/usePusherEventListener";
-import { PUSHER_GLOBAL_NOTIFICATION } from "../../constants";
+import {
+  PUSHER_CREATE_JOB_AUTHOR_NOTIFICATION,
+  PUSHER_CREATE_JOB_SUBSCRIBERS_NOTIFICATION,
+  PUSHER_GLOBAL_NOTIFICATION,
+} from "../../constants";
 import fetch from "../../services/api";
 import { LocalStorage } from "../../services/localStorage";
 import { AiOutlineUser, AiOutlineUserAdd } from "react-icons/ai";
 import { BiLogOutCircle } from "react-icons/bi";
 import { useRouter } from "next/router";
+import Notifications from "../Notifications";
 
 export type NavigationProps = {
   data: {
@@ -72,6 +78,10 @@ const Navigation = ({ data }: NavigationProps) => {
     ({ app }: ReducersProps) => app.notificationVisible
   );
   const user = useSelector(({ user }: ReducersProps) => user.user);
+  const notifications = useSelector(
+    ({ notifications }: ReducersProps) => notifications.notifications
+  );
+  const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
 
   const shouldDisplayNotification = useMemo(() => {
     if (globalNotification) {
@@ -96,14 +106,26 @@ const Navigation = ({ data }: NavigationProps) => {
         type: SET_LOADING_USER,
         payload: true,
       });
+      setIsLoadingNotifications(true);
       try {
-        const userResponse = await fetch("/current-user", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const user = await userResponse.json();
+        const [userResponse, notificationsResponse] = await Promise.all([
+          fetch("/current-user", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+          fetch("/current-user/notifications", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+        ]);
+        const [user, userNotifications] = await Promise.all([
+          userResponse.json(),
+          notificationsResponse.json(),
+        ]);
         if (user) {
           const token = localStorage.getData("jobify").jwt;
           localStorage.setData("jobify", {
@@ -112,6 +134,10 @@ const Navigation = ({ data }: NavigationProps) => {
           dispatch({
             type: SET_USER,
             payload: { ...user, jwt: token },
+          });
+          dispatch({
+            type: SET_NOTIFICATIONS,
+            payload: { notifications: userNotifications?.notifications },
           });
         }
       } catch (error) {
@@ -125,6 +151,7 @@ const Navigation = ({ data }: NavigationProps) => {
           type: SET_LOADING_USER,
           payload: false,
         });
+        setIsLoadingNotifications(false);
       }
     };
     if (typeof window !== undefined && !user?.username && !tokenWasRefreshed) {
@@ -172,39 +199,78 @@ const Navigation = ({ data }: NavigationProps) => {
     );
   };
 
-  usePusherEventListener(
+  const handleFetchSubscriberNotification = useCallback(
     async (data) => {
-      const fetchNotifications = async () => {
-        try {
-          const response = await fetch("/global?populate[0]=notification");
-          if (response) {
-            const { data } = await response.json();
-            if (!data?.error) {
-              setGlobalNotification(data?.attributes?.notification);
-              if (
-                !isGlobalNotificationVisible ||
-                isGlobalNotificationVisible === "hide"
-              ) {
-                localStorage.setData("jobify", {
-                  hideGlobalNotification: false,
-                });
-                dispatch({
-                  type: SET_GLOBAL_DATA,
-                  payload: { notificationVisible: true },
-                });
-              }
+      const fetchAuthorNotification = async (id) => {
+        if (user.id === id) {
+          setIsLoadingNotifications(true);
+          try {
+            const responseData = await fetch("/current-user/notifications", {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${user.jwt}`,
+              },
+            });
+            const response = await responseData.json();
+            if (response.notifications) {
+              dispatch({
+                type: SET_NOTIFICATIONS,
+                payload: { notifications: response.notifications },
+              });
             }
+          } catch (error) {
+            console.error("Error fetching global data notifications: ", error);
+          } finally {
+            setIsLoadingNotifications(false);
           }
-        } catch (error) {
-          console.error("Error fetching global data notifications: ", error);
         }
       };
       if (data) {
-        await fetchNotifications();
+        await fetchAuthorNotification(data.user_id);
       }
     },
-    PUSHER_GLOBAL_NOTIFICATION,
-    [isGlobalNotificationVisible, dispatch]
+    [user, dispatch]
+  );
+
+  const handleFetchGlobalNotification = useCallback(async () => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await fetch("/global?populate[0]=notification");
+        if (response) {
+          const { data } = await response.json();
+          if (!data?.error) {
+            setGlobalNotification(data?.attributes?.notification);
+            if (
+              !isGlobalNotificationVisible ||
+              isGlobalNotificationVisible === "hide"
+            ) {
+              localStorage.setData("jobify", {
+                hideGlobalNotification: false,
+              });
+              dispatch({
+                type: SET_GLOBAL_DATA,
+                payload: { notificationVisible: true },
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching global data notifications: ", error);
+      }
+    };
+    if (data) {
+      await fetchNotifications();
+    }
+  }, [dispatch]);
+
+  usePusherEventListener(
+    handleFetchSubscriberNotification,
+    PUSHER_CREATE_JOB_SUBSCRIBERS_NOTIFICATION
+  );
+
+  usePusherEventListener(
+    handleFetchGlobalNotification,
+    PUSHER_GLOBAL_NOTIFICATION
   );
 
   useEffect(() => {
@@ -368,6 +434,11 @@ const Navigation = ({ data }: NavigationProps) => {
           >
             Post a job
           </Button>
+          <Notifications
+            user={user}
+            isLoading={isLoadingNotifications}
+            notifications={notifications}
+          />
           <Menu>
             <MenuButton
               as={IconButton}

@@ -1,4 +1,4 @@
-import { IndexProps, UserProps } from "types";
+import { IndexProps, NotificationsReducerProps, UserProps } from "types";
 
 export type ReducersProps = {
   app: IndexProps & {
@@ -6,4 +6,5 @@ export type ReducersProps = {
     isGlobalModalOpen: Boolean;
   };
   user: UserProps;
+  notifications: NotificationsReducerProps;
 };

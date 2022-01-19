@@ -242,3 +242,16 @@ export type SocialLinkProps = {
   url: string;
   color: string;
 };
+
+export type NotificationProps = {
+  id: number;
+  content: string;
+  title: string;
+  url: string;
+  createdAt: string;
+  readed: boolean;
+};
+
+export type NotificationsReducerProps = {
+  notifications: NotificationProps[];
+};
