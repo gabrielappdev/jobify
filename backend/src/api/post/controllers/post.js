@@ -123,9 +123,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
           try {
             await strapi.service("api::notification.notification").create({
               title: `New Job at ${company.name} - ${response.data.attributes.title}`,
-              content: response.data.attributes.description
-                .substr(0, 20)
-                .concat("..."),
+              content: response.data.attributes.description,
               url: `/jobs/${response.data.attributes.slug}`,
               users_permissions_user: user.id,
               expiration_date: response.data.attributes.expiration_date,

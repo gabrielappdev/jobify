@@ -20,12 +20,12 @@ const getPostCreateNotification = async (params = {}, users = []) => {
         return (created_at) =>
           pusher.trigger(
             "jobify-notifications",
-            "actions/create::job-subscribers-notification",
+            "actions/create::job-subscribers-notifications",
             {
               message: {
                 ...notificationData,
                 user_id: id,
-                action: "actions/create::job-subscribers-notification",
+                action: "actions/create::job-subscribers-notifications",
                 created_at,
               },
             }
@@ -69,12 +69,14 @@ const handleNotifications = async (
     "expiration_date",
   ]);
   if (interestedUsers.length) {
-    await strapi.db.query("api::notification.notification").createMany({
-      data: interestedUsers.map(({ id }) => ({
-        ...requestParams,
-        users_permissions_user: id,
-      })),
-    });
+    for (let user of interestedUsers) {
+      await strapi.db.query("api::notification.notification").create({
+        data: {
+          ...requestParams,
+          users_permissions_user: user.id,
+        },
+      });
+    }
     await getPostCreateNotification(requestParams, interestedUsers);
   }
 
