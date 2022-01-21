@@ -10,21 +10,12 @@ const formatError = (error) => [
 
 module.exports = {
   index: async (ctx) => {
+    const currentUser = ctx.state.user;
     const params = ctx.request.body;
-
-    if (!params.identifier) {
-      return ctx.badRequest(
-        null,
-        formatError({
-          id: "Auth.form.error.email.provide",
-          message: "Por favor, informe o apelido ou o e-mail",
-        })
-      );
-    }
 
     const user = await strapi
       .query("plugin::users-permissions.user")
-      .findOne({ where: { email: params.identifier } });
+      .findOne({ where: { email: currentUser.email } });
 
     const validPassword = await strapi.plugins[
       "users-permissions"
