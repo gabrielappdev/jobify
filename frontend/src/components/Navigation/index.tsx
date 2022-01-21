@@ -172,8 +172,8 @@ const Navigation = ({ data }: NavigationProps) => {
     if (user?.email) {
       return (
         <MenuGroup title={`Hello ${user.username}!`}>
-          <Link href="/profile">
-            <MenuItem icon={<AiOutlineUser />}>Profile</MenuItem>
+          <Link href="/dashboard">
+            <MenuItem icon={<AiOutlineUser />}>Dashboard</MenuItem>
           </Link>
           <MenuItem onClick={handleLogout} icon={<BiLogOutCircle />}>
             Logout
