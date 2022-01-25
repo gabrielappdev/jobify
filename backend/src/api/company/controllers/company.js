@@ -87,7 +87,26 @@ module.exports = createCoreController("api::company.company", ({ strapi }) => ({
       }
     }
   },
+  async _verifySlug(ctx) {
+    const data = JSON.parse(ctx.request.body.data);
+    const slug = data.slug;
+    const companiesWithSameSlug = await strapi.db
+      .query("api::company.company")
+      .findMany({
+        where: {
+          slug: {
+            $containsi: slug,
+          },
+        },
+      });
+    let newSlug = slug;
+    if (companiesWithSameSlug.length) {
+      newSlug += `-${companiesWithSameSlug.length + 1}`;
+      ctx.request.body.data = JSON.stringify({ ...data, slug: newSlug });
+    }
+  },
   async create(ctx) {
+    await this._verifySlug(ctx);
     const response = await super.create(ctx);
     ctx.body = response;
     if (response?.data?.id) {
@@ -138,6 +157,36 @@ module.exports = createCoreController("api::company.company", ({ strapi }) => ({
           "resetPasswordToken",
           "confirmationToken",
         ]),
+      };
+    }
+  },
+  async update(ctx) {
+    const user = await strapi
+      .query("plugin::users-permissions.user")
+      .findOne({ where: { id: ctx.state.user.id }, populate: ["company"] });
+    if (
+      user.company?.id &&
+      ctx.request.params.id &&
+      Number(ctx.request.params.id) === user?.company?.id
+    ) {
+      ctx.request.query = { populate: ["profile_picture", "social_link"] };
+      if (_.keys(ctx.request.files).includes("files.profile_picture")) {
+        ctx.request.files.files = [ctx.request.files["files.profile_picture"]];
+        await strapi.controller("plugin::upload.content-api").upload(ctx);
+        const fileId = _.first(ctx.body)?.id;
+        ctx.request.body.data = JSON.stringify({
+          ...JSON.parse(ctx.request.body.data),
+          profile_picture: fileId,
+        });
+        ctx.request.files = {};
+      }
+      await this._verifySlug(ctx);
+      const response = await super.update(ctx);
+      ctx.body = response;
+    } else {
+      ctx.status = 403;
+      ctx.body = {
+        error: "You are unauthorized to perform this action!",
       };
     }
   },
