@@ -33,6 +33,11 @@ export const Editor: React.FC<EditorProps> = ({
     memoizedChage(value);
   }, [value]);
 
+  useEffect(() => {
+    const value = RichTextEditor.createValueFromString(initialValue, "html");
+    setValue(value);
+  }, [initialValue]);
+
   return (
     <InjectWrapper colorMode={colorMode}>
       <Stack w="100%" gap={1}>

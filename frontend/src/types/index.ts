@@ -2,12 +2,12 @@ import React from "react";
 import { Url } from "url";
 
 export type LogoProps = {
-  url: String;
+  url: string;
 };
 
 export type ColorModeProps = {
-  light: String;
-  dark: String;
+  light: string;
+  dark: string;
 };
 
 export type HomeProps = {
@@ -29,8 +29,8 @@ export type HomeProps = {
 };
 
 export type GlobalNotificationProps = {
-  message: String;
-  colorScheme: String;
+  message: string;
+  colorScheme: string;
   active: Boolean;
 };
 
@@ -49,9 +49,9 @@ export type TagProps = {
 
 export type FeaturedCompaniesProps = {
   id: Number;
-  logo: String;
-  name: String;
-  slug: String;
+  logo: string;
+  name: string;
+  slug: string;
   posts: Number;
 };
 
@@ -59,7 +59,7 @@ export type GlobalModalInnerProps = {};
 
 export type GlobalModalProps = {
   isGlobalModalOpen: Boolean;
-  action: String;
+  action: string;
   props?: GlobalModalInnerProps;
   params?: {
     redirect?: Url;
@@ -83,18 +83,19 @@ export type TemplateDataProps =
 
 export type CompanyProps = {
   id?: Number;
-  name: String;
-  location: String;
-  description: String;
-  url: String;
+  name: string;
+  location: string;
+  description: string;
+  url: string;
   profile_picture: LogoProps;
-  createdAt: String;
-  updatedAt: String;
-  slug: String;
-  email: String;
+  createdAt: string;
+  updatedAt: string;
+  slug: string;
+  email: string;
   post_settings: PostSettingsProps;
   posts?: Number;
   jobs?: JobCardProps[];
+  social_link?: SocialLinkProps[];
 };
 
 export type PostSettingsProps = {
@@ -105,16 +106,16 @@ export type PostSettingsProps = {
 };
 
 export type JobCardCompanyProps = {
-  name: String;
-  description: String;
-  url: String;
-  location: String;
-  slug: String;
-  logo: String;
+  name: string;
+  description: string;
+  url: string;
+  location: string;
+  slug: string;
+  logo: string;
   posts?: Number;
   jobs?: JobCardProps[];
-  createdAt?: String;
-  updatedAt?: String;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type FormattedPostSettings = {
@@ -126,10 +127,10 @@ export type FormattedPostSettings = {
 
 export type JobCardProps = {
   id?: Number;
-  title: String;
-  description?: String;
-  createdAt?: String;
-  slug?: String;
+  title: string;
+  description?: string;
+  createdAt?: string;
+  slug?: string;
   categories: CategoryProps[];
   tags: TagProps[];
   company: JobCardCompanyProps;
@@ -141,7 +142,7 @@ export type JobCardProps = {
 
 export type JobPostProps = {
   relatedJobs: JobCardProps[];
-  description: String;
+  description: string;
 } & JobCardProps;
 
 export type RawCompanyProps = {
@@ -162,12 +163,12 @@ export type RawCategoriesProps = {
 
 export type PostAttributesProps = {
   id: Number;
-  title: String;
-  description: String;
-  createdAt: String;
-  updatedAt: String;
-  slug: String;
-  expiration_date: String;
+  title: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  slug: string;
+  expiration_date: string;
   active: Boolean;
   company: CompanyProps;
   categories: CategoryProps[];
@@ -193,8 +194,8 @@ export type MetaProps = {
 };
 
 export type RoleProps = {
-  name: String;
-  type: String;
+  name: string;
+  type: string;
 };
 
 export type OrderProps = {
@@ -223,9 +224,9 @@ export type UserInnerProps = {
   confirmed: Boolean;
   email: "";
   id: Number;
-  provider: String;
-  username: String;
-  jwt: String;
+  provider: string;
+  username: string;
+  jwt: string;
   company: CompanyProps | null;
   role: RoleProps;
   create_job_flow?: CreateJobFlowProps;

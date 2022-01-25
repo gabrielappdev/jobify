@@ -10,25 +10,33 @@ import {
   Stack,
   useColorMode,
   useToast,
+  Image,
+  Skeleton,
 } from "@chakra-ui/react";
 import _ from "lodash";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { FaPhotoVideo } from "react-icons/fa";
 import slugify from "slugify";
 import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { SocialLinkProps } from "../../types";
+import { SocialLinkProps, UserInnerProps } from "../../types";
 import { ReducersProps } from "../../store/reducers";
 import SocialLinkBuilder from "../SocialLinkBuilder";
 import { bgColor } from "helpers";
 import UploadButton from "../UploadButton";
 import fetch from "services/api";
 import { SET_USER } from "store/actions";
+import useIsTouchDevice from "hooks/useDeviceDetect";
 
 const ReactRTE = dynamic(() => import("../Editor"), {
   ssr: false,
 });
+
+type CreateCompanyProps = {
+  onSuccess: (data: any) => void;
+  user?: UserInnerProps;
+};
 
 type CreateCompanyFormProps = {
   name: string;
@@ -52,15 +60,29 @@ const defaultValues: CreateCompanyFormProps = {
   email: "",
 };
 
-const CreateCompany = ({ onSuccess }) => {
-  const user = useSelector(({ user }: ReducersProps) => user.user);
+const CreateCompany = ({ onSuccess, user }: CreateCompanyProps) => {
+  const isMobile = useIsTouchDevice();
+  const currentUser =
+    user ??
+    useSelector(({ user: reducerUser }: ReducersProps) => reducerUser.user);
   const toast = useToast();
   const dispatch = useDispatch();
   const [isSaving, setIsSaving] = useState(false);
   const { colorMode } = useColorMode();
 
+  const [isEdit, setIsEdit] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const initialDescription = useMemo(() => {
+    return (user?.company?.description as string) ?? "";
+  }, [user]);
+
+  const initialSocialLinks = useMemo(() => {
+    return user?.company?.social_link ?? [];
+  }, [user]);
+
   const onSubmit = async (data: CreateCompanyFormProps) => {
-    if (!data.profilePicture) {
+    if (!data.profilePicture && !isEdit) {
       return toast({
         title: "Error",
         description: "You must upload a profile picture to your company",
@@ -86,12 +108,14 @@ const CreateCompany = ({ onSuccess }) => {
       formData.append("files.profile_picture", data.profilePicture);
     }
     formData.append("data", JSON.stringify(submitData));
-
+    const endpoint = isEdit
+      ? `/companies/${currentUser.company.id}?populate[0]=profile_picture&populate[1]=social_link`
+      : "/companies";
     try {
-      const responseData = await fetch("/companies", {
-        method: "POST",
+      const responseData = await fetch(endpoint, {
+        method: isEdit ? "PUT" : "POST",
         headers: {
-          Authorization: `Bearer ${user.jwt}`,
+          Authorization: `Bearer ${currentUser.jwt}`,
         },
         body: formData,
       });
@@ -99,25 +123,54 @@ const CreateCompany = ({ onSuccess }) => {
       if (response?.error) {
         toast({
           title: "Error",
-          description: responseData?.error?.message || "",
+          description: response?.error?.message || "",
           status: "error",
           duration: 5000,
           isClosable: true,
         });
       } else {
-        const company = _.omit(response, ["users_permissions_user"]);
-        const updatedUser = { ...response.users_permissions_user, company };
-        dispatch({
-          type: SET_USER,
-          payload: { ...updatedUser, jwt: user.jwt },
-        });
-        toast({
-          title: `Congratulations! You've created the company ${response.name}`,
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        onSuccess(response);
+        if (isEdit) {
+          let {
+            data: { attributes },
+          } = response;
+          let formattedAttributes = {
+            ...attributes,
+            profile_picture: {
+              url: attributes?.profile_picture?.data?.attributes?.url ?? "",
+            },
+            social_link: attributes?.social_link ?? [],
+          };
+          dispatch({
+            type: SET_USER,
+            payload: {
+              ...currentUser,
+              company: { ...currentUser.company, ...formattedAttributes },
+            },
+          });
+          toast({
+            title: "Company updated!",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+          onSuccess(attributes);
+        } else {
+          const company = _.omit(response, ["users_permissions_user"]);
+          const updatedUser = { ...response.users_permissions_user, company };
+          dispatch({
+            type: SET_USER,
+            payload: { ...updatedUser, jwt: currentUser.jwt },
+          });
+          toast({
+            title: isEdit
+              ? "Company updated!"
+              : `Congratulations! You've created the company ${response.name}`,
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+          onSuccess(response);
+        }
       }
     } catch (error) {
       toast({
@@ -132,9 +185,20 @@ const CreateCompany = ({ onSuccess }) => {
     }
   };
 
+  useEffect(() => {
+    const company = currentUser.company ?? {};
+    if (_.get(company, "name")) {
+      reset(_.pick(company, _.keys(defaultValues)));
+      setIsEdit(true);
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+    }
+  }, [currentUser]);
+
   const resetLogoRef = useRef(null);
 
-  const { handleSubmit, register, reset, setValue } =
+  const { handleSubmit, register, reset, setValue, watch } =
     useForm<CreateCompanyFormProps>({
       defaultValues,
     });
@@ -158,11 +222,50 @@ const CreateCompany = ({ onSuccess }) => {
     setValue("social_link", links);
   };
 
+  if (isLoading) {
+    return (
+      <Stack w="100%" gap={4}>
+        <Flex
+          gap={4}
+          justify={isMobile ? "flex-start" : "space-between"}
+          align="center"
+          direction={isMobile ? "column-reverse" : "row"}
+          mb={4}
+        >
+          <Skeleton w="200px" h="36px" />
+          <Skeleton w="100px" h="100px" />
+        </Flex>
+        <Stack gap={4}>
+          {Array.from(new Array(10)).map((_, index) => (
+            <Skeleton w="100%" h="40px" key={index} />
+          ))}
+        </Stack>
+      </Stack>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} onReset={handleResetForm}>
-      <Heading mb={4} as="h6" size="lg">
-        Create a Company
-      </Heading>
+      <Flex
+        gap={4}
+        justify={isMobile ? "flex-start" : "space-between"}
+        align="center"
+        direction={isMobile ? "column-reverse" : "row"}
+        mb={4}
+      >
+        <Heading mb={4} as="h6" size="lg">
+          {isEdit ? "Edit company" : "Create a Company"}
+        </Heading>
+        {currentUser?.company?.profile_picture?.url && (
+          <Image
+            borderRadius="4px"
+            objectFit="cover"
+            boxSize="100px"
+            src={currentUser.company.profile_picture.url}
+            alt={currentUser.company.name}
+          />
+        )}
+      </Flex>
       <Stack>
         <Input
           bg={bgColor[colorMode]}
@@ -176,7 +279,10 @@ const CreateCompany = ({ onSuccess }) => {
           placeholder="Company Location"
         />
         <Box mb={4} />
-        <ReactRTE onValueChange={onRTEValueChange} />
+        <ReactRTE
+          onValueChange={onRTEValueChange}
+          initialValue={initialDescription}
+        />
         <Box mb={4} />
         <InputGroup>
           <InputLeftAddon children="https://" />
@@ -197,7 +303,10 @@ const CreateCompany = ({ onSuccess }) => {
           resetLogoRef={resetLogoRef}
         />
         <Box mb={4} />
-        <SocialLinkBuilder onChange={handleSocialLinksChange} />
+        <SocialLinkBuilder
+          onChange={handleSocialLinksChange}
+          initialValues={initialSocialLinks}
+        />
         <Box mb={4} />
         <Input
           bg={bgColor[colorMode]}

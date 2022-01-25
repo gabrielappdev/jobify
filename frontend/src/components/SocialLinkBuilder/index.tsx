@@ -57,6 +57,7 @@ type CreateSocialLinkFormProps = {
 
 type SocialLinkBuilderProps = {
   onChange: (links: SocialLinkProps[]) => void;
+  initialValues?: SocialLinkProps[];
 };
 
 const CreateSocialLinkForm = ({
@@ -153,13 +154,20 @@ const CreateSocialLinkForm = ({
   );
 };
 
-const SocialLinkBuilder = ({ onChange }: SocialLinkBuilderProps) => {
+const SocialLinkBuilder = ({
+  onChange,
+  initialValues,
+}: SocialLinkBuilderProps) => {
   const [showCreator, setShowCreator] = useState(false);
-  const [socialLinks, setSocialLinks] = useState([]);
+  const [socialLinks, setSocialLinks] = useState(initialValues ?? []);
 
   const createdLinks = useMemo(() => {
-    return socialLinks.map((socialLink) => ({ value: socialLink.name }));
+    return socialLinks?.map((socialLink) => ({ value: socialLink.name }));
   }, [socialLinks]);
+
+  useEffect(() => {
+    setSocialLinks(initialValues);
+  }, [initialValues]);
 
   useEffect(() => {
     onChange(socialLinks);
@@ -215,11 +223,11 @@ const SocialLinkBuilder = ({ onChange }: SocialLinkBuilderProps) => {
         />
       )}
       <Divider />
-      {socialLinks.length > 0 ? (
+      {socialLinks?.length > 0 ? (
         <Stack>
           <Text>Current social links</Text>
           <Flex gap={4}>
-            {socialLinks.map((socialLink, index) => {
+            {socialLinks?.map((socialLink, index) => {
               return (
                 <SocialLinkCard
                   isRemovable

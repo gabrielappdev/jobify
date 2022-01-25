@@ -106,12 +106,12 @@ const UploadButton = ({
       )}
       {previews?.length > 0 &&
         previews.map((preview, index) => (
-          <Stack>
+          <Stack key={index}>
             <Text fontSize="sm">Preview</Text>
             <Image
               borderRadius="4px"
               objectFit="cover"
-              boxSize="200px"
+              boxSize="100px"
               src={preview.content}
               alt={preview.name}
             />

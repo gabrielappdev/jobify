@@ -30,13 +30,15 @@ export const InjectWrapper = styled.div<InjectWrapperProps>`
       color: ${theme.colors[getColor(color, colorMode)]};
     }
     .DraftEditor-editorContainer {
-      min-height: 200px;
       background-color: ${
         theme.colors[getColor(bgColor, colorMode).color][
           getColor(bgColor, colorMode).contrast
         ]
       };
       color: ${theme.colors[getColor(color, colorMode)]};
+    }
+    & [data-contents] {
+      min-height: 200px;
     }
   `}
 `;

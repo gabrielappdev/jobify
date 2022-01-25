@@ -22,6 +22,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { cloneElement, useEffect, useMemo, useState } from "react";
 import {
+  FaBusinessTime,
+  FaChartBar,
   FaCheck,
   FaCheckCircle,
   FaHome,
@@ -37,8 +39,16 @@ import { ReducersProps } from "store/reducers";
 
 const menus = [
   {
+    title: "Go back to home",
+    icon: <FaHome aria-label="Application Home" />,
+    url: "/",
+    disabled: false,
+    type: "regular",
+    loading: false,
+  },
+  {
     title: "Home",
-    icon: <FaHome aria-label="Dashboard home" />,
+    icon: <FaChartBar aria-label="Dashboard home" />,
     url: "/dashboard",
     disabled: false,
     type: "regular",
@@ -144,6 +154,18 @@ const DashboardTemplate = ({ children }: DashboardTemplateProps) => {
         loading: false,
       },
       {
+        title: `${user?.company ? "Edit company" : "Create company"}`,
+        icon: (
+          <FaBusinessTime
+            aria-label={`${user?.company ? "Edit company" : "Create company"}`}
+          />
+        ),
+        url: "/dashboard/company",
+        disabled: false,
+        type: "regular",
+        loading: false,
+      },
+      {
         title: "Confirm account",
         icon: <FaCheckCircle aria-label="Dashboard Confirm Account" />,
         url: "/dashboard/confirm-account",
@@ -217,7 +239,7 @@ const DashboardTemplate = ({ children }: DashboardTemplateProps) => {
       <Flex w="100%">
         <Box
           bg={theme.colors.green[900]}
-          h="100vh"
+          minH="100vh"
           w={isCollapsed ? "4rem" : "16rem"}
         >
           <Stack p={4} h="100%">
