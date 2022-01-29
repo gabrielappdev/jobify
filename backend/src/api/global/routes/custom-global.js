@@ -10,5 +10,10 @@ module.exports = {
       path: "/current-user",
       handler: "global.getCurrentUser",
     },
+    {
+      method: "GET",
+      path: "/app-data",
+      handler: "global.getAppData",
+    },
   ],
 };

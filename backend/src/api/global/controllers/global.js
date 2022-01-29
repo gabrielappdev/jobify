@@ -73,4 +73,11 @@ module.exports = createCoreController("api::global.global", ({ strapi }) => ({
       return { error: error.message };
     }
   },
+  async getAppData(ctx) {
+    const appData = await strapi.db.query("api::global.global").findOne({
+      where: { id: 1 },
+      populate: ["logo"],
+    });
+    ctx.body = appData ?? null;
+  },
 }));
