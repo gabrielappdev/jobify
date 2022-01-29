@@ -17,8 +17,8 @@ module.exports = {
     },
     {
       method: "GET",
-      path: "/orders/get-intent",
-      handler: "order.aaa",
+      path: "/current-user/orders",
+      handler: "order.currentUserOrders",
     },
   ],
 };

@@ -112,20 +112,19 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
     }
     const orders = await strapi.db.query("api::order.order").findMany({
       where: { ...options },
-      populate: ["user_permissions_user", "post"],
+      orderBy: {
+        createdAt: "desc",
+      },
+      populate: ["users_permissions_user", "post"],
     });
 
-    ctx.body = {
-      ...orders.map((order) => ({
-        ...order,
-        total: order.total_in_cents * 100,
-      })),
-    };
-  },
-  async aaa(ctx) {
-    const response = await strapi
-      .service("api::order.order")
-      .getCompleteOrderDetails(ctx.request.query.order_id);
-    ctx.body = response;
+    ctx.body = orders.length
+      ? {
+          orders: orders.map((order) => ({
+            ...order,
+            total: order.total_in_cents / 100,
+          })),
+        }
+      : { orders: [] };
   },
 }));
