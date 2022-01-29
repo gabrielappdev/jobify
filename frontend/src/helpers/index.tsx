@@ -105,9 +105,7 @@ export const _formatAppData = (json) => {
     ...json,
     logoUrl: url?.toString(),
     heroUrl: heroUrl?.toString(),
-    currencySymbol: currencies.find(({ cc }) => {
-      return cc === json?.currency?.toUpperCase();
-    })?.symbol,
+    currencySymbol: _getCurrencySymbol(json.currency),
   };
   return json;
 };
@@ -160,4 +158,12 @@ export const pickParams = (params) => {
     "limit",
     "page",
   ]);
+};
+
+export const _getCurrencySymbol = (currency) => {
+  return (
+    currencies.find(({ cc }) => {
+      return cc === currency?.toUpperCase();
+    })?.symbol ?? "$"
+  );
 };

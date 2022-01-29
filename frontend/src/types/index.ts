@@ -205,8 +205,11 @@ export type OrderProps = {
   card_brand: string;
   card_last4: string;
   status: string;
+  createdAt: string;
   users_permissions_user: UserInnerProps;
   post: PostAttributesProps;
+  receipt?: string;
+  total?: string;
 };
 
 export type CreateJobFlowProps = {

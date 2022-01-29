@@ -36,6 +36,7 @@ import fetch from "services/api";
 import { LocalStorage } from "services/localStorage";
 import { SET_USER } from "store/actions";
 import { ReducersProps } from "store/reducers";
+import { HomeProps } from "types";
 
 const menus = [
   {
@@ -90,6 +91,7 @@ type MenuItemProps = {
 
 type DashboardTemplateProps = {
   children: React.ReactElement;
+  data?: Omit<HomeProps, "currencySymbol" | "notification">;
 };
 
 const MenuItem = ({
@@ -134,7 +136,7 @@ const MenuItem = ({
   );
 };
 
-const DashboardTemplate = ({ children }: DashboardTemplateProps) => {
+const DashboardTemplate = ({ children, data }: DashboardTemplateProps) => {
   const dispatch = useDispatch();
   const isMobile = useIsTouchDevice();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -163,22 +165,6 @@ const DashboardTemplate = ({ children }: DashboardTemplateProps) => {
         url: "/dashboard/company",
         disabled: false,
         type: "regular",
-        loading: false,
-      },
-      {
-        title: "Confirm account",
-        icon: <FaCheckCircle aria-label="Dashboard Confirm Account" />,
-        url: "/dashboard/confirm-account",
-        disabled: !!user?.confirmed,
-        type: "regular",
-        loading: isFetchingUser,
-      },
-      {
-        title: "Delete account",
-        icon: <FaTrash aria-label="Dashboard Delete Account" />,
-        url: "/dashboard/delete-account",
-        type: "danger",
-        disabled: false,
         loading: false,
       },
     ];
@@ -292,7 +278,7 @@ const DashboardTemplate = ({ children }: DashboardTemplateProps) => {
           </Stack>
         </Box>
         <Box flex={1} p={4} bg={highlightColor[colorMode]}>
-          {cloneElement(children, { ...children.props, user })}
+          {cloneElement(children, { ...children.props, user, data })}
         </Box>
       </Flex>
     </>

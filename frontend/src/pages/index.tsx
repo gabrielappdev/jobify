@@ -35,16 +35,7 @@ const Index = ({ data }: IndexPageProps) => {
 export async function getServerSideProps() {
   let notFound = false;
   let data: IndexProps = {
-    appData: {
-      name: "",
-      description: "",
-      price: 0,
-      logo: null,
-      logoUrl: "",
-      hero: null,
-      heroUrl: "",
-      notification: null,
-    },
+    appData: null,
     categories: [],
     tags: [],
     featuredJobs: [],
