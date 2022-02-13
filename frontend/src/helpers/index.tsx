@@ -7,12 +7,15 @@ import {
   CategoryProps,
   CompanyProps,
   TagProps,
+  IndexProps,
+  HomeProps,
 } from "types";
 import _ from "lodash";
 import { rgba } from "polished";
 import { theme } from "@chakra-ui/react";
 import moment from "moment";
 import { currencies } from "../constants";
+import fetch from "services/api";
 
 export const defaultPostPopulateQuery =
   "populate[0]=company&populate[1]=company.profile_picture&populate[2]=categories&populate[3]=post_settings";
@@ -166,4 +169,88 @@ export const _getCurrencySymbol = (currency) => {
       return cc === currency?.toUpperCase();
     })?.symbol ?? "$"
   );
+};
+
+export const assignIndexData = async () => {
+  let notFound = false;
+  let data: IndexProps = {
+    appData: null,
+    categories: [],
+    tags: [],
+    featuredJobs: [],
+    otherJobs: [],
+    featuredCompanies: [],
+  };
+
+  const assignGlobalData = (json) => {
+    const appData = json as HomeProps;
+    data = {
+      ...data,
+      appData: {
+        ...appData,
+        logoUrl: appData?.logo?.url?.toString(),
+        heroUrl: appData?.hero?.url?.toString(),
+      },
+    };
+  };
+
+  const assignCategories = (json) => {
+    data = {
+      ...data,
+      categories: _formatCategories(json),
+    };
+  };
+
+  const assignTags = (json) => {
+    data = {
+      ...data,
+      tags: _formatTags(json),
+    };
+  };
+
+  const assignFeaturedCompanies = (json) => {
+    data = {
+      ...data,
+      featuredCompanies: json,
+    };
+  };
+
+  const assignPosts = (json, key) => {
+    const jobs = applyPostsSorting(
+      json.map((job) =>
+        _formatCardPost({
+          id: job.id,
+          ...job,
+        } as PostAttributesProps)
+      )
+    );
+    data = {
+      ...data,
+      [key]: jobs,
+    };
+  };
+
+  const response = await fetch("/index");
+  const responseData = await response.json();
+
+  if (Object.keys(data)?.length) {
+    let {
+      appData,
+      categories,
+      tags,
+      featuredCompanies,
+      featuredJobs,
+      otherJobs,
+    } = responseData;
+    appData = assignGlobalData(appData);
+    categories = assignCategories(categories);
+    tags = assignTags(tags);
+    featuredCompanies = assignFeaturedCompanies(featuredCompanies);
+    featuredJobs = assignPosts(featuredJobs, "featuredJobs");
+    otherJobs = assignPosts(otherJobs, "otherJobs");
+  }
+  return {
+    props: { data },
+    notFound,
+  };
 };
