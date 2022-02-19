@@ -51,6 +51,7 @@ export const _formatCompany = (data: CompanyProps): JobCardCompanyProps => {
     posts,
     createdAt,
     updatedAt,
+    social_link: data?.social_link ?? [],
   };
 };
 

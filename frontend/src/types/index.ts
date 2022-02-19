@@ -116,6 +116,7 @@ export type JobCardCompanyProps = {
   jobs?: JobCardProps[];
   createdAt?: string;
   updatedAt?: string;
+  social_link: SocialLinkProps[];
 };
 
 export type FormattedPostSettings = {

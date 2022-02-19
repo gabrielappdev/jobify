@@ -2,6 +2,7 @@ import {
   Box,
   Flex,
   Heading,
+  SimpleGrid,
   Stack,
   Text,
   useColorMode,
@@ -11,13 +12,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { JobCardCompanyProps } from "types";
+import SocialLinkCard from "../SocialLinkCard";
 
 type CompanyCardProps = {
   data: JobCardCompanyProps;
-  shouldDisplayLogo: Boolean;
+  shouldDisplayLogo: boolean;
+  displaySocialLinks: boolean;
 };
 
-const CompanyCard = ({ data, shouldDisplayLogo }: CompanyCardProps) => {
+const CompanyCard = ({
+  data,
+  shouldDisplayLogo,
+  displaySocialLinks = false,
+}: CompanyCardProps) => {
   const { colorMode } = useColorMode();
   return (
     <Stack align="center">
@@ -54,6 +61,15 @@ const CompanyCard = ({ data, shouldDisplayLogo }: CompanyCardProps) => {
       <Text size="xs">
         <b>Jobs posted:</b> {data?.posts}
       </Text>
+      <Flex p={4} gap={2}>
+        {data?.social_link?.map((socialLink) => (
+          <SocialLinkCard
+            data={socialLink}
+            isRemovable={false}
+            onRemove={() => ({})}
+          />
+        ))}
+      </Flex>
     </Stack>
   );
 };

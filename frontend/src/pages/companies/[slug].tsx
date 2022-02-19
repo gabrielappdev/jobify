@@ -29,6 +29,7 @@ type CompanyPageProps = {
 };
 
 const CompanyPage = ({ data }: CompanyPageProps) => {
+  console.log(data);
   const { colorMode } = useColorMode();
   return (
     <Template data={data.templateData}>
@@ -98,6 +99,7 @@ export async function getStaticProps({ params: { slug } }) {
   return {
     props: {
       data,
+      notFound,
     },
   };
 }
