@@ -61,6 +61,14 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
       return { error: error.message };
     }
   },
+  async update(ctx) {
+    const response = await strapi.query("api::post.post").update({
+      where: { id: ctx.request.params.id },
+      data: ctx.request.body.data,
+      populate: ["tags", "categories"],
+    });
+    ctx.body = { data: { attributes: response, id: response.id } };
+  },
   async create(ctx) {
     const loadedUser = await strapi
       .query("plugin::users-permissions.user")
@@ -151,6 +159,19 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
     try {
       const posts = await strapi.service("api::post.post").getAllActivePosts();
       ctx.body = posts;
+    } catch (error) {
+      return { error: error.message };
+    }
+  },
+  async getUserPostsByActivity(ctx) {
+    const userId = ctx.state.user.id;
+    try {
+      const posts = await strapi
+        .service("api::post.post")
+        .getUserPostsByActivity(userId, ctx.query.status ?? "active");
+      ctx.body = {
+        posts,
+      };
     } catch (error) {
       return { error: error.message };
     }

@@ -33,8 +33,11 @@ module.exports = createCoreController("api::global.global", ({ strapi }) => ({
     }
   },
   async getIndexData(ctx) {
+    const omitKeys = ctx.params.omit;
     try {
-      const data = await strapi.service("api::global.global").getIndexData();
+      const data = await strapi
+        .service("api::global.global")
+        .getIndexData(omitKeys);
       ctx.body = data;
     } catch (error) {
       console.error("Error getting home data: ", error);
@@ -79,5 +82,13 @@ module.exports = createCoreController("api::global.global", ({ strapi }) => ({
       populate: ["logo"],
     });
     ctx.body = appData ?? null;
+  },
+  async getTemplateData(ctx) {
+    const templateData = await strapi
+      .service("api::global.global")
+      .getTemplateData(false);
+    ctx.body = {
+      data: templateData,
+    };
   },
 }));

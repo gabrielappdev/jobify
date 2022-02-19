@@ -138,4 +138,34 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
       throw new Error(error);
     }
   },
+  async getUserPostsByActivity(userId, status = "active") {
+    try {
+      const user = await strapi.db
+        .query("plugin::users-permissions.user")
+        .findOne({
+          where: {
+            id: userId,
+          },
+          populate: ["company"],
+        });
+      const posts = await strapi.db.query("api::post.post").findMany({
+        where: {
+          active: status === "active",
+          company: user.company.id,
+        },
+        limit: 100000,
+        populate: [
+          "categories",
+          "company.profile_picture",
+          "company.posts",
+          "post_settings",
+          "tags",
+        ],
+      });
+      return this.attachPostLength(posts);
+    } catch (error) {
+      console.error("Error fetching all active posts: ", error);
+      throw new Error(error);
+    }
+  },
 }));

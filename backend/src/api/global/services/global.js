@@ -1,5 +1,5 @@
 "use strict";
-
+const _ = require("lodash");
 /**
  * global service.
  */
@@ -7,7 +7,7 @@
 const { createCoreService } = require("@strapi/strapi").factories;
 
 module.exports = createCoreService("api::global.global", ({ strapi }) => ({
-  async getTemplateData() {
+  async getTemplateData(shouldFetchFeaturedCompanies = true) {
     try {
       const categories = await strapi.db
         .query("api::category.category")
@@ -17,16 +17,22 @@ module.exports = createCoreService("api::global.global", ({ strapi }) => ({
         where: { id: 1 },
         populate: ["hero", "logo", "notification"],
       });
-      const featuredCompanies = await strapi
-        .service("api::company.company")
-        .setFeaturedCompanies();
+      let featuredCompanies = [];
+      if (shouldFetchFeaturedCompanies) {
+        featuredCompanies = await strapi
+          .service("api::company.company")
+          .setFeaturedCompanies();
+      }
 
-      return {
-        appData,
-        categories,
-        tags,
-        featuredCompanies,
-      };
+      return _.omit(
+        {
+          appData,
+          categories,
+          tags,
+          featuredCompanies,
+        },
+        shouldFetchFeaturedCompanies ? [] : ["featuredCompanies"]
+      );
     } catch (error) {
       console.error("Error getting the template data: ", error);
     }

@@ -15,5 +15,10 @@ module.exports = {
       path: "/app-data",
       handler: "global.getAppData",
     },
+    {
+      method: "GET",
+      path: "/template-data",
+      handler: "global.getTemplateData",
+    },
   ],
 };

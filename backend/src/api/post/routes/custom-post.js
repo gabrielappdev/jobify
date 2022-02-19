@@ -15,5 +15,10 @@ module.exports = {
       path: "/jobs",
       handler: "post.getAllActivePosts",
     },
+    {
+      method: "GET",
+      path: "/current-user/jobs",
+      handler: "post.getUserPostsByActivity",
+    },
   ],
 };
