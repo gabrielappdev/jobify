@@ -38,6 +38,7 @@ const menus = [
     disabled: false,
     type: "regular",
     loading: false,
+    forceUrl: true,
   },
   {
     title: "Jobs",
@@ -46,6 +47,7 @@ const menus = [
     disabled: false,
     type: "regular",
     loading: false,
+    forceUrl: false,
   },
   {
     title: "Orders",
@@ -54,6 +56,7 @@ const menus = [
     disabled: false,
     type: "regular",
     loading: false,
+    forceUrl: false,
   },
 ];
 
@@ -65,13 +68,13 @@ type MenuItemProps = {
     disabled: boolean;
     type: string;
     loading: boolean;
+    forceUrl: boolean;
   };
   isActive: boolean;
   isCollapsed: boolean;
   isDisabled: boolean;
   type: string;
   isLoading: boolean;
-  forceUrl: boolean;
 };
 
 type DashboardTemplateProps = {
@@ -94,7 +97,6 @@ const MenuItem = ({
   isDisabled,
   type = "regular",
   isLoading = false,
-  forceUrl = false,
 }: MenuItemProps) => {
   if (isLoading) {
     return <Skeleton h="40px" w="100%" />;
@@ -126,7 +128,7 @@ const MenuItem = ({
       </Flex>
     </Button>
   );
-  return forceUrl ? (
+  return menuItem.forceUrl ? (
     <ForceWrapper url={menuItem.url}>{Item}</ForceWrapper>
   ) : (
     <Link href={menuItem.url}>{Item}</Link>
@@ -164,6 +166,7 @@ const DashboardTemplate = ({ children, data }: DashboardTemplateProps) => {
         disabled: false,
         type: "regular",
         loading: false,
+        forceUrl: true,
       },
     ];
   }, [user, isFetchingUser]);
