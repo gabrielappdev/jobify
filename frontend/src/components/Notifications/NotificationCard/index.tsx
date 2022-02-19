@@ -36,7 +36,7 @@ const getCardBody = (
   useEffect(() => {
     return () => {
       setIsMarkingAsRead(false);
-      setIsMarkingAsRead(false);
+      setIsDeleting(false);
     };
   }, []);
 
