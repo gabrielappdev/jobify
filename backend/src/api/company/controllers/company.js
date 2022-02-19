@@ -16,7 +16,7 @@ module.exports = createCoreController("api::company.company", ({ strapi }) => ({
       try {
         const company = await strapi.query("api::company.company").findOne({
           where: { slug },
-          populate: { profile_picture: true },
+          populate: ["profile_picture", "social_link"],
         });
         const jobs = await strapi
           .service("api::company.company")
@@ -66,7 +66,7 @@ module.exports = createCoreController("api::company.company", ({ strapi }) => ({
       try {
         const company = await strapi.query("api::company.company").findOne({
           where: { slug },
-          populate: { profile_picture: true },
+          populate: ["profile_picture", "social_link"],
         });
         const jobs = await strapi
           .service("api::company.company")

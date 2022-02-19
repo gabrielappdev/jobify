@@ -34,7 +34,11 @@ const CompanyPage = ({ data }: CompanyPageProps) => {
   return (
     <Template data={data.templateData}>
       <GenericPageHero>
-        <CompanyCard data={data?.company} shouldDisplayLogo={true} />
+        <CompanyCard
+          displaySocialLinks
+          data={data?.company}
+          shouldDisplayLogo={true}
+        />
       </GenericPageHero>
       <Box w="100%" bg={bgColor[colorMode]}>
         <CompanyDescription
