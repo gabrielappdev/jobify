@@ -22,7 +22,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import fetch from "services/api";
-import { CategoryProps, PostSettingsProps, TagProps } from "types";
+import { CreateJobFormProps, PostSettingsProps } from "types";
 import { ReducersProps } from "../../store/reducers";
 import JobPreview from "../JobPreview";
 import MultiSelect from "../MultiSelect";
@@ -34,6 +34,9 @@ const ReactRTE = dynamic(() => import("../Editor"), {
 type CreateJobProps = {
   onSuccess: (values: any) => void;
   isEdit?: boolean;
+  isAfterCreateEdit?: boolean;
+  postValues: CreateJobFormProps;
+  postId?: number;
 };
 
 type FormattedCategoryProps = {
@@ -46,15 +49,7 @@ type FormattedTagProps = {
   value: string;
 };
 
-type CreateJobFormProps = {
-  title: string;
-  description: string;
-  tags: TagProps[];
-  categories: CategoryProps[];
-  post_settings: PostSettingsProps;
-};
-
-const defaultValues = {
+export const defaultValues = {
   title: "",
   description: "",
   tags: [],
@@ -67,12 +62,18 @@ const defaultValues = {
   },
 };
 
-const CreateJob = ({ onSuccess, isEdit = false }: CreateJobProps) => {
+const CreateJob = ({
+  onSuccess,
+  isEdit = false,
+  isAfterCreateEdit = false,
+  postValues = defaultValues,
+  postId,
+}: CreateJobProps) => {
   const isMobile = useIsTouchDevice();
   const toast = useToast();
   const [isSaving, setIsSaving] = useState(false);
   const [initialSwitches, setInitialSwitches] = useState(
-    defaultValues.post_settings
+    postValues.post_settings
   );
 
   const tags = useSelector(({ app }: ReducersProps) => app.tags);
@@ -80,9 +81,7 @@ const CreateJob = ({ onSuccess, isEdit = false }: CreateJobProps) => {
   const global = useSelector(({ app }: ReducersProps) => app.appData);
   const user = useSelector(({ user }: ReducersProps) => user.user);
 
-  const currency = useMemo(() => {
-    return global?.currency ?? "usd";
-  }, [global]);
+  const currency = global?.currency ?? "usd";
 
   const [total, setTotal] = useState(global.price ?? 0);
   const { formattedCategories, formattedTags } = useMemo(() => {
@@ -106,7 +105,7 @@ const CreateJob = ({ onSuccess, isEdit = false }: CreateJobProps) => {
     reset,
     formState: { errors },
   } = useForm<CreateJobFormProps>({
-    defaultValues,
+    defaultValues: postValues,
   });
 
   const {
@@ -118,8 +117,8 @@ const CreateJob = ({ onSuccess, isEdit = false }: CreateJobProps) => {
   } = watch();
 
   useEffect(() => {
-    if (isEdit) {
-      const values = user.create_job_flow.values;
+    if (isEdit || isAfterCreateEdit) {
+      const values = isEdit ? user.create_job_flow.values : postValues;
       const formattedCategories = _.intersectionBy(
         categories,
         values.categories,
@@ -143,7 +142,7 @@ const CreateJob = ({ onSuccess, isEdit = false }: CreateJobProps) => {
       });
       setInitialSwitches(values.post_settings);
     }
-  }, [isEdit, user, reset]);
+  }, [isEdit, user, reset, postValues]);
 
   const onSubmit = async (data: CreateJobFormProps) => {
     setIsSaving(true);
@@ -244,6 +243,55 @@ const CreateJob = ({ onSuccess, isEdit = false }: CreateJobProps) => {
     setTotal(total as number);
   };
 
+  const handleEditPost = async (data: CreateJobFormProps) => {
+    let submitData = _.omit(_.cloneDeep(data), ["post_settings", "id"]);
+    let submit = {
+      ...submitData,
+      categories: submitData.categories.map(({ id }) => id),
+      tags: submitData.tags.map(({ id }) => id),
+    };
+    setIsSaving(true);
+    try {
+      const responseData = await fetch(`/posts/${postId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${user.jwt}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data: { ...submit } }),
+      });
+      if (responseData?.error) {
+        toast({
+          title: "Error",
+          description:
+            responseData?.error?.message ?? responseData?.error?.error,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      } else {
+        const response = await responseData.json();
+        toast({
+          title: `Post updated successfully !`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        onSuccess(response.data.attributes);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error?.message ?? "",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Heading size="lg" as="h6" mb={4}>
@@ -266,8 +314,8 @@ const CreateJob = ({ onSuccess, isEdit = false }: CreateJobProps) => {
               options={formattedCategories}
               placeholder="Job categories"
               isClearable
-              onChange={handleCategoriesSelection}
               size="md"
+              onChange={handleCategoriesSelection}
               value={formCategories}
             />
           </Box>
@@ -284,30 +332,54 @@ const CreateJob = ({ onSuccess, isEdit = false }: CreateJobProps) => {
           </Box>
         </Flex>
         <Divider />
-        <JobPreview
-          data={jobCardPreviewData}
-          currency={"usd"}
-          onChange={handlePostSettingsChange}
-          initialSwitches={initialSwitches}
-        />
-        <Divider />
-        <Flex gap={2} align="center">
-          <Heading size="md">Total: {`$ ${total}`}</Heading>
-          {currency !== "usd" && (
-            <Text color="red.600" fontSize="sm">
-              * The total price in {currency.toUpperCase()} will be shown on the
-              next page (payment)
-            </Text>
-          )}
-        </Flex>
-        <Stack w="100%">
+        {!isAfterCreateEdit && (
+          <>
+            <JobPreview
+              data={jobCardPreviewData}
+              currency={"usd"}
+              onChange={handlePostSettingsChange}
+              initialSwitches={initialSwitches}
+            />
+            <Divider />
+          </>
+        )}
+        {!isAfterCreateEdit && (
+          <Flex gap={2} align="center">
+            <Heading size="md">Total: {`$ ${total}`}</Heading>
+            {currency !== "usd" && (
+              <Text color="red.600" fontSize="sm">
+                * The total price in {currency.toUpperCase()} will be shown on
+                the next page (payment)
+              </Text>
+            )}
+          </Flex>
+        )}
+        <Stack w="100%" pb={4}>
           <Flex gap={4} w="100%" align="center">
-            <Button isLoading={isSaving} type="submit" colorScheme="green">
-              Save and continue
-            </Button>
-            <Button isDisabled={isSaving} type="reset" colorScheme="gray">
-              Reset
-            </Button>
+            {isAfterCreateEdit ? (
+              <Button
+                onClick={handleSubmit(handleEditPost)}
+                isLoading={isSaving}
+                type="submit"
+                colorScheme="green"
+              >
+                Save Edition
+              </Button>
+            ) : (
+              <Button isLoading={isSaving} type="submit" colorScheme="green">
+                Save and continue
+              </Button>
+            )}
+            {!isAfterCreateEdit && (
+              <Button
+                onClick={() => reset(postValues)}
+                isDisabled={isSaving}
+                type="reset"
+                colorScheme="gray"
+              >
+                Reset
+              </Button>
+            )}
           </Flex>
         </Stack>
       </Stack>

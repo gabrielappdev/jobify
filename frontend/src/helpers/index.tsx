@@ -171,6 +171,35 @@ export const _getCurrencySymbol = (currency) => {
   );
 };
 
+export const assignGlobalData = (data, json) => {
+  const appData = json as HomeProps;
+  data = {
+    ...data,
+    appData: {
+      ...appData,
+      logoUrl: appData?.logo?.url?.toString(),
+      heroUrl: appData?.hero?.url?.toString(),
+    },
+  };
+  return data;
+};
+
+export const assignCategories = (data, json) => {
+  data = {
+    ...data,
+    categories: _formatCategories(json),
+  };
+  return data;
+};
+
+export const assignTags = (data, json) => {
+  data = {
+    ...data,
+    tags: _formatTags(json),
+  };
+  return data;
+};
+
 export const assignIndexData = async () => {
   let notFound = false;
   let data: IndexProps = {
@@ -180,32 +209,6 @@ export const assignIndexData = async () => {
     featuredJobs: [],
     otherJobs: [],
     featuredCompanies: [],
-  };
-
-  const assignGlobalData = (json) => {
-    const appData = json as HomeProps;
-    data = {
-      ...data,
-      appData: {
-        ...appData,
-        logoUrl: appData?.logo?.url?.toString(),
-        heroUrl: appData?.hero?.url?.toString(),
-      },
-    };
-  };
-
-  const assignCategories = (json) => {
-    data = {
-      ...data,
-      categories: _formatCategories(json),
-    };
-  };
-
-  const assignTags = (json) => {
-    data = {
-      ...data,
-      tags: _formatTags(json),
-    };
   };
 
   const assignFeaturedCompanies = (json) => {
@@ -242,9 +245,9 @@ export const assignIndexData = async () => {
       featuredJobs,
       otherJobs,
     } = responseData;
-    appData = assignGlobalData(appData);
-    categories = assignCategories(categories);
-    tags = assignTags(tags);
+    data = assignGlobalData(data, appData);
+    data = assignCategories(data, categories);
+    data = assignTags(data, tags);
     featuredCompanies = assignFeaturedCompanies(featuredCompanies);
     featuredJobs = assignPosts(featuredJobs, "featuredJobs");
     otherJobs = assignPosts(otherJobs, "otherJobs");

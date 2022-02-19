@@ -17,11 +17,11 @@ interface MultiSelectProps {
 
 const MultiSelect = ({
   options = [],
-  value = [],
   placeholder,
   closeMenuOnSelect = false,
   isClearable = true,
   size = "md",
+  value,
   onChange,
 }: MultiSelectProps) => {
   return (
@@ -32,8 +32,8 @@ const MultiSelect = ({
       closeMenuOnSelect={closeMenuOnSelect}
       isClearable={isClearable}
       size={size}
-      value={value}
       onChange={onChange}
+      defaultValue={value}
     />
   );
 };

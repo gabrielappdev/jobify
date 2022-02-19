@@ -176,6 +176,14 @@ export type PostAttributesProps = {
   post_settings: PostSettingsProps;
 };
 
+export type CreateJobFormProps = {
+  title: string;
+  description: string;
+  tags: TagProps[];
+  categories: CategoryProps[];
+  post_settings: PostSettingsProps;
+};
+
 export type RawPostProps = {
   data?: {
     id: Number;

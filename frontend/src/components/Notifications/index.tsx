@@ -17,6 +17,7 @@ import {
   Popover,
   PopoverArrow,
   PopoverBody,
+  PopoverCloseButton,
   PopoverContent,
   PopoverFooter,
   PopoverHeader,
@@ -32,6 +33,7 @@ import NotificationCard from "./NotificationCard";
 import fetch from "services/api";
 import { useDispatch } from "react-redux";
 import { SET_NOTIFICATIONS } from "store/actions";
+import ClickAwayListener from "react-click-away-listener";
 
 type NotificationsProps = {
   user: UserInnerProps;
@@ -245,6 +247,11 @@ const Notifications = ({
   };
 
   const ref = useRef();
+
+  const handleClickAway = () => {
+    setIsOpen(false);
+  };
+
   return (
     <>
       <Popover
@@ -252,8 +259,10 @@ const Notifications = ({
         isOpen={isOpen}
         onClose={close}
         placement="bottom"
-        closeOnBlur={false}
+        closeOnBlur
+        closeOnEsc
         initialFocusRef={ref}
+        lazyBehavior="unmount"
       >
         <PopoverTrigger>
           <NotificationsTrigger
@@ -264,6 +273,7 @@ const Notifications = ({
           />
         </PopoverTrigger>
         <PopoverContent>
+          <PopoverCloseButton />
           <PopoverHeader fontWeight="semibold">
             <Flex gap={4} align="center">
               Notifications: {allNotifications.length}

@@ -1,9 +1,4 @@
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "@chakra-ui/icons";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -23,12 +18,9 @@ import { useRouter } from "next/router";
 import { cloneElement, useEffect, useMemo, useState } from "react";
 import {
   FaBusinessTime,
-  FaChartBar,
-  FaCheck,
-  FaCheckCircle,
   FaHome,
+  FaCheck,
   FaSuitcase,
-  FaTrash,
   FaUser,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,14 +35,6 @@ const menus = [
     title: "Go back to home",
     icon: <FaHome aria-label="Application Home" />,
     url: "/",
-    disabled: false,
-    type: "regular",
-    loading: false,
-  },
-  {
-    title: "Home",
-    icon: <FaChartBar aria-label="Dashboard home" />,
-    url: "/dashboard",
     disabled: false,
     type: "regular",
     loading: false,
@@ -87,11 +71,20 @@ type MenuItemProps = {
   isDisabled: boolean;
   type: string;
   isLoading: boolean;
+  forceUrl: boolean;
 };
 
 type DashboardTemplateProps = {
   children: React.ReactElement;
   data?: Omit<HomeProps, "currencySymbol" | "notification">;
+};
+
+const ForceWrapper = ({ children, url }: { children: any; url: string }) => {
+  const router = useRouter();
+  const onClick = () => {
+    router.push(url, null, { shallow: true });
+  };
+  return cloneElement(children, { onClick });
 };
 
 const MenuItem = ({
@@ -101,38 +94,42 @@ const MenuItem = ({
   isDisabled,
   type = "regular",
   isLoading = false,
+  forceUrl = false,
 }: MenuItemProps) => {
   if (isLoading) {
     return <Skeleton h="40px" w="100%" />;
   }
-  return (
-    <Link href={menuItem.url}>
-      <Button
-        isDisabled={isDisabled}
-        bg="transparent"
+  const Item = (
+    <Button
+      isDisabled={isDisabled}
+      bg="transparent"
+      _hover={{ background: theme.colors.green[700] }}
+    >
+      <Flex
+        align="center"
+        w={isCollapsed ? "auto" : "100%"}
+        p={2}
+        gap={4}
+        cursor="pointer"
+        color={
+          type === "danger" ? theme.colors.red[500] : theme.colors.green[300]
+        }
+        background={isActive ? theme.colors.green[700] : "transparent"}
         _hover={{ background: theme.colors.green[700] }}
       >
-        <Flex
-          align="center"
-          w={isCollapsed ? "auto" : "100%"}
-          p={2}
-          gap={4}
-          cursor="pointer"
-          color={
-            type === "danger" ? theme.colors.red[500] : theme.colors.green[300]
-          }
-          background={isActive ? theme.colors.green[700] : "transparent"}
-          _hover={{ background: theme.colors.green[700] }}
-        >
-          {menuItem.icon}
-          {!isCollapsed && (
-            <Text fontWeight={isActive ? "bold" : "normal"}>
-              {menuItem.title}
-            </Text>
-          )}
-        </Flex>
-      </Button>
-    </Link>
+        {menuItem.icon}
+        {!isCollapsed && (
+          <Text fontWeight={isActive ? "bold" : "normal"}>
+            {menuItem.title}
+          </Text>
+        )}
+      </Flex>
+    </Button>
+  );
+  return forceUrl ? (
+    <ForceWrapper url={menuItem.url}>{Item}</ForceWrapper>
+  ) : (
+    <Link href={menuItem.url}>{Item}</Link>
   );
 };
 
@@ -154,6 +151,7 @@ const DashboardTemplate = ({ children, data }: DashboardTemplateProps) => {
         disabled: false,
         type: "regular",
         loading: false,
+        forceUrl: true,
       },
       {
         title: `${user?.company ? "Edit company" : "Create company"}`,

@@ -23,7 +23,6 @@ const Orders = ({ data }: AppDataProps) => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchedOrders, setFetchedOrders] = useState(false);
-  const global = useSelector(({ app }: ReducersProps) => app.appData);
   const user = useSelector(({ user }: ReducersProps) => user.user);
 
   const toast = useToast();

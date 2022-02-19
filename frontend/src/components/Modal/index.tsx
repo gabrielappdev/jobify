@@ -66,7 +66,7 @@ const ModalDialog = forwardRef(
         <Modal size={data?.size ?? "md"} isOpen={isOpen} onClose={onClose}>
           {!data?.hasNotOverlay && <ModalOverlay />}
           <ModalContent>
-            {data?.Header && <ModalHeader>Modal Title</ModalHeader>}
+            {data?.Header && <ModalHeader>{data?.Header}</ModalHeader>}
             <ModalCloseButton onClick={() => onClose()} />
             {children && <ModalBody>{children}</ModalBody>}
 
