@@ -33,7 +33,7 @@ const MultiSelect = ({
       isClearable={isClearable}
       size={size}
       onChange={onChange}
-      defaultValue={value}
+      value={value}
     />
   );
 };
