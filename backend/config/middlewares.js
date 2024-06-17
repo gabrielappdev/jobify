@@ -8,7 +8,9 @@ module.exports = [
       headers: "*",
       origin: [
         "http://localhost:1337",
+        "http://localhost:3000",
         "http://localhost:3001",
+        "http://localhost:3002",
         "https://board.gabrielcosta.pro",
         "https://boardapi.gabrielcosta.pro",
       ],

@@ -27,7 +27,7 @@ import { ReducersProps } from "../../store/reducers";
 import JobPreview from "../JobPreview";
 import MultiSelect from "../MultiSelect";
 
-const ReactRTE = dynamic(() => import("../Editor"), {
+const ReactRTE = dynamic(async () => import("../Editor"), {
   ssr: false,
 });
 

@@ -1,3 +1,6 @@
+import AddressFill, { FormAddressProps } from "@/components/AddressFill";
+import Clipboard from "@/components/Clipboard";
+import JobCard from "@/components/JobCard";
 import {
   Box,
   Button,
@@ -10,26 +13,23 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import _ from "lodash";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { SyntheticEvent, useMemo, useState, useRef, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/router";
-import fetchClient from "services/api";
-import { ReducersProps } from "store/reducers";
-import { SET_USER } from "store/actions";
-import AddressFill, { FormAddressProps } from "@/components/AddressFill";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Address, PaymentMethodCreateParams } from "@stripe/stripe-js";
-import { BiCreditCardAlt } from "react-icons/bi";
-import Clipboard from "@/components/Clipboard";
 import {
   _formatCategories,
   _formatCompany,
   _formatSettings,
   _formatTags,
 } from "helpers";
+import _ from "lodash";
+import { useRouter } from "next/router";
+import { SyntheticEvent, useMemo, useRef, useState } from "react";
+import { BiCreditCardAlt } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import fetchClient from "services/api";
+import { SET_USER } from "store/actions";
+import { ReducersProps } from "store/reducers";
 import { PostSettingsProps } from "types";
-import JobCard from "@/components/JobCard";
 
 type CheckoutForm = {
   clientSecret: string;
@@ -214,47 +214,40 @@ const CheckoutForm = ({ clientSecret, onGoBack }: CheckoutForm) => {
       <AddressFill ref={ref} onSubmit={onAddressFill} />
       <form id="payment-form" onSubmit={submitForm}>
         <Stack gap={4}>
-          {process.env.NODE_ENV !== "production" && (
-            <Stack
-              p={4}
-              borderWidth={1}
-              borderColor="gray.400"
-              borderRadius={4}
-            >
-              <Text color="gray.400" fontWeight="bold">
-                Testing scenarios
-              </Text>
-              <Flex gap={4}>
-                <Clipboard value="4000000760000002">
-                  <Button
-                    colorScheme="green"
-                    size="sm"
-                    leftIcon={<BiCreditCardAlt />}
-                  >
-                    Brazilian credit card test number
-                  </Button>
-                </Clipboard>
-                <Clipboard value="4242424242424242">
-                  <Button
-                    colorScheme="blue"
-                    size="sm"
-                    leftIcon={<BiCreditCardAlt />}
-                  >
-                    USA credit card test number
-                  </Button>
-                </Clipboard>
-                <Clipboard value="4000000000000002">
-                  <Button
-                    colorScheme="red"
-                    size="sm"
-                    leftIcon={<BiCreditCardAlt />}
-                  >
-                    Incorrect card number
-                  </Button>
-                </Clipboard>
-              </Flex>
-            </Stack>
-          )}
+          <Stack p={4} borderWidth={1} borderColor="gray.400" borderRadius={4}>
+            <Text color="gray.400" fontWeight="bold">
+              Testing scenarios
+            </Text>
+            <Flex gap={4}>
+              <Clipboard value="4000000760000002">
+                <Button
+                  colorScheme="green"
+                  size="sm"
+                  leftIcon={<BiCreditCardAlt />}
+                >
+                  Brazilian credit card test number
+                </Button>
+              </Clipboard>
+              <Clipboard value="4242424242424242">
+                <Button
+                  colorScheme="blue"
+                  size="sm"
+                  leftIcon={<BiCreditCardAlt />}
+                >
+                  USA credit card test number
+                </Button>
+              </Clipboard>
+              <Clipboard value="4000000000000002">
+                <Button
+                  colorScheme="red"
+                  size="sm"
+                  leftIcon={<BiCreditCardAlt />}
+                >
+                  Incorrect card number
+                </Button>
+              </Clipboard>
+            </Flex>
+          </Stack>
           <CardElement />
           <Divider />
           <Text>Check the card below to see if everything is ok</Text>

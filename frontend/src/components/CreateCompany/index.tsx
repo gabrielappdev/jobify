@@ -4,32 +4,32 @@ import {
   Divider,
   Flex,
   Heading,
+  Image,
   Input,
   InputGroup,
   InputLeftAddon,
+  Skeleton,
   Stack,
   useColorMode,
   useToast,
-  Image,
-  Skeleton,
 } from "@chakra-ui/react";
-import _ from "lodash";
-import { useState, useRef, useEffect, useMemo } from "react";
-import { FaPhotoVideo } from "react-icons/fa";
-import slugify from "slugify";
-import dynamic from "next/dynamic";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { SocialLinkProps, UserInnerProps } from "../../types";
-import { ReducersProps } from "../../store/reducers";
-import SocialLinkBuilder from "../SocialLinkBuilder";
 import { bgColor } from "helpers";
-import UploadButton from "../UploadButton";
-import fetch from "services/api";
-import { SET_USER } from "store/actions";
 import useIsTouchDevice from "hooks/useDeviceDetect";
+import _ from "lodash";
+import dynamic from "next/dynamic";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaPhotoVideo } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import fetch from "services/api";
+import slugify from "slugify";
+import { SET_USER } from "store/actions";
+import { ReducersProps } from "../../store/reducers";
+import { SocialLinkProps, UserInnerProps } from "../../types";
+import SocialLinkBuilder from "../SocialLinkBuilder";
+import UploadButton from "../UploadButton";
 
-const ReactRTE = dynamic(() => import("../Editor"), {
+const ReactRTE = dynamic(async () => import("../Editor"), {
   ssr: false,
 });
 

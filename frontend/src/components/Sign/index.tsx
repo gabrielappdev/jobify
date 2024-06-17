@@ -1,6 +1,5 @@
 import {
   Button,
-  Divider,
   Flex,
   Heading,
   IconButton,
@@ -12,17 +11,16 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import _ from "lodash";
+import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { LocalStorage } from "../../services/localStorage";
-import slugify from "slugify";
-import fetch from "../../services/api";
 import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
+import slugify from "slugify";
 import { CLOSE_GLOBAL_MODAL, SET_USER } from "store/actions";
-import { GlobalModalProps } from "types";
 import { Url } from "url";
+import fetch from "../../services/api";
+import { LocalStorage } from "../../services/localStorage";
 
 type SignProps = {
   data: {
@@ -116,6 +114,7 @@ const Sign = ({ data }: SignProps) => {
             : body
         ),
       });
+      console.log({ response });
       if (response) {
         const responseData = await response.json();
         if (responseData.error) {
@@ -154,7 +153,7 @@ const Sign = ({ data }: SignProps) => {
         }
       }
     } catch (error) {
-      debugger;
+      console.log({ error });
       toast({
         title: "Error",
         description: error?.message || "",

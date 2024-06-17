@@ -1,26 +1,25 @@
 import {
-  Flex,
-  IconButton,
-  Stack,
-  Text,
-  Divider,
-  Input,
-  SimpleGrid,
-  Select,
-  InputLeftAddon,
-  InputRightAddon,
-  InputGroup,
   Button,
   CloseButton,
+  Divider,
+  Flex,
   Heading,
+  IconButton,
+  Input,
+  InputGroup,
+  InputLeftAddon,
+  Select,
+  Stack,
+  Text,
 } from "@chakra-ui/react";
 import useIsTouchDevice from "hooks/useDeviceDetect";
 import _ from "lodash";
-import { useState, useMemo, SyntheticEvent, useEffect } from "react";
+import { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   FaFacebook,
   FaGithub,
+  FaInstagram,
   FaLinkedin,
   FaPlus,
   FaTwitter,
@@ -41,6 +40,12 @@ const socialNetworks = [
     value: "linkedin",
     icon: <FaLinkedin />,
     color: "linkedin",
+  },
+  {
+    name: "Instagram",
+    value: "instagram",
+    icon: <FaInstagram />,
+    color: "pink",
   },
   { name: "Github", value: "github", icon: <FaGithub />, color: "gray" },
 ];

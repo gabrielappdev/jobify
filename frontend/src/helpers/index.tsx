@@ -1,21 +1,21 @@
+import { theme } from "@chakra-ui/react";
+import _ from "lodash";
+import moment from "moment";
+import { rgba } from "polished";
+import fetch from "services/api";
 import {
-  FormattedPostSettings,
-  JobCardCompanyProps,
-  PostSettingsProps,
-  JobCardProps,
-  PostAttributesProps,
   CategoryProps,
   CompanyProps,
-  TagProps,
-  IndexProps,
+  FormattedPostSettings,
   HomeProps,
+  IndexProps,
+  JobCardCompanyProps,
+  JobCardProps,
+  PostAttributesProps,
+  PostSettingsProps,
+  TagProps,
 } from "types";
-import _ from "lodash";
-import { rgba } from "polished";
-import { theme } from "@chakra-ui/react";
-import moment from "moment";
 import { currencies } from "../constants";
-import fetch from "services/api";
 
 export const defaultPostPopulateQuery =
   "populate[0]=company&populate[1]=company.profile_picture&populate[2]=categories&populate[3]=post_settings";
@@ -174,6 +174,7 @@ export const _getCurrencySymbol = (currency) => {
 
 export const assignGlobalData = (data, json) => {
   const appData = json as HomeProps;
+  console.log(appData);
   data = {
     ...data,
     appData: {
@@ -201,7 +202,7 @@ export const assignTags = (data, json) => {
   return data;
 };
 
-export const assignIndexData = async () => {
+export const assignIndexData = async (isNavbarAlwaysTransparent = true) => {
   let notFound = false;
   let data: IndexProps = {
     appData: null,
@@ -210,6 +211,7 @@ export const assignIndexData = async () => {
     featuredJobs: [],
     otherJobs: [],
     featuredCompanies: [],
+    isNavbarAlwaysTransparent: true,
   };
 
   const assignFeaturedCompanies = (json) => {
@@ -249,6 +251,7 @@ export const assignIndexData = async () => {
     data = assignGlobalData(data, appData);
     data = assignCategories(data, categories);
     data = assignTags(data, tags);
+    data.isNavbarAlwaysTransparent = isNavbarAlwaysTransparent;
     featuredCompanies = assignFeaturedCompanies(featuredCompanies);
     featuredJobs = assignPosts(featuredJobs, "featuredJobs");
     otherJobs = assignPosts(otherJobs, "otherJobs");

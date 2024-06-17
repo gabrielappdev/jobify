@@ -1,10 +1,10 @@
-import { IndexProps } from "types";
-import Template from "../../templates";
+import FeaturedCompanies from "@/components/FeaturedCompanies";
 import Hero from "@/components/Hero";
 import JobListSection from "@/components/JobListSection";
-import FeaturedCompanies from "@/components/FeaturedCompanies";
+import { IndexProps } from "types";
+import Template from "../../templates";
 
-type DataType = {
+export type DataType = {
   data: IndexProps;
 };
 

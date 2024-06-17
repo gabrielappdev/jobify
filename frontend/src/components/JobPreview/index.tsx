@@ -10,9 +10,7 @@ import {
   Stack,
   Switch,
   Tag,
-  Text,
 } from "@chakra-ui/react";
-import { currencies } from "../../constants";
 import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { FaRocket } from "react-icons/fa";
@@ -112,7 +110,7 @@ const JobPreview = ({
         <Flex
           w="100%"
           justify="space-between"
-          aling="center"
+          align="center"
           gap={2}
           color="green.400"
         >

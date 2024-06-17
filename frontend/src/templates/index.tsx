@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useRef } from "react";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { IndexProps } from "types";
-import { Box, Divider, Heading, Stack } from "@chakra-ui/react";
 import ModalDialog from "@/components/Modal";
-import { useSelector, useDispatch } from "react-redux";
-import { ReducersProps } from "store/reducers";
-import { CLOSE_GLOBAL_MODAL } from "store/actions";
+import Navigation from "@/components/Navigation";
 import Sign from "@/components/Sign";
+import { Divider } from "@chakra-ui/react";
+import { useEffect, useMemo, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { CLOSE_GLOBAL_MODAL } from "store/actions";
+import { ReducersProps } from "store/reducers";
+import { IndexProps } from "types";
 
 type TemplateProps = {
   children: React.ReactNode;
@@ -60,6 +60,7 @@ const Template = ({ children, data }: TemplateProps) => {
           price: appData?.price,
           categories,
           globalNotification: appData?.notification,
+          isAlwaysTransparent: data.isNavbarAlwaysTransparent,
         }}
       />
       {children}

@@ -1,7 +1,13 @@
 import { Button, Tooltip } from "@chakra-ui/react";
 import _ from "lodash";
 import React, { SyntheticEvent } from "react";
-import { FaFacebook, FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaGithub,
+  FaInstagram,
+  FaLinkedin,
+  FaTwitter,
+} from "react-icons/fa";
 
 type SocialLinkCardProps = {
   data: {
@@ -20,6 +26,7 @@ const getIcon = (iconName) => {
     twitter: <FaTwitter />,
     linkedin: <FaLinkedin />,
     github: <FaGithub />,
+    instagram: <FaInstagram />,
   };
 
   return icons[iconName];

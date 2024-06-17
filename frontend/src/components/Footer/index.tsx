@@ -79,8 +79,12 @@ const quickLinks = [
     url: "/companies",
   },
   {
-    categories: "Categories",
+    name: "Categories",
     url: "/categories",
+  },
+  {
+    name: "Privacy Policy",
+    url: "/privacy-policy#",
   },
 ];
 

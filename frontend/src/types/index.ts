@@ -73,6 +73,7 @@ export type IndexProps = {
   featuredCompanies?: FeaturedCompaniesProps[];
   featuredJobs?: JobCardProps[];
   otherJobs?: JobCardProps[];
+  isNavbarAlwaysTransparent?: boolean;
 } & {
   notificationVisible?: Boolean | string;
   globalModalProps?: GlobalModalProps;

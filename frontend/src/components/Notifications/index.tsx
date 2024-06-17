@@ -1,13 +1,3 @@
-import {
-  useState,
-  useRef,
-  forwardRef,
-  Ref,
-  useEffect,
-  useCallback,
-  useMemo,
-  memo,
-} from "react";
 import { BellIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -28,12 +18,21 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import _ from "lodash";
+import {
+  Ref,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useDispatch } from "react-redux";
+import fetch from "services/api";
+import { SET_NOTIFICATIONS } from "store/actions";
 import { NotificationProps, UserInnerProps } from "types";
 import NotificationCard from "./NotificationCard";
-import fetch from "services/api";
-import { useDispatch } from "react-redux";
-import { SET_NOTIFICATIONS } from "store/actions";
-import ClickAwayListener from "react-click-away-listener";
 
 type NotificationsProps = {
   user: UserInnerProps;
@@ -233,7 +232,7 @@ const Notifications = ({
     }
 
     if (allNotifications.length === 0) {
-      return <Text>There is no notifications at this moment</Text>;
+      return <Text>There are no notifications at this moment</Text>;
     }
     return allNotifications.map((notification) => (
       <NotificationCard
@@ -287,7 +286,7 @@ const Notifications = ({
               </Flex>
             </Flex>
             <Text fontSize="xs">
-              Readed notifications are delete within 30 days
+              Readed notifications are deleted within 30 days
             </Text>
           </PopoverHeader>
           <PopoverArrow />
@@ -295,7 +294,7 @@ const Notifications = ({
             {getPopoverBody()}
           </PopoverBody>
           {notifications.length > 0 && (
-            <PopoverFooter d="flex" justifyContent="flex-end">
+            <PopoverFooter display="flex" justifyContent="flex-end">
               <ButtonGroup size="sm">
                 {unreadedNotifications > 0 && (
                   <Button

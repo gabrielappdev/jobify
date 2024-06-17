@@ -53,13 +53,16 @@ export type NavigationProps = {
     price: number;
     categories: CategoryProps[];
     globalNotification?: GlobalNotificationProps;
+    isAlwaysTransparent?: boolean;
   };
 };
 
 const Navigation = ({ data }: NavigationProps) => {
   const isMobile = useIsTouchDevice();
   const { colorMode } = useColorMode();
-  const [isTransparent, setIsTransparent] = useState(true);
+  const [isTransparent, setIsTransparent] = useState(
+    data.isAlwaysTransparent ? true : false
+  );
   const router = useRouter();
   const isRefreshingUserToken = useSelector(
     ({ user }: ReducersProps) => user.isLoading
@@ -301,7 +304,11 @@ const Navigation = ({ data }: NavigationProps) => {
 
   useScrollPosition(
     ({ currPos }) => {
-      setIsTransparent(currPos.y > -100);
+      if (data.isAlwaysTransparent) {
+        setIsTransparent(currPos.y > -100);
+      } else {
+        setIsTransparent(false);
+      }
     },
     [colorMode],
     null,
@@ -503,14 +510,7 @@ const Navigation = ({ data }: NavigationProps) => {
           </Container>
         </AnimatedWrapper>
       )}
-      <Container
-        maxW="140ch"
-        p={4}
-        pt={6}
-        centerContent
-        direction="row"
-        background="inherit"
-      >
+      <Container maxW="140ch" p={4} pt={6} centerContent background="inherit">
         {getRightSideContent()}
       </Container>
     </Box>
