@@ -160,9 +160,16 @@ const Footer = ({ data }: FooterDataProps) => {
         <Flex w="100%" background={navigationBgColor[colorMode]}>
           <Section padding="32px 16px 32px 16px" inheritBg minW="auto">
             <Flex w="inherit" justify="space-between" align="center">
-              <Text color={switchPrimaryColor[colorMode]} size="sm">
-                {new Date().getFullYear()} - Jobify &#174;
-              </Text>
+              <Flex gap={4} align="center">
+                <Text color={switchPrimaryColor[colorMode]} size="sm">
+                  {new Date().getFullYear()} - Jobify
+                </Text>
+                <Link href="privacy-policy" color="green">
+                  <Text color="green" textDecor="underline" cursor="pointer">
+                    Privacy Policy
+                  </Text>
+                </Link>
+              </Flex>
               <Text size="sm">
                 <IconButton
                   aria-label="Scroll Top Button"
