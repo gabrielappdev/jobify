@@ -164,7 +164,7 @@ const Footer = ({ data }: FooterDataProps) => {
                 <Text color={switchPrimaryColor[colorMode]} size="sm">
                   {new Date().getFullYear()} - Jobify
                 </Text>
-                <Link href="privacy-policy" color="green">
+                <Link href="privacy-policy">
                   <Text color="green" textDecor="underline" cursor="pointer">
                     Privacy Policy
                   </Text>
