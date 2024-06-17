@@ -3,7 +3,7 @@
 A fullstack project created using Typescript and NodeJS. The main goal is to post jobs and configure it individually to allow some highlight methods.
 
 <p align="center">
-    <img src="https://github.com/gabrielappdev/jobify/jobify.png" alt="Jobify Home page"></img> 
+    <img src="https://github.com/gabrielappdev/jobify/blob/master/jobify.png" alt="Jobify Home page"></img> 
 </p>
 
 ## Live Version
