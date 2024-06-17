@@ -1,10 +1,4 @@
-import {
-  bgColor,
-  color,
-  highlightColor,
-  navigationBgColor,
-  switchPrimaryColor,
-} from "../../helpers";
+import { ChevronUpIcon } from "@chakra-ui/icons";
 import {
   Box,
   Flex,
@@ -15,12 +9,17 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
-import { ChevronUpIcon } from "@chakra-ui/icons";
-import { CategoryProps, FeaturedCompaniesProps, HomeProps } from "types";
-import Link from "next/link";
-import Section from "../Section";
 import useIsTouchDevice from "hooks/useDeviceDetect";
 import Image from "next/image";
+import Link from "next/link";
+import { CategoryProps, FeaturedCompaniesProps, HomeProps } from "types";
+import {
+  bgColor,
+  color,
+  navigationBgColor,
+  switchPrimaryColor,
+} from "../../helpers";
+import Section from "../Section";
 
 type FooterDataProps = {
   data: {
@@ -31,8 +30,8 @@ type FooterDataProps = {
 };
 
 type GenericLinkProps = {
-  name: String;
-  url: String;
+  name: string;
+  url: string;
   colorMode: "light" | "dark";
 };
 

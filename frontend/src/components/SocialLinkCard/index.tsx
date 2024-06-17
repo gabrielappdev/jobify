@@ -1,4 +1,4 @@
-import { Button, Flex, Tooltip } from "@chakra-ui/react";
+import { Button, Tooltip } from "@chakra-ui/react";
 import _ from "lodash";
 import React, { SyntheticEvent } from "react";
 import { FaFacebook, FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
@@ -10,7 +10,7 @@ type SocialLinkCardProps = {
     color: string;
     url: string;
   };
-  isRemovable: Boolean;
+  isRemovable: boolean;
   onRemove: (event: SyntheticEvent) => void;
 };
 

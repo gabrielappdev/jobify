@@ -35,7 +35,7 @@ type CreateJobProps = {
   onSuccess: (values: any) => void;
   isEdit?: boolean;
   isAfterCreateEdit?: boolean;
-  postValues: CreateJobFormProps;
+  postValues?: CreateJobFormProps;
   postId?: number;
 };
 

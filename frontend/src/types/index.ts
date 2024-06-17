@@ -31,7 +31,7 @@ export type HomeProps = {
 export type GlobalNotificationProps = {
   message: string;
   colorScheme: string;
-  active: Boolean;
+  active: boolean;
 };
 
 export type CategoryProps = {
@@ -48,17 +48,17 @@ export type TagProps = {
 };
 
 export type FeaturedCompaniesProps = {
-  id: Number;
+  id: number;
   logo: string;
   name: string;
   slug: string;
-  posts: Number;
+  posts: number;
 };
 
 export type GlobalModalInnerProps = {};
 
 export type GlobalModalProps = {
-  isGlobalModalOpen: Boolean;
+  isGlobalModalOpen: boolean;
   action: string;
   props?: GlobalModalInnerProps;
   params?: {
@@ -82,7 +82,7 @@ export type TemplateDataProps =
   | Pick<IndexProps, "appData" | "categories" | "featuredCompanies"> & "tags";
 
 export type CompanyProps = {
-  id?: Number;
+  id?: number;
   name: string;
   location: string;
   description: string;
@@ -93,16 +93,16 @@ export type CompanyProps = {
   slug: string;
   email: string;
   post_settings: PostSettingsProps;
-  posts?: Number;
+  posts?: number;
   jobs?: JobCardProps[];
   social_link?: SocialLinkProps[];
 };
 
 export type PostSettingsProps = {
-  display_logo: Boolean;
-  highlight: Boolean;
-  pinned: Boolean;
-  featured: Boolean;
+  display_logo: boolean;
+  highlight: boolean;
+  pinned: boolean;
+  featured: boolean;
 };
 
 export type JobCardCompanyProps = {
@@ -112,7 +112,7 @@ export type JobCardCompanyProps = {
   location: string;
   slug: string;
   logo: string;
-  posts?: Number;
+  posts?: number;
   jobs?: JobCardProps[];
   createdAt?: string;
   updatedAt?: string;
@@ -120,14 +120,14 @@ export type JobCardCompanyProps = {
 };
 
 export type FormattedPostSettings = {
-  isHighlighted: Boolean;
-  isPinned: Boolean;
-  isFeatured: Boolean;
-  shouldDisplayLogo: Boolean;
+  isHighlighted: boolean;
+  isPinned: boolean;
+  isFeatured: boolean;
+  shouldDisplayLogo: boolean;
 };
 
 export type JobCardProps = {
-  id?: Number;
+  id?: number;
   title: string;
   description?: string;
   createdAt?: string;
@@ -135,10 +135,10 @@ export type JobCardProps = {
   categories: CategoryProps[];
   tags: TagProps[];
   company: JobCardCompanyProps;
-  isHighlighted: Boolean;
-  isPinned: Boolean;
-  isFeatured: Boolean;
-  shouldDisplayLogo: Boolean;
+  isHighlighted: boolean;
+  isPinned: boolean;
+  isFeatured: boolean;
+  shouldDisplayLogo: boolean;
 };
 
 export type JobPostProps = {
@@ -148,7 +148,7 @@ export type JobPostProps = {
 
 export type RawCompanyProps = {
   data?: {
-    id: Number;
+    id: number;
     attributes: CompanyProps;
   };
   attributes?: CompanyProps;
@@ -163,14 +163,14 @@ export type RawCategoriesProps = {
 };
 
 export type PostAttributesProps = {
-  id: Number;
+  id: number;
   title: string;
   description: string;
   createdAt: string;
   updatedAt: string;
   slug: string;
   expiration_date: string;
-  active: Boolean;
+  active: boolean;
   company: CompanyProps;
   categories: CategoryProps[];
   tags: TagProps[];
@@ -187,7 +187,7 @@ export type CreateJobFormProps = {
 
 export type RawPostProps = {
   data?: {
-    id: Number;
+    id: number;
     attributes: PostAttributesProps;
   };
   attributes?: PostAttributesProps;
@@ -195,10 +195,10 @@ export type RawPostProps = {
 
 export type MetaProps = {
   pagination: {
-    page: Number;
-    pageSize: Number;
-    pageCount: Number;
-    totalNumber: Number;
+    page: number;
+    pageSize: number;
+    pageCount: number;
+    totalNumber: number;
   };
 };
 
@@ -232,10 +232,10 @@ export type CreateJobFlowProps = {
 };
 
 export type UserInnerProps = {
-  blocked: Boolean;
-  confirmed: Boolean;
+  blocked: boolean;
+  confirmed: boolean;
   email: "";
-  id: Number;
+  id: number;
   provider: string;
   username: string;
   jwt: string;
@@ -246,7 +246,7 @@ export type UserInnerProps = {
 
 export type UserProps = {
   user: UserInnerProps;
-  isLoading: Boolean;
+  isLoading: boolean;
 };
 
 export type SocialLinkProps = {

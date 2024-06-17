@@ -1,10 +1,10 @@
-import { AnyAction } from "redux";
 import { HYDRATE } from "next-redux-wrapper";
-import { HomeProps, IndexProps } from "types";
+import { AnyAction } from "redux";
+import { IndexProps } from "types";
 import {
-  SET_GLOBAL_DATA,
-  OPEN_GLOBAL_MODAL,
   CLOSE_GLOBAL_MODAL,
+  OPEN_GLOBAL_MODAL,
+  SET_GLOBAL_DATA,
 } from "../../actions";
 
 const initialState: IndexProps = {
@@ -17,6 +17,13 @@ const initialState: IndexProps = {
     hero: null,
     heroUrl: "",
     notification: null,
+    display_logo: 0,
+    country: "",
+    currency: "",
+    currencySymbol: "",
+    featured: 0,
+    highlight: 0,
+    pinned: 0,
   },
   categories: [],
   tags: [],

@@ -8,27 +8,27 @@ import {
   Stack,
   useColorMode,
 } from "@chakra-ui/react";
-import { bgColor, pickParams } from "../../helpers";
-import { useForm } from "react-hook-form";
-import { SyntheticEvent, useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
-import { ReducersProps } from "store/reducers";
 import { useRouter } from "next/router";
 import qs from "qs";
+import { SyntheticEvent, useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { ReducersProps } from "store/reducers";
+import { bgColor, pickParams } from "../../helpers";
 
 export type SearchParamsProps = {
-  title?: String;
-  category?: Number;
-  company?: String;
-  tag?: Number;
-  location?: String;
-  page?: Number;
-  limit?: Number;
+  title?: string;
+  category?: number | string;
+  company?: string;
+  tag?: number | string;
+  location?: string;
+  page?: number;
+  limit?: number;
 };
 
 type AdvancedSearchJobsProps = {
   params: SearchParamsProps;
-  hasInheritBackground?: Boolean;
+  hasInheritBackground?: boolean;
 };
 
 const AdvancedSearchJobs = ({

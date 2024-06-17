@@ -1,15 +1,7 @@
-import qs from "qs";
-import fetch from "../../services/api";
-import {
-  bgColor,
-  _extractRawData,
-  _formatAppData,
-  _formatCardPost,
-  _formatCompany,
-} from "../../helpers";
-import { TemplateDataProps, MetaProps, JobCardCompanyProps } from "../../types";
-import Template from "templates";
+import CompanyCard from "@/components/CompanyCard";
 import GenericPageHero from "@/components/GenericPageHero";
+import Pagination from "@/components/Pagination";
+import Section from "@/components/Section";
 import {
   Box,
   Button,
@@ -24,11 +16,18 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import CompanyCard from "@/components/CompanyCard";
-import Section from "@/components/Section";
-import Pagination from "@/components/Pagination";
+import qs from "qs";
+import { useEffect, useState } from "react";
+import Template from "templates";
+import {
+  _extractRawData,
+  _formatAppData,
+  _formatCompany,
+  bgColor,
+} from "../../helpers";
+import fetch from "../../services/api";
+import { JobCardCompanyProps, MetaProps, TemplateDataProps } from "../../types";
 
 type CompaniesPageProps = {
   data: {
@@ -36,9 +35,9 @@ type CompaniesPageProps = {
     companies: JobCardCompanyProps[];
     meta: MetaProps;
     params: {
-      limit: Number;
-      page: Number;
-      search: String;
+      limit: number;
+      page: number;
+      search: string;
     };
   };
 };
@@ -159,7 +158,12 @@ const CompaniesPage = ({ data }: CompaniesPageProps) => {
             </Text>
             <SimpleGrid pt={4} columns={{ sm: 2, md: 4 }} gap={4} rowGap={8}>
               {companies.map((company, index) => (
-                <CompanyCard data={company} shouldDisplayLogo key={index} />
+                <CompanyCard
+                  data={company}
+                  displaySocialLinks
+                  shouldDisplayLogo
+                  key={index}
+                />
               ))}
             </SimpleGrid>
             <Flex w="100%" pt={4} justify="flex-end">

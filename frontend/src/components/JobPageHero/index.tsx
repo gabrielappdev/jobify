@@ -1,12 +1,4 @@
-import {
-  Center,
-  Flex,
-  Heading,
-  SimpleGrid,
-  Stack,
-  Tag,
-  Text,
-} from "@chakra-ui/react";
+import { Flex, Heading, Stack, Tag, Text } from "@chakra-ui/react";
 import useIsTouchDevice from "hooks/useDeviceDetect";
 import moment from "moment";
 import Link from "next/link";
@@ -73,6 +65,7 @@ const JobPageHero = ({ data }: JobPageHeroProps) => {
           <CompanyCard
             data={data.company}
             shouldDisplayLogo={data.shouldDisplayLogo}
+            displaySocialLinks={data.shouldDisplayLogo}
           />
         </Flex>
       </Flex>

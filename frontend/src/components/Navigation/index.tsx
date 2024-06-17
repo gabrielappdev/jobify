@@ -1,57 +1,56 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { AddIcon, ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
+  Center,
+  CloseButton,
+  Container,
+  Flex,
+  IconButton,
   Menu,
   MenuButton,
-  MenuList,
   MenuGroup,
   MenuItem,
-  Button,
-  Flex,
-  useColorMode,
-  IconButton,
+  MenuList,
   Spacer,
-  theme,
-  Container,
-  CloseButton,
-  Center,
   Text,
+  theme,
+  useColorMode,
 } from "@chakra-ui/react";
-import Image from "next/image";
-import { CategoryProps, GlobalNotificationProps } from "types";
-import { AddIcon, ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
-import Link from "next/link";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
-import DarkModeSwitch from "../DarkModeSwitch";
 import useIsTouchDevice from "hooks/useDeviceDetect";
-import { contrastColor, navigationBgColor } from "../../helpers";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AiOutlineUser, AiOutlineUserAdd } from "react-icons/ai";
+import { BiLogOutCircle } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
+import { CategoryProps, GlobalNotificationProps } from "types";
 import {
-  SET_GLOBAL_DATA,
-  OPEN_GLOBAL_MODAL,
-  SET_USER,
-  SET_LOADING_USER,
-  SET_NOTIFICATIONS,
-} from "../../store/actions";
-import { ReducersProps } from "../../store/reducers";
-import { AnimatedWrapper } from "./styles";
-import usePusherEventListener from "../../hooks/usePusherEventListener";
-import {
-  PUSHER_CREATE_JOB_AUTHOR_NOTIFICATION,
   PUSHER_CREATE_JOB_SUBSCRIBERS_NOTIFICATION,
   PUSHER_GLOBAL_NOTIFICATION,
 } from "../../constants";
+import { contrastColor, navigationBgColor } from "../../helpers";
+import usePusherEventListener from "../../hooks/usePusherEventListener";
 import fetch from "../../services/api";
 import { LocalStorage } from "../../services/localStorage";
-import { AiOutlineUser, AiOutlineUserAdd } from "react-icons/ai";
-import { BiLogOutCircle } from "react-icons/bi";
-import { useRouter } from "next/router";
+import {
+  OPEN_GLOBAL_MODAL,
+  SET_GLOBAL_DATA,
+  SET_LOADING_USER,
+  SET_NOTIFICATIONS,
+  SET_USER,
+} from "../../store/actions";
+import { ReducersProps } from "../../store/reducers";
+import DarkModeSwitch from "../DarkModeSwitch";
 import Notifications from "../Notifications";
+import { AnimatedWrapper } from "./styles";
 
 export type NavigationProps = {
   data: {
     logo: string;
-    price: Number;
+    price: number;
     categories: CategoryProps[];
     globalNotification?: GlobalNotificationProps;
   };
@@ -76,7 +75,7 @@ const Navigation = ({ data }: NavigationProps) => {
   const dispatch = useDispatch();
   const isGlobalNotificationVisible = useSelector(
     ({ app }: ReducersProps) => app.notificationVisible
-  );
+  ) as boolean | string;
   const user = useSelector(({ user }: ReducersProps) => user.user);
   const notifications = useSelector(
     ({ notifications }: ReducersProps) => notifications.notifications

@@ -1,14 +1,14 @@
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
   Button,
   Flex,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { forwardRef, useEffect } from "react";
 
@@ -16,7 +16,7 @@ type ModalDialogProps = {
   data: {
     Header?: React.ReactNode;
     Footer?: React.ReactNode;
-    hasNotOverlay?: Boolean;
+    hasNotOverlay?: boolean;
     size:
       | "xs"
       | "sm"

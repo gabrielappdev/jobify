@@ -8,8 +8,8 @@ import { Button, Flex, IconButton, Stack } from "@chakra-ui/react";
 
 type PaginationProps = {
   data: {
-    pageCount: Number;
-    currentPage: Number;
+    pageCount: number;
+    currentPage: number;
     onChange: (value: number) => void;
   };
 };

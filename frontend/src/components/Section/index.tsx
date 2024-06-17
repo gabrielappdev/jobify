@@ -1,17 +1,17 @@
-import React, { JSXElementConstructor, ReactElement, useMemo } from "react";
-import { bgColor, color } from "helpers";
 import {
   Container,
   LayoutProps,
   SpacerProps,
   useColorMode,
 } from "@chakra-ui/react";
+import { bgColor, color } from "helpers";
 import useIsTouchDevice from "hooks/useDeviceDetect";
+import { JSXElementConstructor, ReactElement, useMemo } from "react";
 
 type SectionProps = {
   minW?: LayoutProps["minW"];
   padding?: SpacerProps["padding"];
-  inheritBg?: Boolean;
+  inheritBg?: boolean;
   children: ReactElement<any, string | JSXElementConstructor<any>>;
 };
 

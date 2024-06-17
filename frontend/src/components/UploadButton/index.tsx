@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Stack, Text, theme } from "@chakra-ui/react";
+import { Button, Flex, Image, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useMemo } from "react";
 import { useFilePicker } from "use-file-picker";
 
@@ -12,7 +12,7 @@ type UploadButtonProps = {
   accept: string | string[];
   maxHeight: number;
   maxWidth: number;
-  title: String;
+  title: string;
   icon?: React.ReactElement;
   onChange: (FileContent) => void;
   resetLogoRef?: React.Ref<HTMLButtonElement>;

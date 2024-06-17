@@ -1,11 +1,11 @@
-import { Box, Center, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import Section from "@/components/Section";
+import { Box, Center, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 
 type CompanyDescriptionProps = {
   data: {
-    name: String;
-    description: String;
-    url?: String;
+    name: string;
+    description: string;
+    url?: string;
   };
 };
 

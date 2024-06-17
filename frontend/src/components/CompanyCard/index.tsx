@@ -2,7 +2,6 @@ import {
   Box,
   Flex,
   Heading,
-  SimpleGrid,
   Stack,
   Text,
   useColorMode,
@@ -62,13 +61,14 @@ const CompanyCard = ({
         <b>Jobs posted:</b> {data?.posts}
       </Text>
       <Flex p={4} gap={2}>
-        {data?.social_link?.map((socialLink) => (
-          <SocialLinkCard
-            data={socialLink}
-            isRemovable={false}
-            onRemove={() => ({})}
-          />
-        ))}
+        {displaySocialLinks &&
+          data?.social_link?.map((socialLink) => (
+            <SocialLinkCard
+              data={socialLink}
+              isRemovable={false}
+              onRemove={() => ({})}
+            />
+          ))}
       </Flex>
     </Stack>
   );

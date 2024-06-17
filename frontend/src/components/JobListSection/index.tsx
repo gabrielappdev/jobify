@@ -1,4 +1,3 @@
-import { useState, useEffect, useMemo } from "react";
 import {
   Center,
   Flex,
@@ -8,18 +7,19 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { useEffect, useMemo, useState } from "react";
 import { JobCardProps } from "types";
+import useIsTouchDevice from "../../hooks/useDeviceDetect";
 import JobCard from "../JobCard";
 import Section from "../Section";
-import useIsTouchDevice from "../../hooks/useDeviceDetect";
 
 type JobListSectionProps = {
-  heading: String;
-  description?: String;
+  heading: string;
+  description?: string;
   jobList: JobCardProps[];
-  isLoading?: Boolean;
+  isLoading?: boolean;
   Pagination?: React.ReactNode;
-  displayCategoriesFilters?: Boolean;
+  displayCategoriesFilters?: boolean;
 };
 
 const JobListSection = ({
