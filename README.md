@@ -6,10 +6,6 @@ A fullstack project created using Typescript and NodeJS. The main goal is to pos
     <img src="https://github.com/gabrielappdev/jobify/blob/master/jobify.png" alt="Jobify Home page"></img> 
 </p>
 
-## Live Version
-
-You can access a version of this project live in [Jobify](https://board.gabrielcosta.pro)
-
 ## Features
 
 - Create company, with logo, descriptions and social networks
